@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jpa:entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://jcp.org/en/jsr/detail?id=270" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jpa="http://java.sun.com/xml/ns/persistence/orm" pkg="software_architecture_entities" v="2.6.5" persistenceUnitName="DEFAULT_PU" sm="false" xs="false" id="_14799843085951" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_1.xsd">
+    <jpa:mapped-superclass xre="false" compositePrimaryKeyClass="PERSON_ENTPK" abs="false" class="PERSON_ENT" visibile="true" minimized="true" rootElement="_14799843085951" id="_1479984470765">
+        <jpa:ts e="true"/>
+        <jpa:hc e="true"/>
+        <jpa:eq e="true"/>
+        <jpa:attributes>
+            <jpa:basic attribute-type="String" visibile="true" name="FIRST_NAME" id="_14799852553868">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" visibile="true" name="LAST_NAME" id="_14799852606499">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" visibile="true" name="DEGREE" id="_147998527972910">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="char" visibile="true" name="ADMINISTRATIVE_SEX" id="_148018301585549">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="int" visibile="true" name="SVNR" id="_148018304215150">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="java.sql.Date" visibile="true" name="BIRTH_DATE" id="_148018307067951">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:id attribute-type="Long" visibile="true" name="PERSON_PK" id="_14799851182447">
+                <jpa:bv/>
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+        <jpa:nq e="false" name="PERSON_ENT.findAll">
+            <jpa:query>Select m from PERSON_ENT m</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="PERSON_ENT.findByFIRST_NAME">
+            <jpa:query>Select p from PERSON_ENT p where p.FIRST_NAME=:FIRST_NAME</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="PERSON_ENT.findByLAST_NAME">
+            <jpa:query>Select p from PERSON_ENT p where p.LAST_NAME=:LAST_NAME</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="PERSON_ENT.findByDEGREE">
+            <jpa:query>Select p from PERSON_ENT p where p.DEGREE=:DEGREE</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="PERSON_ENT.findByADMINISTRATIVE_SEX">
+            <jpa:query>Select p from PERSON_ENT p where p.ADMINISTRATIVE_SEX=:ADMINISTRATIVE_SEX</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="PERSON_ENT.findBySVNR">
+            <jpa:query>Select p from PERSON_ENT p where p.SVNR=:SVNR</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="PERSON_ENT.findByBIRTH_DATE">
+            <jpa:query>Select p from PERSON_ENT p where p.BIRTH_DATE=:BIRTH_DATE</jpa:query>
+        </jpa:nq>
+    </jpa:mapped-superclass>
+    <jpa:entity xre="false" compositePrimaryKeyClass="STUDENT_ENTPK" abs="false" class="STUDENT_ENT" superclassId="_1479984470765" visibile="true" minimized="false" rootElement="_14799843085951" id="_1479984315053">
+        <jpa:ts e="true"/>
+        <jpa:hc e="true"/>
+        <jpa:eq e="true"/>
+        <jpa:attributes>
+            <jpa:basic attribute-type="String" visibile="true" name="STUDENT_NUMBER" id="_147998534570411">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:many-to-many collection-type="java.util.List" connected-entity-id="_1480184054936" connected-attribute-id="_148018433068757" visibile="true" name="LECTURE_ENTs" id="_148018433070458"/>
+        </jpa:attributes>
+        <jpa:nq e="false" name="STUDENT_ENT.findAll">
+            <jpa:query>Select e from STUDENT_ENT e</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="STUDENT.findBySTUDENT_NUMBER">
+            <jpa:query>Select s from STUDENT_ENT s where s.STUDENT_NUMBER=:STUDENT_NUMBER</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="STUDENT_ENT.findByDEGREE_COURSE">
+            <jpa:query>Select s from STUDENT_ENT s where s.DEGREE_COURSE=:DEGREE_COURSE</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="STUDENT_ENT.findByTYPE_OF_STUDY">
+            <jpa:query>Select s from STUDENT_ENT s where s.TYPE_OF_STUDY=:TYPE_OF_STUDY</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="STUDENT_ENT.findBySEMESTER">
+            <jpa:query>Select s from STUDENT_ENT s where s.SEMESTER=:SEMESTER</jpa:query>
+        </jpa:nq>
+    </jpa:entity>
+    <jpa:entity xre="false" compositePrimaryKeyClass="TEACHER_ENTPK" abs="false" class="TEACHER_ENT" superclassId="_1479984470765" visibile="true" minimized="false" rootElement="_14799843085951" id="_1479984930835">
+        <jpa:ts e="true"/>
+        <jpa:hc e="true"/>
+        <jpa:eq e="true"/>
+        <jpa:attributes>
+            <jpa:basic attribute-type="boolean" visibile="true" name="IS_INTERNAL_LECTOR" id="_147998537808012">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:one-to-many orp="false" own="true" collection-type="java.util.List" connected-entity-id="_1480184054936" visibile="true" name="LECTURE_ENTs" id="_148018437106359"/>
+        </jpa:attributes>
+        <jpa:nq e="false" name="TEACHER_ENT.findAll">
+            <jpa:query>Select e from TEACHER_ENT e</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="TEACHER_ENT.findByIS_INTERNAL_LECTOR">
+            <jpa:query>Select t from TEACHER_ENT t where t.IS_INTERNAL_LECTOR=:IS_INTERNAL_LECTOR</jpa:query>
+        </jpa:nq>
+    </jpa:entity>
+    <jpa:entity xre="false" compositePrimaryKeyClass="LECTURE_ENTPK" abs="false" class="LECTURE_ENT" visibile="true" minimized="false" rootElement="_14799843085951" id="_1480184054936">
+        <jpa:ts e="true"/>
+        <jpa:hc e="true"/>
+        <jpa:eq e="true"/>
+        <jpa:attributes>
+            <jpa:basic attribute-type="String" visibile="true" name="NAME" id="_148018459868460">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" visibile="true" name="DESCRIPTION" id="_148018460662061">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="int" visibile="true" name="SEMESTER" id="_148018408836054">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" visibile="true" name="FIELD_OF_STUDY" id="_148018409796855">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" visibile="true" name="DEGREE_OF_STUDY" id="_148018411055156">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:many-to-many own="true" collection-type="java.util.List" connected-entity-id="_1479984315053" connected-attribute-id="_148018433070458" visibile="true" name="STUDENT_ENTs" id="_148018433068757"/>
+            <jpa:id attribute-type="Long" visibile="true" name="LECTURE_PK" id="_148018405493852">
+                <jpa:bv/>
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+        <jpa:nq e="false" name="LECTURE_ENT.findAll">
+            <jpa:query>Select e from LECTURE_ENT e</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="LECTURE_ENT.findBySEMESTER">
+            <jpa:query>Select l from LECTURE_ENT l where l.SEMESTER=:SEMESTER</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="LECTURE_ENT.findByFIELD_OF_STUDY">
+            <jpa:query>Select l from LECTURE_ENT l where l.FIELD_OF_STUDY=:FIELD_OF_STUDY</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="LECTURE_ENT.findByDEGREE_OF_STUDY">
+            <jpa:query>Select l from LECTURE_ENT l where l.DEGREE_OF_STUDY=:DEGREE_OF_STUDY</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="LECTURE_ENT.findByNAME">
+            <jpa:query>Select l from LECTURE_ENT l where l.NAME=:NAME</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="LECTURE_ENT.findByDESCRIPTION">
+            <jpa:query>Select l from LECTURE_ENT l where l.DESCRIPTION=:DESCRIPTION</jpa:query>
+        </jpa:nq>
+    </jpa:entity>
+    <jpa:snp e="true" loc="BEFORE_PACKAGE">/**
+ * This file was generated by the JPA Modeler
+ */</jpa:snp>
+    <jpa:inf e="true" n="java.io.Serializable"/>
+    <jpa:c>
+        <ct>java.util.List</ct>
+        <ct>java.util.Set</ct>
+        <ct>java.util.Map</ct>
+        <ct>java.util.Collection</ct>
+    </jpa:c>
+    <jpa:diagram>
+        <plane elementRef="_14799843085951">
+            <shape elementRef="_1479984315053">
+                <Bounds x="1.0" y="121.0" width="178.0" height="92.0"/>
+            </shape>
+            <shape elementRef="_1479984930835">
+                <Bounds x="266.0" y="44.0" width="183.0" height="92.0"/>
+            </shape>
+            <shape elementRef="_1480184054936">
+                <Bounds x="266.0" y="187.0" width="177.0" height="210.0"/>
+            </shape>
+            <shape elementRef="_1479984470765">
+                <Bounds x="31.0" y="9.0" width="173.0" height="24.0"/>
+            </shape>
+        </plane>
+    </jpa:diagram>
+</jpa:entity-mappings>
