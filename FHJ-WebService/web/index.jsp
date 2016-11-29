@@ -56,7 +56,7 @@
     <body>
         <div class="container">
             <center>
-<h1>Session Trackinggg</h1>
+<h1>Session </h1>
 </center>
 <table border="1" align="center"> 
 <tr bgcolor="#949494">
