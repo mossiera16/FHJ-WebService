@@ -48,3 +48,7 @@ Temporary Items
 /FHJ-WebService/nbproject/private/
 FHJ-WebService/nbproject/private/private.properties
 FHJ-WebService/nbproject/private/private.xml
+/FHJ-WebService/dist/
+FHJ-WebService/nbproject/build-impl.xml
+FHJ-WebService/nbproject/private/private.xml
+FHJ-WebService/nbproject/genfiles.properties
