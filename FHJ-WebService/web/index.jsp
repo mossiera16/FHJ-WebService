@@ -4,7 +4,7 @@
     Author     : Notebook
 --%>
 <%@page import="java.util.Date"%>
-<%@page import="project_entities.STUDENT_ENT"%>
+<%@page import="project_entities.STUDENT_ENTITY"%>
 <%@page import="project_classes.DBAccess"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page session="true" %>
@@ -48,10 +48,11 @@
         <title>JSP Page</title>
     </head>
      <% 
-//            Date test = new Date();
-//            STUDENT_ENT student = new STUDENT_ENT();
-//            DBAccess dbAccess = new DBAccess();
-//            dbAccess.DBPersistObject(student);
+            Date test = new Date();
+            STUDENT_ENTITY student = new STUDENT_ENTITY();
+            student.setADMINSEX("m");
+            DBAccess dbAccess = new DBAccess();
+            dbAccess.DBPersistObject(student);
         %>
     <body>
         <div class="container">

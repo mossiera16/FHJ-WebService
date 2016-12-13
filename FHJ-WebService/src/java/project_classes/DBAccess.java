@@ -23,6 +23,7 @@ public class DBAccess {
             emf = Persistence.createEntityManagerFactory(persistencyUnit);
             em = emf.createEntityManager();
         } catch (Exception e) {
+            String message = e.getMessage();
             System.out.println(e.getMessage());
             if (emf != null) {
                 emf.close();

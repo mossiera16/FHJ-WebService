@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/project"/>
+<Context path="/project">
+  <Resource auth="Container" driverClassName="org.apache.derby.jdbc.ClientDriver" maxActive="20" maxIdle="10" maxWait="-1" name="administrator" password="123" type="javax.sql.DataSource" url="jdbc:derby://localhost:1527/project" username="administrator"/>
+</Context>
