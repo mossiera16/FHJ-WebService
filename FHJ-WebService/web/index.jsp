@@ -42,18 +42,30 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
+        <link rel="SHORTCUT ICON" href="images/favicon.png" type="image/png">
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <title>JSP Page</title>
+        <title>FH-Joanneum Kursverwaltungssystem</title>
     </head>
      <% 
             Date test = new Date();
             STUDENT_ENTITY student = new STUDENT_ENTITY();
             student.setADMINSEX("m");
             DBAccess dbAccess = new DBAccess();
-            dbAccess.DBPersistObject(student);
-        %>
+            //dbAccess.DBPersistObject(student);
+            List test2 = dbAccess.findWithName("m");
+            List<STUDENT_ENTITY> studentList;
+            studentList = (List<STUDENT_ENTITY>)test2;
+            dbAccess.DBCloseAccess();
+//    for (Iterator it = studentList.iterator(); it.hasNext();) {
+//        Object elem = it.next();
+//        student = (STUDENT_ENTITY) elem;
+//     %>
+              <%-- <li><%= student.getPERSON_PK()%></li> --%>
+     <%
+//         }
+//     %>
+               
     <body>
         <div class="container">
             <center>

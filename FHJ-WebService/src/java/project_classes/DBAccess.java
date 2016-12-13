@@ -1,4 +1,5 @@
 package project_classes;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -32,6 +33,14 @@ public class DBAccess {
                 em.close();
             }
         }
+    }
+    
+    public List findWithName(String name) {
+        return em.createQuery(
+            "SELECT c FROM STUDENT_ENTITY c WHERE c.ADMINSEX LIKE :custName")
+            .setParameter("custName", name)
+            .setMaxResults(10)
+            .getResultList();
     }
 
     public void DBPersistObject(Object objectToPersist) {
