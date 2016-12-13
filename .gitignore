@@ -47,7 +47,11 @@ Temporary Items
 .apdisk
 /FHJ-WebService/nbproject/private/
 FHJ-WebService/nbproject/private/private.properties
+<<<<<<< HEAD
+FHJ-WebService/nbproject/private/private.properties
+=======
 FHJ-WebService/nbproject/private/private.xml
+<<<<<<< HEAD
 <<<<<<< HEAD
 /FHJ-WebService/dist/
 FHJ-WebService/nbproject/build-impl.xml
@@ -56,3 +60,7 @@ FHJ-WebService/nbproject/genfiles.properties
 =======
 FHJ-WebService/nbproject/private/private.properties
 >>>>>>> 2c870792567d6c6d9ae00b61ee3ee036ec185bd4
+=======
+>>>>>>> 2c870792567d6c6d9ae00b61ee3ee036ec185bd4
+FHJ-WebService/nbproject/private/private.properties
+>>>>>>> origin/master
