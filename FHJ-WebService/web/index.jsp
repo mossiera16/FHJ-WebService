@@ -97,7 +97,6 @@
    <td><% out.print(visitCount); %></td>
 </tr> 
 </table> 
-</body>
             <div style="margin-left: auto; margin-right:auto; width: 20em;">
                 <h1 style="text-align: center;">Login</h1>
                 
