@@ -1,4 +1,5 @@
 package project_classes;
+import java.sql.ResultSet;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,10 +16,10 @@ import javax.persistence.Persistence;
  * @author Notebook
  */
 public class DBAccess {
-     static EntityManagerFactory emf;
+    static EntityManagerFactory emf;
     static EntityManager em;
     static String persistencyUnit = "PROJECT_PU";
-
+    
     public DBAccess() {
         try {
             emf = Persistence.createEntityManagerFactory(persistencyUnit);
@@ -41,6 +42,10 @@ public class DBAccess {
             .setParameter("custName", name)
             .setMaxResults(10)
             .getResultList();
+    }
+    
+    public List executeSQLStatement(String sqlStatement){
+        return em.createQuery(sqlStatement).getResultList();
     }
 
     public void DBPersistObject(Object objectToPersist) {

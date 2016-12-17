@@ -1,0 +1,49 @@
+package LoginPackage;
+
+import java.security.MessageDigest;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import project_entities.STUDENT_ENTITY;
+
+/**
+ * * Servlet implementation class LoginServlet
+ */
+public class LoginServlet extends HttpServlet {
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, java.io.IOException {
+        try {
+            STUDENT_ENTITY person = new STUDENT_ENTITY();
+            person.setUSERNAME(request.getParameter("username"));
+            MessageDigest md = MessageDigest.getInstance("SHA-1");;
+            String shaPassword = byteArrayToHexString(md.digest(request.getParameter("password").getBytes()));
+
+            person.setPASSWORD(shaPassword);
+            person = PersonToCheck.login(person);
+            HttpSession session = request.getSession(true);
+            if (person.isISVALID()) {
+                session.setAttribute("currentSessionUser", person);
+                session.setAttribute("userState", 0);
+                response.sendRedirect("dashboard.jsp"); //logged-in page 
+            } else {
+                session.setAttribute("userState", 1);
+                response.sendRedirect("index.jsp"); //error page 
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+
+    }
+
+    public static String byteArrayToHexString(byte[] b) {
+        String result = "";
+        for (int i = 0; i < b.length; i++) {
+            result
+                    += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
+        }
+        return result;
+    }
+}

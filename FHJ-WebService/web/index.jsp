@@ -4,33 +4,13 @@
     Author     : Notebook
 --%>
 <%@page import="java.util.Date"%>
+<%@page import="LoginPackage.LoginServlet"%>
+<%@page import="project_classes.MessageHandler"%>
 <%@page import="project_entities.STUDENT_ENTITY"%>
 <%@page import="project_classes.DBAccess"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page session="true" %>
 <%@ page import="java.io.*,java.util.*" %>
-<%
-   // Get session creation time.
-   Date createTime = new Date(session.getCreationTime());
-   // Get last access time of this web page.
-   Date lastAccessTime = new Date(session.getLastAccessedTime());
-
-   String title = "Welcome Back to my website";
-   Integer visitCount = 0;
-   String visitCountKey = new String("visitCount");
-   String userIDKey = new String("userID");
-   String userID = "Test";
-
-   // Check if this is new comer on your web page.
-   
-    title = "Welcome to my website";
-    session.setAttribute(userIDKey, userID);
-    session.setAttribute(visitCountKey,  visitCount);
-   visitCount = (Integer)session.getAttribute(visitCountKey);
-   visitCount = visitCount+1;
-   userID = (String)session.getAttribute(userIDKey);
-   session.setAttribute(visitCountKey,  visitCount);
-%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -47,69 +27,33 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <title>FH-Joanneum Kursverwaltungssystem</title>
     </head>
-     <% 
-            Date test = new Date();
-            STUDENT_ENTITY student = new STUDENT_ENTITY();
-            student.setADMINSEX("m");
-            DBAccess dbAccess = new DBAccess();
-            //dbAccess.DBPersistObject(student);
-            List test2 = dbAccess.findWithName("m");
-            List<STUDENT_ENTITY> studentList;
-            studentList = (List<STUDENT_ENTITY>)test2;
-            dbAccess.DBCloseAccess();
-//    for (Iterator it = studentList.iterator(); it.hasNext();) {
-//        Object elem = it.next();
-//        student = (STUDENT_ENTITY) elem;
-//     %>
-              <%-- <li><%= student.getPERSON_PK()%></li> --%>
-     <%
-//         }
-//     %>
-               
+    <%
+        if (session.getAttribute("userState") == null) {
+            session.setAttribute("userState", 0);
+        }
+    %>
+
     <body>
         <div class="container">
-            <div style="margin-left: auto; margin-right:auto;">           
-<h1>Session Tracking</h1>
-            </div>
-<table style="border: solid 1px; margin-left: auto; margin-right:auto;"> 
-<tr>
-   <th>Session info</th>
-   <th>Value</th>
-</tr> 
-<tr>
-   <td>id</td>
-   <td><% out.print( session.getId()); %></td>
-</tr> 
-<tr>
-   <td>Creation Time</td>
-   <td><% out.print(createTime); %></td>
-</tr> 
-<tr>
-   <td>Time of Last Access</td>
-   <td><% out.print(lastAccessTime); %></td>
-</tr> 
-<tr>
-   <td>User ID</td>
-   <td><% out.print(userID); %></td>
-</tr> 
-<tr>
-   <td>Number of visits</td>
-   <td><% out.print(visitCount); %></td>
-</tr> 
-</table> 
             <div style="margin-left: auto; margin-right:auto; width: 20em;">
                 <h1 style="text-align: center;">Login</h1>
-                
-                <div class="input-group margin-bottom-sm">
-                    <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
-                    <input class="form-control" type="text" placeholder="Benutzername">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
-                    <input class="form-control" type="password" placeholder="Passwort">
-                </div>
-                <div style="width: 100%;">
-                <a class="btn btn-default" href="dashboard.jsp" role="button" style="width: 50%">Login</a><a class="btn btn-default" href="#" role="button" style="width: 50%">Abbrechen</a>
+                <form action="LoginServlet">
+                    <div class="input-group margin-bottom-sm">
+                        <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+                        <input class="form-control" type="text" name="username" placeholder="Benutzername">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+                        <input class="form-control" type="password" name="password" placeholder="Passwort">
+                    </div>
+                    <div style="width: 100%; display: inline-flex;">
+                        <input class="btn btn-default" style="width: 50%;" type="submit" value="Login">
+                        <input class="btn btn-default" style="width: 50%;" type="cancel" value="Abbrechen">
+                    </div>
+                </form>
+                <div id="message-container" style="text-align: center;">
+                    <jsp:useBean id="message" class="project_classes.MessageHandler"></jsp:useBean>
+                    <%= message.getIndexSiteMessage((int) session.getAttribute("userState"))%>
                 </div>
             </div>
         </div>

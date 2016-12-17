@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <jpa:entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:java="http://jcp.org/en/jsr/detail?id=270" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jpa="http://java.sun.com/xml/ns/persistence/orm" pkg="project_entities" v="2.6.5" sm="false" xs="false" id="_14799843085951" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_1.xsd">
-    <jpa:mapped-superclass xre="false" compositePrimaryKeyClass="PERSON_ENTITYPK" abs="false" class="PERSON_ENTITY" visibile="true" minimized="true" rootElement="_14799843085951" id="_1479984470765">
+    <jpa:mapped-superclass xre="false" compositePrimaryKeyClass="PERSON_ENTITYPK" abs="false" class="PERSON_ENTITY" visibile="true" minimized="false" rootElement="_14799843085951" id="_1479984470765">
         <jpa:ts e="true"/>
         <jpa:hc e="true"/>
         <jpa:eq e="true"/>
@@ -26,7 +26,13 @@
             <jpa:basic attribute-type="String" visibile="true" name="PASSWORD" id="_148035583422727">
                 <jpa:bv/>
             </jpa:basic>
-            <jpa:one-to-many own="true" collection-type="java.util.List" connected-entity-id="_1480335147927" visibile="true" name="ADDRESS_ENTITies" id="_148070634120613"/>
+            <jpa:basic attribute-type="String" visibile="true" name="USERNAME" id="_148199951661137">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="boolean" visibile="true" name="ISVALID" id="_148200007122238">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:one-to-many orp="false" own="true" collection-type="java.util.List" connected-entity-id="_1480335147927" visibile="true" name="ADDRESS_ENTITies" id="_148070634120613"/>
             <jpa:id attribute-type="Long" visibile="true" name="PERSON_PK" id="_148017048307911">
                 <jpa:bv/>
                 <jpa:generated-value strategy="AUTO"/>
@@ -64,6 +70,12 @@
         </jpa:nq>
         <jpa:nq e="false" name="PERSON_ENTITY.findByPASSWORD">
             <jpa:query>Select p from PERSON_ENTITY p where p.PASSWORD=:PASSWORD</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="PERSON_ENTITY.findByUSERNAME">
+            <jpa:query>Select p from PERSON_ENTITY p where p.USERNAME=:USERNAME</jpa:query>
+        </jpa:nq>
+        <jpa:nq e="false" name="PERSON_ENTITY.findByISVALID">
+            <jpa:query>Select p from PERSON_ENTITY p where p.ISVALID=:ISVALID</jpa:query>
         </jpa:nq>
     </jpa:mapped-superclass>
     <jpa:entity xre="false" compositePrimaryKeyClass="STUDENT_ENTITYPK" abs="false" class="STUDENT_ENTITY" superclassId="_1479984470765" visibile="true" minimized="false" rootElement="_14799843085951" id="_1479984315053">
@@ -109,7 +121,7 @@
             <jpa:basic attribute-type="String" visibile="true" name="FIELD_OF_STUDY_2" id="_148017102172725">
                 <jpa:bv/>
             </jpa:basic>
-            <jpa:one-to-many own="true" collection-type="java.util.List" connected-entity-id="_1480350674634" visibile="true" name="COURSE_ENTITies" id="_148070635258114"/>
+            <jpa:one-to-many orp="false" own="true" collection-type="java.util.List" connected-entity-id="_1480350674634" visibile="true" name="COURSE_ENTITies" id="_148070635258114"/>
         </jpa:attributes>
         <jpa:nq e="false" name="LECTURER_ENTITY.findAll">
             <jpa:query>Select e from LECTURER_ENTITY e</jpa:query>
@@ -185,7 +197,7 @@
             <jpa:basic attribute-type="String" visibile="true" name="COURSE_NAME" id="_148035077869438">
                 <jpa:bv/>
             </jpa:basic>
-            <jpa:basic attribute-type="String" visibile="true" name="LECTURER" id="_148035078727239">
+            <jpa:basic attribute-type="int" visibile="true" name="LECTURER_PK" id="_148035078727239">
                 <jpa:bv/>
             </jpa:basic>
             <jpa:one-to-many orp="false" own="true" collection-type="java.util.List" connected-entity-id="_1480352292337" visibile="true" name="GRADE_ENTITies" id="_148035251476462"/>
@@ -200,8 +212,8 @@
         <jpa:nq e="false" name="COURSE.findByCOURSE_NAME">
             <jpa:query>Select c from COURSE_ENTITY c where c.COURSE_NAME=:COURSE_NAME</jpa:query>
         </jpa:nq>
-        <jpa:nq e="false" name="COURSE_ENTITY.findByLECTURER">
-            <jpa:query>Select c from COURSE_ENTITY c where c.LECTURER=:LECTURER</jpa:query>
+        <jpa:nq e="false" name="COURSE_ENTITY.findByLECTURER_PK">
+            <jpa:query>Select c from COURSE_ENTITY c where c.LECTURER_PK=:LECTURER_PK</jpa:query>
         </jpa:nq>
     </jpa:entity>
     <jpa:entity lbl-ref="_148035229233755" xre="false" compositePrimaryKeyClass="GRADE_ENTITYPK" abs="false" class="GRADE_ENTITY" visibile="true" minimized="false" rootElement="_14799843085951" id="_1480352292337">
@@ -209,16 +221,16 @@
         <jpa:hc e="true"/>
         <jpa:eq e="true"/>
         <jpa:attributes>
-            <jpa:basic attribute-type="String" visibile="true" name="STUDENT_PK" id="_148035243342559">
+            <jpa:basic attribute-type="int" visibile="true" name="STUDENT_PK" id="_148035243342559">
                 <jpa:bv/>
             </jpa:basic>
-            <jpa:basic attribute-type="String" visibile="true" name="COURSE_PK" id="_148035245479760">
+            <jpa:basic attribute-type="int" visibile="true" name="COURSE_PK" id="_148035245479760">
                 <jpa:bv/>
             </jpa:basic>
-            <jpa:basic attribute-type="String" visibile="true" name="SEMESTER" id="_148035252253363">
+            <jpa:basic optional="false" attribute-type="int" visibile="true" name="SEMESTER" id="_148035252253363">
                 <jpa:bv/>
             </jpa:basic>
-            <jpa:basic attribute-type="String" visibile="true" name="GRADE" id="_148070351755122">
+            <jpa:basic attribute-type="int" visibile="true" name="GRADE" id="_148070351755122">
                 <jpa:bv/>
             </jpa:basic>
             <jpa:id attribute-type="Long" visibile="true" name="GRADE_PK" id="_148035229233755">
@@ -267,10 +279,10 @@
                 <Bounds x="400.0" y="442.0" width="190.0" height="147.0"/>
             </shape>
             <shape elementRef="_1480352292337">
-                <Bounds x="-81.0" y="486.0" width="181.0" height="155.0"/>
+                <Bounds x="-10.0" y="418.0" width="181.0" height="155.0"/>
             </shape>
             <shape elementRef="_1479984470765">
-                <Bounds x="-81.0" y="-22.0" width="192.0" height="24.0"/>
+                <Bounds x="-19.0" y="-68.0" width="190.0" height="294.0"/>
             </shape>
         </plane>
     </jpa:diagram>
