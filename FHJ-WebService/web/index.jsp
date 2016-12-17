@@ -68,11 +68,11 @@
                
     <body>
         <div class="container">
-            <center>
+            <div style="margin-left: auto; margin-right:auto;">           
 <h1>Session Tracking</h1>
-</center>
-<table border="1" align="center"> 
-<tr bgcolor="#949494">
+            </div>
+<table style="border: solid 1px; margin-left: auto; margin-right:auto;"> 
+<tr>
    <th>Session info</th>
    <th>Value</th>
 </tr> 
