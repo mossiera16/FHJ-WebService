@@ -21,16 +21,16 @@ public class GRADE_ENTITY implements Serializable {
     private Long GRADE_PK;
 
     @Basic
-    private String STUDENT_PK;
+    private int STUDENT_PK;
 
     @Basic
-    private String COURSE_PK;
+    private int COURSE_PK;
+
+    @Basic(optional = false)
+    private int SEMESTER;
 
     @Basic
-    private String SEMESTER;
-
-    @Basic
-    private String GRADE;
+    private int GRADE;
 
     public Long getGRADE_PK() {
         return this.GRADE_PK;
@@ -40,35 +40,35 @@ public class GRADE_ENTITY implements Serializable {
         this.GRADE_PK = GRADE_PK;
     }
 
-    public String getSTUDENT_PK() {
+    public int getSTUDENT_PK() {
         return this.STUDENT_PK;
     }
 
-    public void setSTUDENT_PK(String STUDENT_PK) {
+    public void setSTUDENT_PK(int STUDENT_PK) {
         this.STUDENT_PK = STUDENT_PK;
     }
 
-    public String getCOURSE_PK() {
+    public int getCOURSE_PK() {
         return this.COURSE_PK;
     }
 
-    public void setCOURSE_PK(String COURSE_PK) {
+    public void setCOURSE_PK(int COURSE_PK) {
         this.COURSE_PK = COURSE_PK;
     }
 
-    public String getSEMESTER() {
+    public int getSEMESTER() {
         return this.SEMESTER;
     }
 
-    public void setSEMESTER(String SEMESTER) {
+    public void setSEMESTER(int SEMESTER) {
         this.SEMESTER = SEMESTER;
     }
 
-    public String getGRADE() {
+    public int getGRADE() {
         return this.GRADE;
     }
 
-    public void setGRADE(String GRADE) {
+    public void setGRADE(int GRADE) {
         this.GRADE = GRADE;
     }
 
