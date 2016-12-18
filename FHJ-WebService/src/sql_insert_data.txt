@@ -1,6 +1,6 @@
 /*Studenten*/
 INSERT INTO ADMINISTRATOR.STUDENT_ENTITY
-VALUES(1, 'm', '16.10.1992', 'Andreas', 0, 'Mossier', 'test', '1', 3333,1310288011, 'BSc', 'Masters programme', 'mossiera16');
+VALUES(1, 'm', '16.10.1992', 'Andreas', 0, 'Mossier', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', '1', 3333,1310288011, 'BSc', 'Masters programme', 'mossiera16');
  
 INSERT INTO ADMINISTRATOR.STUDENT_ENTITY
 VALUES(2, 'w', '10.10.1988', 'Eva',0, 'Wurzer', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', '1', 3334,1310288012, 'BA', 'Masters programme', 'wurzere16');
@@ -54,5 +54,16 @@ VALUES(5,1,1,1,3);
 INSERT INTO ADMINISTRATOR.GRADE_ENTITY
 VALUES(6,2,1,1,3);
 
+
+/*Administratoren*/
+INSERT INTO ADMINISTRATOR.ADMINISTRATOR_ENTITY
+VALUES(1, 'm', '16.10.1992', 'Andreas', 0, 'Mossier', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', 3344,'BSc', 'mossieraadmin');
+
+INSERT INTO ADMINISTRATOR.ADMINISTRATOR_ENTITY
+VALUES(2, 'w', '22.10.1990', 'Mina', 0, 'Shokrollahi', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', 3355,'BSc', 'shokrollahimadmin');
+
+INSERT INTO ADMINISTRATOR.ADMINISTRATOR_ENTITY
+VALUES(3, 'w', '2.1.1988', 'Romana', 0, 'Ausim', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', 3366,'BSc', 'ausimradmin');
+ 
 
 

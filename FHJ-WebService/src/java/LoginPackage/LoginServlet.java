@@ -16,15 +16,15 @@ public class LoginServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
         try {
-            STUDENT_ENTITY person = new STUDENT_ENTITY();
+            PERSON person = new PERSON();
             person.setUSERNAME(request.getParameter("username"));
             MessageDigest md = MessageDigest.getInstance("SHA-1");;
             String shaPassword = byteArrayToHexString(md.digest(request.getParameter("password").getBytes()));
 
             person.setPASSWORD(shaPassword);
-            person = PersonToCheck.login(person);
+            person = PersonToCheckDAO.login(person);
             HttpSession session = request.getSession(true);
-            if (person.isISVALID()) {
+            if (person.getISVALID()) {
                 session.setAttribute("currentSessionUser", person);
                 session.setAttribute("userState", 0);
                 response.sendRedirect("dashboard.jsp"); //logged-in page 

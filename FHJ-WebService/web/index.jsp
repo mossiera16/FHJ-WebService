@@ -3,10 +3,8 @@
     Created on : 26.11.2016, 22:12:16
     Author     : Notebook
 --%>
-<%@page import="java.util.Date"%>
 <%@page import="LoginPackage.LoginServlet"%>
 <%@page import="project_classes.MessageHandler"%>
-<%@page import="project_entities.STUDENT_ENTITY"%>
 <%@page import="project_classes.DBAccess"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page session="true" %>
@@ -28,9 +26,11 @@
         <title>FH-Joanneum Kursverwaltungssystem</title>
     </head>
     <%
+        DBAccess dbAccess = new DBAccess();
         if (session.getAttribute("userState") == null) {
             session.setAttribute("userState", 0);
         }
+        dbAccess.DBCloseAccess();
     %>
 
     <body>
@@ -40,11 +40,11 @@
                 <form action="LoginServlet">
                     <div class="input-group margin-bottom-sm">
                         <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
-                        <input class="form-control" type="text" name="username" placeholder="Benutzername">
+                        <input class="form-control" type="text" name="username" autofocus="true" placeholder="Benutzername" required>
                     </div>
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
-                        <input class="form-control" type="password" name="password" placeholder="Passwort">
+                        <input class="form-control" type="password" name="password" placeholder="Passwort" required>
                     </div>
                     <div style="width: 100%; display: inline-flex;">
                         <input class="btn btn-default" style="width: 50%;" type="submit" value="Login">
