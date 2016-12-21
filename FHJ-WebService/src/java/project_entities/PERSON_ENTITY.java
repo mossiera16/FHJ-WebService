@@ -44,6 +44,12 @@ public abstract class PERSON_ENTITY implements Serializable {
     @Basic
     private String PASSWORD;
 
+    @Basic
+    private String USERNAME;
+
+    @Basic
+    private boolean ISVALID;
+
     @OneToMany(targetEntity = ADDRESS_ENTITY.class)
     private List<ADDRESS_ENTITY> ADDRESS_ENTITies;
 
@@ -109,6 +115,22 @@ public abstract class PERSON_ENTITY implements Serializable {
 
     public void setPASSWORD(String PASSWORD) {
         this.PASSWORD = PASSWORD;
+    }
+
+    public String getUSERNAME() {
+        return this.USERNAME;
+    }
+
+    public void setUSERNAME(String USERNAME) {
+        this.USERNAME = USERNAME;
+    }
+
+    public boolean isISVALID() {
+        return this.ISVALID;
+    }
+
+    public void setISVALID(boolean ISVALID) {
+        this.ISVALID = ISVALID;
     }
 
     public List<ADDRESS_ENTITY> getADDRESS_ENTITies() {

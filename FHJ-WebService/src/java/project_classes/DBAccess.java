@@ -1,21 +1,23 @@
 package project_classes;
+
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Notebook
  */
-public class DBAccess {
-     static EntityManagerFactory emf;
+public class DBAccess<T> {
+
+    static EntityManagerFactory emf;
     static EntityManager em;
     static String persistencyUnit = "PROJECT_PU";
 
@@ -34,13 +36,18 @@ public class DBAccess {
             }
         }
     }
-    
-    public List findWithName(String name) {
-        return em.createQuery(
-            "SELECT c FROM STUDENT_ENTITY c WHERE c.ADMINSEX LIKE :custName")
-            .setParameter("custName", name)
-            .setMaxResults(10)
-            .getResultList();
+
+    public List DBgetSQLResultList(String sqlStatement, String[] parameterStrings, T[] parameterValues) {
+        if (parameterStrings.length == parameterValues.length) {
+            Query typedQuery = em.createQuery(sqlStatement);
+            for (int i = 0; i < parameterStrings.length; i++) {
+                typedQuery = typedQuery.setParameter(parameterStrings[i], parameterValues[i]);
+            }
+            return typedQuery.getResultList();
+        } else {
+            DBCloseAccess();
+            return null;
+        }
     }
 
     public void DBPersistObject(Object objectToPersist) {
@@ -49,9 +56,9 @@ public class DBAccess {
             DBTransaction();
         }
     }
-    
-    public void DBUpdateObject(Object objectToUpdate){
-         if (em != null) {
+
+    public void DBUpdateObject(Object objectToUpdate) {
+        if (em != null) {
             em.merge(objectToUpdate);
             DBTransaction();
         }
@@ -70,8 +77,8 @@ public class DBAccess {
             em.close();
         }
     }
-    
-    public void DBGetObjectToUpdate(Class objectClass, Long id){
+
+    public void DBGetObjectToUpdate(Class objectClass, Long id) {
         if (em != null) {
             DBUpdateObject(em.find(objectClass, id));
         }
