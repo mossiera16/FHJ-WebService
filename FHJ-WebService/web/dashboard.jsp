@@ -45,6 +45,11 @@
             response.sendRedirect(redirectURL);
             return;
         }
+        else if (person.getPERSON_TYPE() == "ADMINISTRATOR_ENTITY"){
+            String redirectURL = "admindashboard.jsp";
+            response.sendRedirect(redirectURL);
+            return;
+        }
     %>
     <body>
         <%@include  file="navbar.jsp" %>
