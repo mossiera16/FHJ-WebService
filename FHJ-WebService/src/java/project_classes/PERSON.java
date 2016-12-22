@@ -1,9 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
+ * Programm: software_architecture
+ * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
+ * Fachhochschule Joanneum
+ * Datum: 16.12.2016
  */
-package LoginPackage;
+package project_classes;
 
 import javax.persistence.Basic;
 

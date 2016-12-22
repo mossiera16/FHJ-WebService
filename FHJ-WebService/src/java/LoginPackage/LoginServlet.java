@@ -1,5 +1,13 @@
+/*
+ * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
+ * Programm: software_architecture
+ * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
+ * Fachhochschule Joanneum
+ * Datum: 16.12.2016
+ */
 package LoginPackage;
 
+import project_classes.PERSON;
 import java.security.MessageDigest;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,7 +17,7 @@ import javax.servlet.http.HttpSession;
 import project_entities.STUDENT_ENTITY;
 
 /**
- * * Servlet implementation class LoginServlet
+ * * Servlet Implementierung LoginServlet
  */
 public class LoginServlet extends HttpServlet {
 

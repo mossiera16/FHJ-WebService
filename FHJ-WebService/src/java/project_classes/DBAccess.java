@@ -1,3 +1,10 @@
+/*
+ * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
+ * Programm: software_architecture
+ * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
+ * Fachhochschule Joanneum
+ * Datum: 16.12.2016
+ */
 package project_classes;
 
 import java.util.List;
@@ -6,15 +13,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author Notebook
- */
+
 public class DBAccess<T> {
 
     static EntityManagerFactory emf;

@@ -1,7 +1,11 @@
 <%-- 
-    Document   : dashboard
-    Created on : 27.11.2016, 17:42:19
-    Author     : Notebook
+/*
+ * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
+ * Programm: software_architecture
+ * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
+ * Fachhochschule Joanneum
+ * Datum: 16.12.2016
+ */
 --%>
 <jsp:useBean id="dashboardMessage" class="project_classes.MessageHandler"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
