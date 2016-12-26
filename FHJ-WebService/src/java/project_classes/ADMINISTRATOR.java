@@ -11,7 +11,7 @@ package project_classes;
  *
  * @author standard
  */
-public class ADMINISTRATOR {
+public class ADMINISTRATOR extends PERSON {
     
     //public class ADMINISTRATOR_ENTITY extends PERSON_ENTITY implements Serializable {}
 }

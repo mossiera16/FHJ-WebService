@@ -12,6 +12,9 @@ package project_classes;
  * @author Notebook
  * Befehle
  */
-public interface GradeCommand {
-    
+public interface CourseDataCommand {
+    public void push(int grade, STUDENT studentToGrade, COURSE course);
+    public void unsetGrade(int gradePK, STUDENT studentToGrade, COURSE course);
+    public void changeGrade(int gradePK, STUDENT studentToGrade, COURSE course);
 }
+

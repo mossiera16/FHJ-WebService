@@ -15,7 +15,7 @@ import javax.persistence.Basic;
  *
  * @author standard
  */
-public class LECTURER {
+public class LECTURER extends PERSON{
     @Basic(optional = false)
     private int EMPLOEE_NR;
 

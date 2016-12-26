@@ -13,7 +13,7 @@ import javax.persistence.Basic;
  *
  * @author standard
  */
-public class STUDENT {
+public class STUDENT extends PERSON {
     @Basic(optional = false)
     private int STUDENT_NR;
 
