@@ -7,7 +7,6 @@
  * Datum: 16.12.2016
  */
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
@@ -22,9 +21,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
+            <li><a href="dashboard.jsp">Dashboard</a></li>
+            <li><a href="courses.jsp">Kurse</a></li>
+            <li><a href="results.jsp">Ergebnisse</a></li>
             <li><a href="logout.jsp">Logout</a></li>
           </ul>
           <form class="navbar-form navbar-right">
