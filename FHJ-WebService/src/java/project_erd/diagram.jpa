@@ -200,6 +200,12 @@
             <jpa:basic attribute-type="int" visibile="true" name="LECTURER_PK" id="_148035078727239">
                 <jpa:bv/>
             </jpa:basic>
+            <jpa:basic attribute-type="int" visibile="true" name="SEMESTER" id="_148035078727240">
+                <jpa:bv/>
+            </jpa:basic>
+            <jpa:basic attribute-type="String" visibile="true" name="STUDY" id="_148035077869441">
+                <jpa:bv/>
+            </jpa:basic>
             <jpa:one-to-many orp="false" own="true" collection-type="java.util.List" connected-entity-id="_1480352292337" visibile="true" name="GRADE_ENTITies" id="_148035251476462"/>
             <jpa:id attribute-type="Long" visibile="true" name="COURSE_PK" id="_148035067463535">
                 <jpa:bv/>

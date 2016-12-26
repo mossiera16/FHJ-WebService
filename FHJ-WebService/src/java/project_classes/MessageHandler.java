@@ -7,6 +7,8 @@
  */
 package project_classes;
 
+import java.util.List;
+
 /**
  *
  * @author Notebook
@@ -62,5 +64,22 @@ public class MessageHandler {
                 return SidebarNavigationElementsString;
         }
         return "";
+    }
+
+    public String getCourseDetails(List<COURSE> courses) {
+        if (courses != null) {
+            String result = "";
+
+            for (int i = 0; i < courses.size(); i++) {
+                result += "<tr class='clickable-row' data-href='results.jsp?courseNumber="+courses.get(i).getCOURSE_PK().toString()+"'>";
+                result += "<td> " + courses.get(i).getCOURSE_PK() + "</td>";
+                result += "<td> " + courses.get(i).getCOURSE_NAME() + "</td>";
+                result += "<td> " + courses.get(i).getSEMESTER()+ "</td>";
+                result += "<td> " + courses.get(i).getSTUDY()+ "</td>";
+                result += "</tr>";
+            }
+            return result;
+        }
+        return null;
     }
 }

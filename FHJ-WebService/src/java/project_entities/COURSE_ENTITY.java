@@ -27,6 +27,12 @@ public class COURSE_ENTITY implements Serializable {
 
     @Basic
     private int LECTURER_PK;
+    
+    @Basic
+    private int SEMESTER;
+    
+    @Basic
+    private String STUDY;
 
     @OneToMany(targetEntity = GRADE_ENTITY.class)
     private List<GRADE_ENTITY> GRADE_ENTITies;
@@ -62,5 +68,23 @@ public class COURSE_ENTITY implements Serializable {
     public void setGRADE_ENTITies(List<GRADE_ENTITY> GRADE_ENTITies) {
         this.GRADE_ENTITies = GRADE_ENTITies;
     }
+
+    public int getSEMESTER() {
+        return SEMESTER;
+    }
+
+    public void setSEMESTER(int SEMESTER) {
+        this.SEMESTER = SEMESTER;
+    }
+
+    public String getSTUDY() {
+        return STUDY;
+    }
+
+    public void setSTUDY(String STUDY) {
+        this.STUDY = STUDY;
+    }
+    
+    
 
 }

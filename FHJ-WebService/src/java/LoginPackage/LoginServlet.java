@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import project_classes.STUDENT;
 import project_entities.STUDENT_ENTITY;
 
 /**
@@ -28,7 +29,7 @@ public class LoginServlet extends HttpServlet {
             person.setUSERNAME(request.getParameter("username"));
             MessageDigest md = MessageDigest.getInstance("SHA-1");;
             String shaPassword = byteArrayToHexString(md.digest(request.getParameter("password").getBytes()));
-
+            
             person.setPASSWORD(shaPassword);
             person = PersonToCheckDAO.login(person);
             HttpSession session = request.getSession(true);

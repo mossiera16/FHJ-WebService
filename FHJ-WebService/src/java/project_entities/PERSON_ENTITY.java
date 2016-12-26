@@ -125,7 +125,7 @@ public abstract class PERSON_ENTITY implements Serializable {
         this.USERNAME = USERNAME;
     }
 
-    public boolean isISVALID() {
+    public boolean getISVALID() {
         return this.ISVALID;
     }
 

@@ -9,6 +9,9 @@
 --%>
 <jsp:useBean id="dashboardMessage" class="project_classes.MessageHandler"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="project_classes.STUDENT"%>
+<%@page import="project_classes.LECTURER"%>
+
 <%@page import="project_classes.PERSON"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,6 +41,7 @@
     </head>
     <%
         session.setAttribute("siteName", "dashboard");
+
         PERSON person = (PERSON) session.getAttribute("currentSessionUser");
         if (person == null) {
             session.setAttribute("userState", 2);
@@ -50,6 +54,14 @@
             response.sendRedirect(redirectURL);
             return;
         }
+//        else {
+//            if(person.getPERSON_TYPE()== "STUDENT_ENTITY"){
+//                student = (STUDENT) person.getPERSON(person.getPERSON_TYPE());
+//            }
+//            else {
+//                lecturer = (LECTURER) person.getPERSON(person.getPERSON_TYPE());
+//            }
+//        }
     %>
     <body>
         <%@include  file="navbar.jsp" %>

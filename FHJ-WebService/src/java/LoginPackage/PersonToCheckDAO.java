@@ -56,6 +56,7 @@ public class PersonToCheckDAO {
                 Object elem = resultList.iterator().next();
                 PERSON_ENTITY person = (PERSON_ENTITY) elem;
                 personToCheck.setISVALID(true);
+                personToCheck.setPERSON_PK(person.getPERSON_PK());
                 personToCheck.setFIRSTNAME(person.getFIRSTNAME());
                 personToCheck.setLASTNAME(person.getLASTNAME());
                 personToCheck.setPERSON_TYPE(person_entity);
