@@ -1,7 +1,11 @@
 <%-- 
-    Document   : index
-    Created on : 26.11.2016, 22:12:16
-    Author     : Notebook
+/*
+ * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
+ * Programm: software_architecture
+ * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
+ * Fachhochschule Joanneum
+ * Datum: 16.12.2016
+ */
 --%>
 <%@page import="LoginPackage.LoginServlet"%>
 <%@page import="project_classes.MessageHandler"%>
@@ -27,10 +31,11 @@
     </head>
     <%
         DBAccess dbAccess = new DBAccess();
+        //dbAccess.DBInsertSampleData();
         if (session.getAttribute("userState") == null) {
             session.setAttribute("userState", 0);
         }
-        dbAccess.DBCloseAccess();
+        //dbAccess.DBCloseAccess();
     %>
 
     <body>

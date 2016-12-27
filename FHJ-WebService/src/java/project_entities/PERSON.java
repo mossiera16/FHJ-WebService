@@ -1,4 +1,3 @@
-<%-- 
 /*
  * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
  * Programm: software_architecture
@@ -6,10 +5,12 @@
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
  */
---%>
-<%
-    session.removeAttribute("currentSessionUser");
-    session.setAttribute("userState", 3);
-    String redirectURL = "index.jsp";
-    response.sendRedirect(redirectURL);
-%>
+package project_entities;
+
+/**
+ *
+ * @author Notebook
+ */
+public interface PERSON extends Cloneable {
+    public PERSON_ENTITY getClone();
+}

@@ -5,6 +5,7 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
   padding-top: 50px;
+  overflow-y: scroll;
 }
 
 
@@ -33,6 +34,14 @@ body {
 .sidebar {
   display: none;
 }
+
+.sidebar a {
+color: #78b832;
+}
+
+.sidebar a:hover {
+color: #558521;
+	}
 @media (min-width: 768px) {
   .sidebar {
     position: fixed;
@@ -63,7 +72,7 @@ body {
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
   color: #fff;
-  background-color: #428bca;
+  background-color: #78b832;
 }
 
 
@@ -102,4 +111,8 @@ body {
 .placeholder img {
   display: inline-block;
   border-radius: 50%;
+}
+
+.clickable-row{
+    cursor: pointer;
 }

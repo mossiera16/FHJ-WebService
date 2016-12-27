@@ -1,4 +1,3 @@
-<%-- 
 /*
  * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
  * Programm: software_architecture
@@ -6,10 +5,13 @@
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
  */
---%>
-<%
-    session.removeAttribute("currentSessionUser");
-    session.setAttribute("userState", 3);
-    String redirectURL = "index.jsp";
-    response.sendRedirect(redirectURL);
-%>
+package project_classes;
+
+/**
+ *
+ * @author standard
+ */
+public class ADMINISTRATOR extends PERSON {
+    
+    //public class ADMINISTRATOR_ENTITY extends PERSON_ENTITY implements Serializable {}
+}

@@ -1,10 +1,13 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
+ * Programm: software_architecture
+ * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
+ * Fachhochschule Joanneum
+ * Datum: 16.12.2016
  */
 package LoginPackage;
 
+import project_classes.PERSON;
 import java.sql.Statement;
 import java.util.Iterator;
 import java.util.List;
@@ -53,6 +56,7 @@ public class PersonToCheckDAO {
                 Object elem = resultList.iterator().next();
                 PERSON_ENTITY person = (PERSON_ENTITY) elem;
                 personToCheck.setISVALID(true);
+                personToCheck.setPERSON_PK(person.getPERSON_PK());
                 personToCheck.setFIRSTNAME(person.getFIRSTNAME());
                 personToCheck.setLASTNAME(person.getLASTNAME());
                 personToCheck.setPERSON_TYPE(person_entity);

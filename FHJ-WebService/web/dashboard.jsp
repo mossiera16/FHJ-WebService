@@ -1,11 +1,18 @@
 <%-- 
-    Document   : dashboard
-    Created on : 27.11.2016, 17:42:19
-    Author     : Notebook
+/*
+ * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
+ * Programm: software_architecture
+ * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
+ * Fachhochschule Joanneum
+ * Datum: 16.12.2016
+ */
 --%>
 <jsp:useBean id="dashboardMessage" class="project_classes.MessageHandler"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="LoginPackage.PERSON"%>
+<%@page import="project_classes.STUDENT"%>
+<%@page import="project_classes.LECTURER"%>
+
+<%@page import="project_classes.PERSON"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -34,6 +41,7 @@
     </head>
     <%
         session.setAttribute("siteName", "dashboard");
+
         PERSON person = (PERSON) session.getAttribute("currentSessionUser");
         if (person == null) {
             session.setAttribute("userState", 2);
@@ -41,6 +49,19 @@
             response.sendRedirect(redirectURL);
             return;
         }
+        else if (person.getPERSON_TYPE() == "ADMINISTRATOR_ENTITY"){
+            String redirectURL = "admindashboard.jsp";
+            response.sendRedirect(redirectURL);
+            return;
+        }
+//        else {
+//            if(person.getPERSON_TYPE()== "STUDENT_ENTITY"){
+//                student = (STUDENT) person.getPERSON(person.getPERSON_TYPE());
+//            }
+//            else {
+//                lecturer = (LECTURER) person.getPERSON(person.getPERSON_TYPE());
+//            }
+//        }
     %>
     <body>
         <%@include  file="navbar.jsp" %>
