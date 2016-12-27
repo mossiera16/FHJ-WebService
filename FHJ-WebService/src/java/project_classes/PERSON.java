@@ -14,6 +14,7 @@ import java.util.List;
 import static javafx.scene.input.KeyCode.T;
 import javax.persistence.Basic;
 import project_entities.COURSE_ENTITY;
+import project_entities.GRADE_ENTITY;
 import project_entities.STUDENT_ENTITY;
 
 /**
@@ -167,23 +168,32 @@ public class PERSON<T> {
         }
     }
 
-    public List<COURSE> getCourseDetails() {
+    public List<COURSE> getCourseDetails(Integer COURSE_PK, boolean isResultCall) {
         List<COURSE_ENTITY> dbResult = new ArrayList();
+        String sqlStatement = "";
         switch (this.getPERSON_TYPE()) {
             case "STUDENT_ENTITY": {
-                dbResult = getCourseDetailsForPerson("SELECT course FROM STUDENT_ENTITY student, COURSE_ENTITY course, GRADE_ENTITY grade\n"
+                sqlStatement = "SELECT course FROM STUDENT_ENTITY student, COURSE_ENTITY course, GRADE_ENTITY grade\n"
                         + "WHERE student.PERSON_PK = grade.STUDENT_PK\n"
                         + "AND grade.COURSE_PK = course.COURSE_PK\n"
-                        + "AND student.PERSON_PK = :PERSON_PK;");
+                        + "AND student.PERSON_PK = :PERSON_PK";
                 break;
             }
             case "LECTURER_ENTITY": {
-                dbResult = getCourseDetailsForPerson("SELECT course FROM LECTURER_ENTITY lecturer, COURSE_ENTITY course\n"
+                sqlStatement = "SELECT course FROM LECTURER_ENTITY lecturer, COURSE_ENTITY course\n"
                         + "WHERE course.LECTURER_PK = lecturer.PERSON_PK AND\n"
-                        + "lecturer.PERSON_PK = :PERSON_PK;");
+                        + "lecturer.PERSON_PK = :PERSON_PK";
+
                 break;
             }
         }
+
+        if (COURSE_PK != null) {
+            sqlStatement += " AND course.COURSE_PK = :COURSE_PK";
+        }else if(!isResultCall){
+            sqlStatement += " GROUP BY course.COURSE_PK, course.COURSE_NAME, course.LECTURER_PK, course.SEMESTER, course.STUDY";
+        }
+        dbResult = getCourseDetailsForPerson(sqlStatement, COURSE_PK);
 
         List<COURSE> result = new ArrayList();
         COURSE courseToConvert;
@@ -195,14 +205,63 @@ public class PERSON<T> {
         return result;
     }
 
-    private List<COURSE_ENTITY> getCourseDetailsForPerson(String sqlStatement) {
+    private List<COURSE_ENTITY> getCourseDetailsForPerson(String sqlStatement, Integer COURSE_PK) {
         DBAccess dbAccess = new DBAccess();
         List<COURSE_ENTITY> dbResult = new ArrayList();
         String[] parameterStrings = new String[]{"PERSON_PK"};
         Long[] parameterValues = new Long[]{this.getPERSON_PK()};
 
+        if (COURSE_PK != null) {
+            parameterStrings = new String[]{"PERSON_PK", "COURSE_PK"};
+            parameterValues = new Long[]{this.getPERSON_PK(), Long.parseLong(COURSE_PK.toString())};
+        }
+
         dbResult = dbAccess.DBgetSQLResultList(sqlStatement, parameterStrings, parameterValues);
         dbAccess.DBCloseAccess();
         return dbResult;
+    }
+
+    public List<GRADE> getGradeDetailsForPerson(Integer COURSE_PK) {
+        List<GRADE_ENTITY> dbResult = new ArrayList<GRADE_ENTITY>();
+        String sqlStatement = "";
+        switch (this.getPERSON_TYPE()) {
+            case "STUDENT_ENTITY": {
+                sqlStatement = "SELECT grade FROM COURSE_ENTITY course, GRADE_ENTITY grade, STUDENT_ENTITY student\n"
+                        + "WHERE course.COURSE_PK = grade.COURSE_PK\n"
+                        + "AND student.PERSON_PK = grade.STUDENT_PK\n"
+                        + "AND student.PERSON_PK = :PERSON_PK \n";
+                break;
+            }
+            case "LECTURER_ENTITY": {
+                sqlStatement = "SELECT grade FROM LECTURER_ENTITY AS lecturer, COURSE_ENTITY AS course, GRADE_ENTITY AS grade\n"
+                        + "WHERE lecturer.PERSON_PK = course.LECTURER_PK\n"
+                        + "AND grade.COURSE_PK = course.COURSE_PK\n"
+                        + "AND lecturer.PERSON_PK = :PERSON_PK ";
+                break;
+            }
+        }
+
+        String[] parameterStrings = new String[]{"PERSON_PK"};
+        Long[] parameterValues = new Long[]{this.getPERSON_PK()};
+
+        if (COURSE_PK != null) {
+            sqlStatement += " AND course.COURSE_PK = :COURSE_PK";
+            parameterStrings = new String[]{"PERSON_PK", "COURSE_PK"};
+            parameterValues = new Long[]{this.getPERSON_PK(), Long.parseLong(COURSE_PK.toString())};
+        }
+
+        DBAccess dbAccess = new DBAccess();
+
+        dbResult = dbAccess.DBgetSQLResultList(sqlStatement, parameterStrings, parameterValues);
+        dbAccess.DBCloseAccess();
+
+        List<GRADE> result = new ArrayList();
+        GRADE gradeToConvert;
+        for (int i = 0; i < dbResult.size(); i++) {
+            gradeToConvert = new GRADE();
+            result.add(i, gradeToConvert.convertToGRADE(dbResult.get(i)));
+        }
+
+        return result;
     }
 }

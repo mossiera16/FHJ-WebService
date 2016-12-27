@@ -17,8 +17,8 @@ import javax.persistence.OneToMany;
  * @author Notebook
  */
 @MappedSuperclass
-public abstract class PERSON_ENTITY implements Serializable {
-
+public abstract class PERSON_ENTITY implements Serializable  {    
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long PERSON_PK;
@@ -140,5 +140,7 @@ public abstract class PERSON_ENTITY implements Serializable {
     public void setADDRESS_ENTITies(List<ADDRESS_ENTITY> ADDRESS_ENTITies) {
         this.ADDRESS_ENTITies = ADDRESS_ENTITies;
     }
+    
+    
 
 }

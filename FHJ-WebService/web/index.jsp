@@ -31,6 +31,7 @@
     </head>
     <%
         DBAccess dbAccess = new DBAccess();
+        //dbAccess.DBInsertSampleData();
         if (session.getAttribute("userState") == null) {
             session.setAttribute("userState", 0);
         }

@@ -16,6 +16,17 @@ import javax.persistence.Id;
 @Entity
 public class GRADE_ENTITY implements Serializable {
 
+    public GRADE_ENTITY () {
+    }
+    
+    public GRADE_ENTITY (String GRADE_PK, int COURSE_PK, int GRADE, int SEMESTER, int STUDENT_PK) {
+        this.setGRADE_PK(Long.parseLong(GRADE_PK));
+        this.setCOURSE_PK(COURSE_PK);
+        this.setGRADE(GRADE);
+        this.setSEMESTER(SEMESTER);
+        this.setSTUDENT_PK(STUDENT_PK);
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long GRADE_PK;

@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import static javafx.scene.input.KeyCode.T;
 import javax.persistence.Basic;
+import javax.persistence.OneToMany;
 import project_entities.COURSE_ENTITY;
+import project_entities.GRADE_ENTITY;
 
 
 /**
@@ -30,6 +32,9 @@ public class COURSE<T> {
     private int SEMESTER;
     
     private String STUDY;
+    
+  @OneToMany(targetEntity = GRADE_ENTITY.class)
+    private List<GRADE_ENTITY> GRADE_ENTITies;
 
     public String getCOURSE_NAME() {
         return this.COURSE_NAME;
@@ -70,8 +75,16 @@ public class COURSE<T> {
     public void setSTUDY(String STUDY) {
         this.STUDY = STUDY;
     }
+
+    public List<GRADE_ENTITY> getGRADE_ENTITies() {
+        return GRADE_ENTITies;
+    }
+
+    public void setGRADE_ENTITies(List<GRADE_ENTITY> GRADE_ENTITies) {
+        this.GRADE_ENTITies = GRADE_ENTITies;
+    }
     
-    
+  
     
     public COURSE_ENTITY convertToCOURSE_ENTITY(){
         COURSE_ENTITY courseToConvert = new COURSE_ENTITY();
@@ -80,6 +93,7 @@ public class COURSE<T> {
         courseToConvert.setCOURSE_PK(this.getCOURSE_PK());
         courseToConvert.setSEMESTER(this.getSEMESTER());
         courseToConvert.setSTUDY(this.getSTUDY());
+        courseToConvert.setGRADE_ENTITies(this.getGRADE_ENTITies());
         return courseToConvert;
     }
     
@@ -89,19 +103,18 @@ public class COURSE<T> {
         this.setCOURSE_PK(courseToConvert.getCOURSE_PK());
         this.setSEMESTER(courseToConvert.getSEMESTER());
         this.setSTUDY(courseToConvert.getSTUDY());
-
+        this.setGRADE_ENTITies(courseToConvert.getGRADE_ENTITies());
         return this;
     }
     
-    public List<COURSE> getCourses(String[] parameterStrings, T[] parameterValues, String sqlStatement){
-        DBAccess dbAccess = new DBAccess();
-        List<COURSE> result = new ArrayList();
-        dbAccess.DBgetSQLResultList(sqlStatement, parameterStrings, parameterValues);
-        
-        
-        
-        return result;
+     public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof PERSON)) {
+            return false;
+        }
+        COURSE other = (COURSE) obj;
+        return this.getCOURSE_PK().equals(other.getCOURSE_PK());
     }
-    
-    
 }

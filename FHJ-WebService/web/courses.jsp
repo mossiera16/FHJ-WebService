@@ -41,34 +41,20 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <script type="text/javascript">
-        $(document).ready(function() {
-    $('#courseTable').DataTable( {
-        "order": [[ 3, "desc" ]],
-        "language": {
-            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
-        }
-    } );
-} );
+            $(document).ready(function () {
+                $('#courseTable').DataTable({
+                    "order": [[3, "desc"]],
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
+                    }
+                });
+            });
 
             jQuery(document).ready(function ($) {
                 $(".clickable-row").click(function () {
                     window.document.location = $(this).data("href");
                 });
             });
-//            jQuery(document).ready(function () {
-//                $('#courseTable').DataTable({
-//                    columnDefs: [{
-//                            targets: [0],
-//                            orderData: [0, 1]
-//                        }, {
-//                            targets: [1],
-//                            orderData: [1, 0]
-//                        }, {
-//                            targets: [4],
-//                            orderData: [4, 0]
-//                        }]
-//                });
-//            });
         </script>
 
     </head>
@@ -92,8 +78,8 @@
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                     <div>
                         <h1 class="page-header">Kurse</h1>
-                        <%
-                            List<COURSE> result = person.getCourseDetails();
+                        <%                            
+                            List<COURSE> result = person.getCourseDetails(null, false);
                         %>
                         <table id="courseTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
                             <thead>
@@ -119,5 +105,9 @@
                 </div>
             </div>
         </div>
+                               <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="bootstrap/dist/js/bootstrap.min.js"></script>
     </body>
 </html>

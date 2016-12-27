@@ -4,6 +4,7 @@
 package project_entities;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -13,8 +14,28 @@ import javax.persistence.OneToMany;
  * @author Notebook
  */
 @Entity
-public class LECTURER_ENTITY extends PERSON_ENTITY implements Serializable {
+public class LECTURER_ENTITY extends PERSON_ENTITY implements Serializable, PERSON {
 
+    public LECTURER_ENTITY(){}
+
+    public LECTURER_ENTITY(String PERSON_PK, String ADMINSEX, Date BIRTHDATE, int EMPLOYEE_NR, String FIELD_OF_STUDY_1, String FIELD_OF_STUDY_2, String FIRST_NAME, boolean ISVALID, String LAST_NAME, String PASSWORD, int SVNR, String TITLE, String USERNAME, List<COURSE_ENTITY> COURSE_ENTITies){
+        this.setPERSON_PK(Long.parseLong(PERSON_PK));
+        this.setADMINSEX(ADMINSEX);
+        this.setBIRTHDATE(BIRTHDATE);
+        this.setEMPLOEE_NR(EMPLOYEE_NR);
+        this.setFIELD_OF_STUDY_1(FIELD_OF_STUDY_1);
+        this.setFIELD_OF_STUDY_2(FIELD_OF_STUDY_2);
+        this.setFIRSTNAME(FIRST_NAME);
+        this.setISVALID(ISVALID);
+        this.setLASTNAME(LAST_NAME);
+        this.setPASSWORD(PASSWORD);
+        this.setSSN(SVNR);
+        this.setTITLE(TITLE);
+        this.setUSERNAME(USERNAME);
+        this.setCOURSE_ENTITies(COURSE_ENTITies);
+    }
+    
+    
     @Basic(optional = false)
     private int EMPLOEE_NR;
 
@@ -58,5 +79,17 @@ public class LECTURER_ENTITY extends PERSON_ENTITY implements Serializable {
     public void setCOURSE_ENTITies(List<COURSE_ENTITY> COURSE_ENTITies) {
         this.COURSE_ENTITies = COURSE_ENTITies;
     }
-
+    
+      @Override
+    public PERSON_ENTITY getClone(){
+        LECTURER_ENTITY lecturer = null;
+        try {
+            lecturer = (LECTURER_ENTITY) super.clone();
+            
+        }
+        catch(CloneNotSupportedException ex){
+            System.out.println(ex.getMessage());
+        }
+        return lecturer;
+    }
 }

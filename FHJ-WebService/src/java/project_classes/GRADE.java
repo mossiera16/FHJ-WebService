@@ -8,12 +8,21 @@
 package project_classes;
 
 import javax.persistence.Basic;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import project_entities.COURSE_ENTITY;
+import project_entities.GRADE_ENTITY;
 
 /**
  *
  * @author standard
  */
 public class GRADE {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long GRADE_PK;
+    
     @Basic
     private int STUDENT_PK;
 
@@ -58,5 +67,35 @@ public class GRADE {
 
     public void setGRADE(int GRADE) {
         this.GRADE = GRADE;
+    }
+
+    public Long getGRADE_PK() {
+        return GRADE_PK;
+    }
+
+    public void setGRADE_PK(Long GRADE_PK) {
+        this.GRADE_PK = GRADE_PK;
+    }
+    
+    
+    
+    
+    public GRADE_ENTITY convertToGRADE_ENTITY(){
+        GRADE_ENTITY gradeToConvert = new GRADE_ENTITY();
+        gradeToConvert.setCOURSE_PK(this.getCOURSE_PK());
+        gradeToConvert.setGRADE(this.getGRADE());
+        gradeToConvert.setGRADE_PK(this.getGRADE_PK());
+        gradeToConvert.setSTUDENT_PK(this.getSTUDENT_PK());
+        gradeToConvert.setSEMESTER(this.getSEMESTER());
+        return gradeToConvert;
+    }
+    
+    public GRADE convertToGRADE(GRADE_ENTITY gradeToConvert){
+        this.setCOURSE_PK(gradeToConvert.getCOURSE_PK());
+        this.setGRADE(gradeToConvert.getGRADE());
+        this.setGRADE_PK(gradeToConvert.getGRADE_PK());
+        this.setSEMESTER(gradeToConvert.getSEMESTER());
+        this.setSTUDENT_PK(gradeToConvert.getSTUDENT_PK());
+        return this;
     }
 }
