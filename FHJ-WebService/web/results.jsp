@@ -12,8 +12,10 @@
 <%@page import="project_classes.PERSON"%>
 <%@page import="project_classes.GRADE"%>
 <%@page import="project_classes.COURSE"%>
+<%@page import="project_classes.STUDENT"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Enumeration"%>
+<%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -35,20 +37,27 @@
 
         <!-- Custom styles for this template -->
         <link href="css/dashboard.css" rel="stylesheet">
-
+        <link href="css/results.css" rel="stylesheet">
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#resultTable').DataTable({
+                var table = $('#resultTable').DataTable({
                     "order": [[3, "desc"]],
                     "language": {
                         "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
                     }
+                });
+                $('#commit').click(function () {
+                    var data = table.$('input, select').serialize();
+                    alert(
+                            "The following data would have been submitted to the server: \n\n" +
+                            data.substr(0, 120) + '...'
+                            );
+                    return false;
                 });
             });
 
@@ -57,13 +66,13 @@
                     window.document.location = $(this).data("href");
                 });
             });
+
         </script>
     </head>
 
     <%
-        List<GRADE> gradeResult = null;
         List<COURSE> courseDetails = null;
-
+        ResultSet rs = null;
         Integer courseNumber = null;
         session.setAttribute("siteName", "results");
         PERSON person = (PERSON) session.getAttribute("currentSessionUser");
@@ -76,13 +85,12 @@
             if (request.getParameter("courseNumber") != null) {
                 courseNumber = (Integer) Integer.parseInt(request.getParameter("courseNumber"));
             }
+            rs = person.getGradeDetailsForPerson(courseNumber);
             courseDetails = person.getCourseDetails(courseNumber, true);
-            gradeResult = person.getGradeDetailsForPerson(courseNumber);
         }
     %>
     <body>
         <%@include  file="navbar.jsp"  %>
-
         <div class="container-fluid">
             <div class="row">
                 <%@include  file="sidebar.jsp" %>
@@ -91,53 +99,56 @@
                         <h1 class="page-header">Ergebnisse
                             <%= resultMessages.getResultCaption(courseNumber, courseDetails)%>
                         </h1>
-                        <div style="margin-top: 1em; margin-bottom: 1em;">
-                            <a href="results.jsp" style="text-decoration: none;">
-                                <button type="button" class="btn btn-default btn-sm">
-                                    Ergebnisse aller Kurse anzeigen
-                                </button>
+                        <div class="btn-group" style="margin-top: 1em; margin-bottom: 1em;">
+                            <a href="results.jsp" style="text-decoration: none;" role="button" class="btn btn-default btn-sm <%if (courseNumber == null) {
+                                    out.print(" disabled");
+                                }%>">
+                                <span class='glyphicon glyphicon-th' aria-hidden='true'></span>  Ergebnisse aller Kurse anzeigen
                             </a>
-                            <a href="courses.jsp" style="text-decoration: none;">
-                                <button type="button" class="btn btn-default btn-sm">
-                                    zurück zu den Kursen
-                                </button>
+                            <a href="courses.jsp" style="text-decoration: none;" role="button" class="btn btn-default btn-sm">
+                                <span class='glyphicon glyphicon-arrow-up' aria-hidden='true'></span> zurück zu den Kursen
                             </a>
-                        </div>
+                            <% if(person.getPERSON_TYPE().equals("LECTURER_ENTITY")){
+                                out.print("<a href='results.jsp' style='text-decoration: none;' role='button' id='commit' class='btn btn-default btn-sm'>"+
+                                            "<span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Eingaben bestätigen"+
+                                            "</a>"+
+                                            "<a href='results.jsp' style='text-decoration: none;' role='button' class='btn btn-default btn-sm'>"+
+                                            "<span class='glyphicon glyphicon-plus-sign' aria-hidden='true'></span> Student hinzufügen"+
+                                            "</a>");
+                            }%>
+                            
+                    </div>
+                    <table id="resultTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
+                        <thead>
+                        <th>
+                            #
+                        </th>
+                        <th>
+                            Kursname
+                        </th>
+                        <th>
+                            Note
+                        </th>
+                        <th>
+                            Semester
+                        </th>
                         <%
-                        %>
-                        <table id="resultTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
-                            <thead>
-                            <th>
-                                #
-                            </th>
-                            <th>
-                                Kursname
-                            </th>
-                            <th>
-                                Note
-                            </th>
-                            <th>
-                                Semester
-                            </th>
-                            <%
-                                if (person.getPERSON_TYPE() == "LECTURER_ENTITY") {
-                                    out.print("<th>Vorname</th><th>Nachname</th><th>Studentennummer</th>");
-                                }
+                            if (person.getPERSON_TYPE() == "LECTURER_ENTITY") {
+                                out.print("<th>Vorname</th><th>Nachname</th><th>Studentennummer</th>");
+                            }
                             %>
                             </thead>
                             <tbody>
-                                <%= resultMessages.getGradeDetails(gradeResult, courseDetails, person.getPERSON_TYPE())%>
+                                <%= resultMessages.getGradeDetails(rs, person.getPERSON_TYPE())%>
                             </tbody>
-                        </table>
-
-
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Bootstrap core JavaScript
-================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+            <!-- Bootstrap core JavaScript
+    ================================================== -->
+            <!-- Placed at the end of the document so the pages load faster -->
+            <script src="bootstrap/dist/js/bootstrap.min.js"></script>
     </body>
 </html>

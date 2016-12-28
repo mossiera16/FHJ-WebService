@@ -11,6 +11,10 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+                    <file>${file.reference.derbyclient.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
                     <file>${file.reference.derbyrun.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>

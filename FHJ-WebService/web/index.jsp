@@ -13,6 +13,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page session="true" %>
 <%@ page import="java.io.*,java.util.*" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -30,7 +31,7 @@
         <title>FH-Joanneum Kursverwaltungssystem</title>
     </head>
     <%
-        DBAccess dbAccess = new DBAccess();
+        DBAccess dbAccess = new DBAccess(true);
         //dbAccess.DBInsertSampleData();
         if (session.getAttribute("userState") == null) {
             session.setAttribute("userState", 0);

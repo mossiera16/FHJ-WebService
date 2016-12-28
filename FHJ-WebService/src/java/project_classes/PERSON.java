@@ -8,10 +8,9 @@
 package project_classes;
 
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import static javafx.scene.input.KeyCode.T;
 import javax.persistence.Basic;
 import project_entities.COURSE_ENTITY;
 import project_entities.GRADE_ENTITY;
@@ -143,33 +142,8 @@ public class PERSON<T> {
         this.PERSON_PK = PERSON_PK;
     }
 
-    public T getPERSON(String personType) {
-        DBAccess dbAccess = new DBAccess();
-        T result;
-        switch (personType) {
-            case "STUDENT_ENTITY": {
-                result = (T) dbAccess.DBgetSQLResultList("SELECT * FROM STUDENT_ENTITY WHERE PERSON_PK = :PERSON_PK", new String[]{"PERSON_PK"}, new Long[]{this.PERSON_PK});
-                dbAccess.DBCloseAccess();
-                return result;
-            }
-            case "LECTURER_ENTITY": {
-                result = (T) dbAccess.DBgetSQLResultList("SELECT * FROM LECTURER_ENTITY WHERE PERSON_PK = :PERSON_PK", new String[]{"PERSON_PK"}, new Long[]{this.PERSON_PK});
-                dbAccess.DBCloseAccess();
-                return result;
-
-            }
-            case "ADMINISTRATOR_ENTITY": {
-                result = (T) dbAccess.DBgetSQLResultList("SELECT * FROM ADMINISTRATOR_ENTITY WHERE PERSON_PK = :PERSON_PK", new String[]{"PERSON_PK"}, new Long[]{this.PERSON_PK});
-                dbAccess.DBCloseAccess();
-                return result;
-            }
-            default:
-                return null;
-        }
-    }
-
     public List<COURSE> getCourseDetails(Integer COURSE_PK, boolean isResultCall) {
-        List<COURSE_ENTITY> dbResult = new ArrayList();
+        List<COURSE_ENTITY> dbResult;
         String sqlStatement = "";
         switch (this.getPERSON_TYPE()) {
             case "STUDENT_ENTITY": {
@@ -190,7 +164,7 @@ public class PERSON<T> {
 
         if (COURSE_PK != null) {
             sqlStatement += " AND course.COURSE_PK = :COURSE_PK";
-        }else if(!isResultCall){
+        } else if (!isResultCall) {
             sqlStatement += " GROUP BY course.COURSE_PK, course.COURSE_NAME, course.LECTURER_PK, course.SEMESTER, course.STUDY";
         }
         dbResult = getCourseDetailsForPerson(sqlStatement, COURSE_PK);
@@ -206,8 +180,8 @@ public class PERSON<T> {
     }
 
     private List<COURSE_ENTITY> getCourseDetailsForPerson(String sqlStatement, Integer COURSE_PK) {
-        DBAccess dbAccess = new DBAccess();
-        List<COURSE_ENTITY> dbResult = new ArrayList();
+        DBAccess dbAccess = new DBAccess(true);
+        List<COURSE_ENTITY> dbResult;
         String[] parameterStrings = new String[]{"PERSON_PK"};
         Long[] parameterValues = new Long[]{this.getPERSON_PK()};
 
@@ -221,47 +195,44 @@ public class PERSON<T> {
         return dbResult;
     }
 
-    public List<GRADE> getGradeDetailsForPerson(Integer COURSE_PK) {
-        List<GRADE_ENTITY> dbResult = new ArrayList<GRADE_ENTITY>();
-        String sqlStatement = "";
-        switch (this.getPERSON_TYPE()) {
-            case "STUDENT_ENTITY": {
-                sqlStatement = "SELECT grade FROM COURSE_ENTITY course, GRADE_ENTITY grade, STUDENT_ENTITY student\n"
-                        + "WHERE course.COURSE_PK = grade.COURSE_PK\n"
-                        + "AND student.PERSON_PK = grade.STUDENT_PK\n"
-                        + "AND student.PERSON_PK = :PERSON_PK \n";
-                break;
-            }
-            case "LECTURER_ENTITY": {
-                sqlStatement = "SELECT grade FROM LECTURER_ENTITY AS lecturer, COURSE_ENTITY AS course, GRADE_ENTITY AS grade\n"
-                        + "WHERE lecturer.PERSON_PK = course.LECTURER_PK\n"
-                        + "AND grade.COURSE_PK = course.COURSE_PK\n"
-                        + "AND lecturer.PERSON_PK = :PERSON_PK ";
-                break;
-            }
-        }
 
-        String[] parameterStrings = new String[]{"PERSON_PK"};
+    public ResultSet getGradeDetailsForPerson(Integer COURSE_PK){
+        ResultSet rs = null;
+        String sqlStatement = "";
+        if(this.getPERSON_TYPE().equals("LECTURER_ENTITY")){
+            sqlStatement += getGradeDetailsForLecturer();
+        }else{
+            sqlStatement += getGradeDetailsForStudent();
+        }
         Long[] parameterValues = new Long[]{this.getPERSON_PK()};
 
         if (COURSE_PK != null) {
-            sqlStatement += " AND course.COURSE_PK = :COURSE_PK";
-            parameterStrings = new String[]{"PERSON_PK", "COURSE_PK"};
+            sqlStatement += " AND course.COURSE_PK = ? ";
             parameterValues = new Long[]{this.getPERSON_PK(), Long.parseLong(COURSE_PK.toString())};
         }
 
-        DBAccess dbAccess = new DBAccess();
+        DBAccess dbAccess = new DBAccess(false);
 
-        dbResult = dbAccess.DBgetSQLResultList(sqlStatement, parameterStrings, parameterValues);
+        rs = dbAccess.DBgetSQLResultSet(sqlStatement, parameterValues);
         dbAccess.DBCloseAccess();
 
-        List<GRADE> result = new ArrayList();
-        GRADE gradeToConvert;
-        for (int i = 0; i < dbResult.size(); i++) {
-            gradeToConvert = new GRADE();
-            result.add(i, gradeToConvert.convertToGRADE(dbResult.get(i)));
-        }
-
-        return result;
+        return rs;
     }
+    
+    
+    public String getGradeDetailsForLecturer() {
+        return "SELECT course.COURSE_PK, course.COURSE_NAME, grade.GRADE, grade.SEMESTER, student.FIRSTNAME, student.LASTNAME, student.STUDENT_NR FROM LECTURER_ENTITY AS lecturer, COURSE_ENTITY AS course, GRADE_ENTITY AS grade, STUDENT_ENTITY AS student\n"
+                + "WHERE lecturer.PERSON_PK = course.LECTURER_PK\n"
+                + "AND grade.COURSE_PK = course.COURSE_PK\n"
+                + "AND grade.STUDENT_PK = student.PERSON_PK\n"
+                + "AND lecturer.PERSON_PK = ?";  
+    }
+    
+    public String getGradeDetailsForStudent() {
+        return "SELECT course.COURSE_NAME, grade.GRADE, grade.SEMESTER FROM STUDENT_ENTITY AS student, COURSE_ENTITY AS course, GRADE_ENTITY AS grade\n" +
+                "WHERE student.PERSON_PK = grade.STUDENT_PK\n" +
+                "AND grade.COURSE_PK = course.COURSE_PK\n" +
+                "AND student.PERSON_PK = ?";  
+    }
+
 }

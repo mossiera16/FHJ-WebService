@@ -7,6 +7,7 @@
  */
 package project_classes;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -86,7 +87,7 @@ public class MessageHandler {
             String result = "";
 
             for (int i = 0; i < courses.size(); i++) {
-                result += "<tr class='clickable-row' data-href='results.jsp?courseNumber=" + courses.get(i).getCOURSE_PK().toString() + "'>";
+                result += "<tr class='clickable-row' data-href='results.jsp?courseNumber=" + courses.get(i).getCOURSE_PK().toString() + "' data-toggle=\"tooltip\" title='Ergebnisse von "+ courses.get(i).getCOURSE_NAME() + "'>";
                 result += "<td> " + (i + 1) + "</td>";
                 result += "<td> " + courses.get(i).getCOURSE_NAME() + "</td>";
                 result += "<td> " + courses.get(i).getSEMESTER() + "</td>";
@@ -98,13 +99,13 @@ public class MessageHandler {
         return null;
     }
 
-    public String getGradeDetails(List<GRADE> grades, List<COURSE> courses, String personType) {
-        if (grades != null) {
+    public String getGradeDetails(ResultSet rs, String personType) {
+        if (rs != null) {
             String result = "";
-            if (personType == "LECTURER_ENTITY") {
-                result = getGradeDetailsForLecturer(grades, courses);
+            if (personType.equals("LECTURER_ENTITY")) {
+                result = getGradeDetailsForLecturer(rs);
             } else {
-                result = getGradeDetailsForStudent(grades, courses);
+                result = getGradeDetailsForStudent(rs);
             }
 
             return result;
@@ -112,46 +113,73 @@ public class MessageHandler {
         return null;
     }
 
-    private String getGradeDetailsForLecturer(List<GRADE> grades, List<COURSE> courses) {
-        String result = "";
-        for (int j = 0; j < courses.size(); j++) {
-            List<GRADE_ENTITY> courseGrades = courses.get(j).getGRADE_ENTITies();
-            for (int i = 0; i < courseGrades.size(); i++) {
-
-                result += "<tr class='clickable-row' data-href=''>";
-
-                result += "<td> " + (i + j + 1) + "</td>";
-                result += "<td> " + courses.get(j).getCOURSE_NAME() + "</td>";
-                if (courseGrades.get(i).getGRADE() == 0) {
-                    result += "<td>noch keine Note</td>";
-                } else {
-                    result += "<td> " + courseGrades.get(i).getGRADE() + "</td>";
+    private String getGradeDetailsForLecturer(ResultSet rs) {
+        try {
+            String result = "";
+            String grade0 = "<option value=\"0\">noch keine Note</option>";
+            String grade1 = "<option value=\"1\">1</option>";
+            String grade2 = "<option value=\"2\">2</option>";
+            String grade3 = "<option value=\"3\">3</option>";
+            String grade4 = "<option value=\"4\">4</option>";
+            String grade5 = "<option value=\"5\">5</option>";
+            int count = 1;
+            while (rs.next()) {
+                result += "<tr>";
+                result += "<td> " + count + "</td>";
+                result += "<td> " + rs.getString("COURSE_NAME") + "</td>";
+                result += "<td><select size=\"1\" id=\"row-"+count+"-grade\" name=\"row-"+count+"-grade\">";
+                if (rs.getInt("GRADE")==0) {
+                    result += "<option value=\"0\" selected=\"selected\">noch keine Note</option>" + grade1 + grade2 + grade3 + grade4 + grade5;
+                } else if(rs.getInt("GRADE")==1) {
+                    result += grade0 + "<option value=\"1\" selected=\"selected\">1</option>" + grade2 + grade3 + grade4 + grade5;
+                }else if(rs.getInt("GRADE")==2) {
+                    result += grade0 + grade1 + "<option value=\"2\" selected=\"selected\">2</option>"  + grade3 + grade4 + grade5;
+                }else if(rs.getInt("GRADE")==3) {
+                    result += grade0 + grade1 + grade2 + "<option value=\"3\" selected=\"selected\">3</option>" + grade4 + grade5;
+                }else if(rs.getInt("GRADE")==4) {
+                    result += grade0 + grade1 + grade2 + grade3 +  "<option value=\"4\" selected=\"selected\">4</option>" + grade5;
+                }else if(rs.getInt("GRADE")==5) {
+                    result += grade0 + grade1 + grade2 + grade3 +  grade4 + "<option value=\"5\" selected=\"selected\">5</option>";
                 }
-                result += "<td> " + courseGrades.get(i).getSEMESTER() + "</td>";
-                result += "<td> " + "Andreas" + "</td>";
-                result += "<td> " + "Mossier" + "</td>";
-                result += "<td> " + "1310288011" + "</td>";
+                result += "<td> " + rs.getInt("SEMESTER") + "</td>";
+                result += "<td> " + rs.getString("FIRSTNAME") + "</td>";
+                result += "<td> " + rs.getString("LASTNAME") + "</td>";
+                result += "<td> " + rs.getInt("STUDENT_NR") + "</td>";
                 result += "</tr>";
+                count++;
             }
+
+            return result;
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return null;
         }
-        return result;
     }
-
-    private String getGradeDetailsForStudent(List<GRADE> grades, List<COURSE> courses) {
-        String result = "";
-
-        for (int i = 0; i < grades.size(); i++) {
-            result += "<tr>";
-            result += "<td> " + (i + 1) + "</td>";
-            result += "<td> " + courses.get(i).getCOURSE_NAME() + "</td>";
-            if (grades.get(i).getGRADE() == 0) {
+    
+    private String getGradeDetailsForStudent(ResultSet rs) {
+        try {
+            String result = "";
+            int count = 1;
+            while (rs.next()) {
+                result += "<tr>";
+                result += "<td> " + count + "</td>";
+                result += "<td> " + rs.getString("COURSE_NAME") + "</td>";
+                if (rs.getInt("GRADE") == 0) {
                     result += "<td>noch keine Note</td>";
                 } else {
-                    result += "<td> " + grades.get(i).getGRADE() + "</td>";
+                    result += "<td> " + rs.getInt("GRADE") + "</td>";
                 }
-            result += "<td> " + grades.get(i).getSEMESTER() + "</td>";
-            result += "</tr>";
+                result += "<td> " + rs.getInt("SEMESTER") + "</td>";
+                result += "</tr>";
+                count++;
+            }
+
+            return result;
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return null;
         }
-        return result;
     }
+
+    
 }

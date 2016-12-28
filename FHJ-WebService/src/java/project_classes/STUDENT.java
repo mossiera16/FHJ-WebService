@@ -21,6 +21,8 @@ import project_entities.STUDENT_ENTITY;
  */
 public class STUDENT<T> extends PERSON {
     
+    public STUDENT(){}
+    
     public STUDENT(String PERSON_PK, String ADMINSEX, Date BIRTHDATE, String FIRST_NAME, boolean ISVALID, String LAST_NAME, String PASSWORD, String SEMESTER, int SVNR, int STUDENT_NR, String TITLE, String TYPE_OF_STUDY, String USERNAME){
         this.setPERSON_PK(Long.parseLong(PERSON_PK));
         this.setADMINSEX(ADMINSEX);
@@ -101,7 +103,7 @@ public class STUDENT<T> extends PERSON {
         return studentToConvert;
     }
 
-    public void convertToStudent(STUDENT_ENTITY studentToConvert) {
+    public STUDENT convertToStudent(STUDENT_ENTITY studentToConvert) {
         this.setPERSON_PK(studentToConvert.getPERSON_PK());
         this.setADMINSEX(studentToConvert.getADMINSEX());
         this.setBIRTHDATE(studentToConvert.getBIRTHDATE());
@@ -116,5 +118,6 @@ public class STUDENT<T> extends PERSON {
         this.setTYPE_OF_STUDY(studentToConvert.getTYPE_OF_STUDY());
         this.setUSERNAME(studentToConvert.getUSERNAME());
         this.setGRADE_ENTITies(studentToConvert.getGRADE_ENTITies());
+        return this;
     }
 }

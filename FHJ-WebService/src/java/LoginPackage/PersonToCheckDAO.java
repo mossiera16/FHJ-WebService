@@ -45,7 +45,7 @@ public class PersonToCheckDAO {
             String[]parameterStrings = new String[] {"username", "password"};
             String searchQuery = "SELECT c FROM " + person_entity + " c WHERE c.USERNAME = :username AND c.PASSWORD = :password";
             
-            DBAccess dbAccess = new DBAccess();
+            DBAccess dbAccess = new DBAccess(true);
 
             resultList = dbAccess.DBgetSQLResultList(searchQuery, parameterStrings, parameterValues);
             boolean isAvailable = resultList.iterator().hasNext();
