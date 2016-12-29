@@ -26,8 +26,7 @@
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <link rel="SHORTCUT ICON" href="images/favicon.png" type="image/png">
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="bootstrap/js/jquery.js" type="text/javascript"></script>
         <title>FH-Joanneum Kursverwaltungssystem</title>
     </head>
     <%
@@ -37,7 +36,7 @@
             session.setAttribute("userState", 0);
         }
         //dbAccess.DBCloseAccess();
-    %>
+%>
 
     <body>
         <div class="container">
@@ -63,5 +62,8 @@
                 </div>
             </div>
         </div>
+        <!-- Bootstrap core JavaScript-->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="bootstrap/dist/js/bootstrap.min.js"></script>
     </body>
 </html>

@@ -195,13 +195,12 @@ public class PERSON<T> {
         return dbResult;
     }
 
-
-    public ResultSet getGradeDetailsForPerson(Integer COURSE_PK){
+    public ResultSet getGradeDetailsForPerson(Integer COURSE_PK) {
         ResultSet rs = null;
         String sqlStatement = "";
-        if(this.getPERSON_TYPE().equals("LECTURER_ENTITY")){
+        if (this.getPERSON_TYPE().equals("LECTURER_ENTITY")) {
             sqlStatement += getGradeDetailsForLecturer();
-        }else{
+        } else {
             sqlStatement += getGradeDetailsForStudent();
         }
         Long[] parameterValues = new Long[]{this.getPERSON_PK()};
@@ -218,21 +217,63 @@ public class PERSON<T> {
 
         return rs;
     }
-    
-    
+
     public String getGradeDetailsForLecturer() {
-        return "SELECT course.COURSE_PK, course.COURSE_NAME, grade.GRADE, grade.SEMESTER, student.FIRSTNAME, student.LASTNAME, student.STUDENT_NR FROM LECTURER_ENTITY AS lecturer, COURSE_ENTITY AS course, GRADE_ENTITY AS grade, STUDENT_ENTITY AS student\n"
+        return "SELECT course.COURSE_PK, grade.GRADE_PK, course.COURSE_NAME, grade.GRADE, grade.SEMESTER, student.FIRSTNAME, student.LASTNAME, student.STUDENT_NR, student.PERSON_PK FROM LECTURER_ENTITY AS lecturer, COURSE_ENTITY AS course, GRADE_ENTITY AS grade, STUDENT_ENTITY AS student\n"
                 + "WHERE lecturer.PERSON_PK = course.LECTURER_PK\n"
                 + "AND grade.COURSE_PK = course.COURSE_PK\n"
                 + "AND grade.STUDENT_PK = student.PERSON_PK\n"
-                + "AND lecturer.PERSON_PK = ?";  
-    }
-    
-    public String getGradeDetailsForStudent() {
-        return "SELECT course.COURSE_NAME, grade.GRADE, grade.SEMESTER FROM STUDENT_ENTITY AS student, COURSE_ENTITY AS course, GRADE_ENTITY AS grade\n" +
-                "WHERE student.PERSON_PK = grade.STUDENT_PK\n" +
-                "AND grade.COURSE_PK = course.COURSE_PK\n" +
-                "AND student.PERSON_PK = ?";  
+                + "AND lecturer.PERSON_PK = ?";
     }
 
+    public String getGradeDetailsForStudent() {
+        return "SELECT course.COURSE_NAME, grade.GRADE, grade.SEMESTER FROM STUDENT_ENTITY AS student, COURSE_ENTITY AS course, GRADE_ENTITY AS grade\n"
+                + "WHERE student.PERSON_PK = grade.STUDENT_PK\n"
+                + "AND grade.COURSE_PK = course.COURSE_PK\n"
+                + "AND student.PERSON_PK = ?";
+    }
+
+    public void updateGradeDetails(String updateData, Integer courseNumber) {
+        if (updateData != "") {
+            String cleanedUpdateData;
+            if(courseNumber==null)
+             cleanedUpdateData = updateData.replace("update=", "");
+            else
+             cleanedUpdateData = updateData.replace("courseNumber="+courseNumber+"&update=", "");   
+            
+            String[] splittedArray = cleanedUpdateData.split("&");
+            String updateStatement = "UPDATE GRADE_ENTITY SET GRADE = ? WHERE GRADE_PK = ?";
+            DBAccess dbAccess = new DBAccess(false);
+            Long[] parameterValues;
+            String [] updateArray;
+            for (int i = 0; i < splittedArray.length; i++) {
+                updateArray = splittedArray[i].split("=");
+                parameterValues = new Long[]{Long.parseLong(updateArray[1]), Long.parseLong(updateArray[0])};
+                dbAccess.DBupdateData(updateStatement, parameterValues);
+            }
+            dbAccess.DBCloseAccess();
+        }
+    }
+    
+    public ResultSet getStudentsToEnroll(){
+        ResultSet rs = null;
+        String sqlStatement = "SELECT student.PERSON_PK, student.FIRSTNAME, student.LASTNAME, student.STUDENT_NR \n" +
+                "FROM STUDENT_ENTITY AS student WHERE 1 = ?";
+        DBAccess dbAccess = new DBAccess(false);
+        Long[] parameterValues = new Long[]{Long.parseLong("1")};
+        rs = dbAccess.DBgetSQLResultSet(sqlStatement, parameterValues);
+        
+        dbAccess.DBCloseAccess();
+        return rs;
+    }
+    
+    public void deleteStudentFromCourse(String studentPK, String coursePK){
+        String sqlStatement = "DELETE FROM GRADE_ENTITY as grade WHERE grade.STUDENT_PK = ? AND grade.COURSE_PK = ?";
+        
+        DBAccess dbAccess = new DBAccess(false);
+        Long[] parameterValues = new Long[]{Long.parseLong(studentPK),Long.parseLong(coursePK)};
+        
+        dbAccess.DBupdateData(sqlStatement, parameterValues);
+        dbAccess.DBCloseAccess();
+    }
 }

@@ -8,12 +8,9 @@
 package LoginPackage;
 
 import project_classes.PERSON;
-import java.sql.Statement;
-import java.util.Iterator;
 import java.util.List;
 import project_classes.DBAccess;
 import project_entities.PERSON_ENTITY;
-import project_entities.STUDENT_ENTITY;
 
 /**
  *

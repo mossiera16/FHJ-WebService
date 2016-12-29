@@ -18,6 +18,45 @@
 <%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
 <html lang="en">
+    <%
+        List<COURSE> courseDetails = null;
+        ResultSet rs = null;
+        Integer courseNumber = null;
+        String updateData = "";
+        String coursePK = "";
+        String studentPK = "";
+        session.setAttribute("siteName", "results");
+        PERSON person = (PERSON) session.getAttribute("currentSessionUser");
+        if (person == null) {
+            session.setAttribute("userState", 2);
+            String redirectURL = "index.jsp";
+            response.sendRedirect(redirectURL);
+            return;
+        } else {
+            if (request.getParameter("courseNumber") != null) {
+                courseNumber = (Integer) Integer.parseInt(request.getParameter("courseNumber"));
+            }
+            rs = person.getGradeDetailsForPerson(courseNumber);
+            courseDetails = person.getCourseDetails(courseNumber, true);
+            if (request.getParameter("update") != null) {
+                updateData = request.getQueryString();
+                person.updateGradeDetails(updateData, courseNumber);
+                if (courseNumber == null) {
+                    response.sendRedirect("results.jsp");
+                } else {
+                    response.sendRedirect("results.jsp?courseNumber=" + courseNumber);
+                }
+
+            }
+            if(request.getParameter("personPK")!=null&&request.getParameter("coursePK")!=null){
+                studentPK = request.getParameter("personPK");
+                coursePK = request.getParameter("coursePK");
+                person.deleteStudentFromCourse(studentPK, coursePK);
+            }
+        }
+
+    %>
+
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -44,19 +83,28 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <script type="text/javascript">
+            var commited = true;
             $(document).ready(function () {
+                if(document.getElementById("commit")!=null)
+                    document.getElementById("commit").style.background = "#A7D177";
                 var table = $('#resultTable').DataTable({
-                    "order": [[3, "desc"]],
+                    "order": [[0, "asc"]],
                     "language": {
                         "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
                     }
                 });
                 $('#commit').click(function () {
                     var data = table.$('input, select').serialize();
-                    alert(
-                            "The following data would have been submitted to the server: \n\n" +
-                            data.substr(0, 120) + '...'
-                            );
+                    var courseNumber = "<%=courseNumber%>";
+                    document.getElementById("commit").style.background = "#A7D177";
+                    commited = true;
+                    if (courseNumber == "null")
+                    {
+                        window.location.replace("results.jsp?update=" + data);
+                    } else
+                    {
+                        window.location.replace("results.jsp?courseNumber=" + courseNumber + "&update=" + data);
+                    }
                     return false;
                 });
             });
@@ -67,31 +115,31 @@
                 });
             });
 
+            function setUncommitedStyle() {
+                document.getElementById("commit").style.background = "#F79E9E";
+                commited = false;
+            }
+            function openModal() {
+                jQuery('#modalContainer').load('teste');
+                alert("test");
+            }
+            window.onbeforeunload = function () {
+                if (!commited)
+                    return 'Wollen Sie die vorgenommenen Änderungen beibehalten?';
+            };
         </script>
     </head>
-
-    <%
-        List<COURSE> courseDetails = null;
-        ResultSet rs = null;
-        Integer courseNumber = null;
-        session.setAttribute("siteName", "results");
-        PERSON person = (PERSON) session.getAttribute("currentSessionUser");
-        if (person == null) {
-            session.setAttribute("userState", 2);
-            String redirectURL = "index.jsp";
-            response.sendRedirect(redirectURL);
-            return;
-        } else {
-            if (request.getParameter("courseNumber") != null) {
-                courseNumber = (Integer) Integer.parseInt(request.getParameter("courseNumber"));
-            }
-            rs = person.getGradeDetailsForPerson(courseNumber);
-            courseDetails = person.getCourseDetails(courseNumber, true);
-        }
-    %>
     <body>
+        <div onunload="window.location.reload();" style="margin: auto;" class="modal fade" id="modalContainer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                </div>
+            </div>
+        </div>
         <%@include  file="navbar.jsp"  %>
-        <div class="container-fluid">
+
+        <div class="container-fluid" >
             <div class="row">
                 <%@include  file="sidebar.jsp" %>
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -108,47 +156,48 @@
                             <a href="courses.jsp" style="text-decoration: none;" role="button" class="btn btn-default btn-sm">
                                 <span class='glyphicon glyphicon-arrow-up' aria-hidden='true'></span> zurück zu den Kursen
                             </a>
-                            <% if(person.getPERSON_TYPE().equals("LECTURER_ENTITY")){
-                                out.print("<a href='results.jsp' style='text-decoration: none;' role='button' id='commit' class='btn btn-default btn-sm'>"+
-                                            "<span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Eingaben bestätigen"+
-                                            "</a>"+
-                                            "<a href='results.jsp' style='text-decoration: none;' role='button' class='btn btn-default btn-sm'>"+
-                                            "<span class='glyphicon glyphicon-plus-sign' aria-hidden='true'></span> Student hinzufügen"+
-                                            "</a>");
-                            }%>
-                            
-                    </div>
-                    <table id="resultTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
-                        <thead>
-                        <th>
-                            #
-                        </th>
-                        <th>
-                            Kursname
-                        </th>
-                        <th>
-                            Note
-                        </th>
-                        <th>
-                            Semester
-                        </th>
-                        <%
-                            if (person.getPERSON_TYPE() == "LECTURER_ENTITY") {
-                                out.print("<th>Vorname</th><th>Nachname</th><th>Studentennummer</th>");
-                            }
+                            <% if (person.getPERSON_TYPE().equals("LECTURER_ENTITY")) {
+                                    out.print("<a href='results.jsp' style=text-decoration: none;' role='button' id='commit' class='btn btn-default btn-sm'>"
+                                            + "<span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Eingaben bestätigen"
+                                            + "</a>"
+                                            + "<a href='modalContainer.jsp' style='text-decoration: none;' role='button' id='addStudent' data-toggle='modal' data-target='#modalContainer' class='btn btn-default btn-sm'>"
+                                            + "<span class='glyphicon glyphicon-edit' aria-hidden='true'></span> Studentenverwaltung"
+                                            + "</a>");
+                                }
+
+                            %>
+
+
+                        </div>
+                        <table id="resultTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
+                            <thead>
+                            <th>
+                                #
+                            </th>
+                            <th>
+                                Kursname
+                            </th>
+                            <th>
+                                Note
+                            </th>
+                            <th>
+                                Semester
+                            </th>
+                            <%                                if (person.getPERSON_TYPE() == "LECTURER_ENTITY") {
+                                    out.print("<th>Vorname</th><th>Nachname</th><th>Studentennummer</th>");
+                                }
                             %>
                             </thead>
                             <tbody>
                                 <%= resultMessages.getGradeDetails(rs, person.getPERSON_TYPE())%>
                             </tbody>
-                            </table>
-                        </div>
+                        </table>
                     </div>
                 </div>
             </div>
-            <!-- Bootstrap core JavaScript
-    ================================================== -->
-            <!-- Placed at the end of the document so the pages load faster -->
-            <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+        </div>
+        <!-- Bootstrap core JavaScript-->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="bootstrap/dist/js/bootstrap.min.js"></script>
     </body>
 </html>

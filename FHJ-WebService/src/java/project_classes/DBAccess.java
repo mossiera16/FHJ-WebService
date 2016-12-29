@@ -76,16 +76,37 @@ public class DBAccess<T> {
     public ResultSet DBgetSQLResultSet(String sqlStatement, T[] parameterValues) {
         try {
             dbConnection.setAutoCommit(false);
+            ResultSet rs = null;
             PreparedStatement stmt = dbConnection.prepareStatement(sqlStatement);
-            for (int i = 0; i < parameterValues.length; i++) {
-                stmt.setInt(i + 1, Integer.parseInt(parameterValues[i].toString()));
+
+            if(parameterValues != null) {
+                for (int i = 0; i < parameterValues.length; i++) {
+                    stmt.setInt(i + 1, Integer.parseInt(parameterValues[i].toString()));
+                }
+                rs = stmt.executeQuery();
+            } else {
+                Statement statement = dbConnection.createStatement();
+                rs = statement.executeQuery(sqlStatement);
             }
-            ResultSet rs = stmt.executeQuery();
 
             return rs;
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             return null;
+        }
+    }
+
+    public int DBupdateData(String sqlStatement, T[] parameterValues) {
+        try {
+            dbConnection.setAutoCommit(true);
+            PreparedStatement stmt = dbConnection.prepareStatement(sqlStatement);
+            for (int i = 0; i < parameterValues.length; i++) {
+                stmt.setInt(i + 1, Integer.parseInt(parameterValues[i].toString()));
+            }
+            return stmt.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return -1;
         }
     }
 
