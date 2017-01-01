@@ -10,11 +10,8 @@
 <jsp:useBean id="resultMessages" class="project_classes.MessageHandler"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="project_classes.PERSON"%>
-<%@page import="project_classes.GRADE"%>
 <%@page import="project_classes.COURSE"%>
-<%@page import="project_classes.STUDENT"%>
 <%@page import="java.util.List"%>
-<%@page import="java.util.Enumeration"%>
 <%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,6 +20,7 @@
         ResultSet rs = null;
         Integer courseNumber = null;
         String updateData = "";
+        String deleteInsertData = "";
         String coursePK = "";
         String studentPK = "";
         session.setAttribute("siteName", "results");
@@ -46,15 +44,17 @@
                 } else {
                     response.sendRedirect("results.jsp?courseNumber=" + courseNumber);
                 }
-
             }
-            if(request.getParameter("personPK")!=null&&request.getParameter("coursePK")!=null){
-                studentPK = request.getParameter("personPK");
-                coursePK = request.getParameter("coursePK");
-                person.deleteStudentFromCourse(studentPK, coursePK);
+            if (request.getParameter("delete") != null || request.getParameter("insert") != null) {
+                deleteInsertData = request.getQueryString();
+                person.deleteInsertStudents(deleteInsertData);
+                if (courseNumber == null) {
+                    response.sendRedirect("results.jsp");
+                } else {
+                    response.sendRedirect("results.jsp?courseNumber=" + courseNumber);
+                }
             }
         }
-
     %>
 
     <head>
@@ -85,7 +85,7 @@
         <script type="text/javascript">
             var commited = true;
             $(document).ready(function () {
-                if(document.getElementById("commit")!=null)
+                if(document.getElementById("commit")!==null)
                     document.getElementById("commit").style.background = "#A7D177";
                 var table = $('#resultTable').DataTable({
                     "order": [[0, "asc"]],
@@ -98,7 +98,7 @@
                     var courseNumber = "<%=courseNumber%>";
                     document.getElementById("commit").style.background = "#A7D177";
                     commited = true;
-                    if (courseNumber == "null")
+                    if (courseNumber === "null")
                     {
                         window.location.replace("results.jsp?update=" + data);
                     } else
@@ -118,10 +118,6 @@
             function setUncommitedStyle() {
                 document.getElementById("commit").style.background = "#F79E9E";
                 commited = false;
-            }
-            function openModal() {
-                jQuery('#modalContainer').load('teste');
-                alert("test");
             }
             window.onbeforeunload = function () {
                 if (!commited)
@@ -156,11 +152,11 @@
                             <a href="courses.jsp" style="text-decoration: none;" role="button" class="btn btn-default btn-sm">
                                 <span class='glyphicon glyphicon-arrow-up' aria-hidden='true'></span> zurück zu den Kursen
                             </a>
-                            <% if (person.getPERSON_TYPE().equals("LECTURER_ENTITY")) {
+                            <% if (person.getPERSON_TYPE().personType == 1) {
                                     out.print("<a href='results.jsp' style=text-decoration: none;' role='button' id='commit' class='btn btn-default btn-sm'>"
                                             + "<span class='glyphicon glyphicon-floppy-disk' aria-hidden='true'></span> Eingaben bestätigen"
                                             + "</a>"
-                                            + "<a href='modalContainer.jsp' style='text-decoration: none;' role='button' id='addStudent' data-toggle='modal' data-target='#modalContainer' class='btn btn-default btn-sm'>"
+                                            + "<a href='modalStudentManagement.jsp' style='text-decoration: none;' role='button' id='addStudent' data-toggle='modal' data-target='#modalContainer' class='btn btn-default btn-sm'>"
                                             + "<span class='glyphicon glyphicon-edit' aria-hidden='true'></span> Studentenverwaltung"
                                             + "</a>");
                                 }
@@ -183,13 +179,13 @@
                             <th>
                                 Semester
                             </th>
-                            <%                                if (person.getPERSON_TYPE() == "LECTURER_ENTITY") {
+                            <% if (person.getPERSON_TYPE().personType == 1) {
                                     out.print("<th>Vorname</th><th>Nachname</th><th>Studentennummer</th>");
                                 }
                             %>
                             </thead>
                             <tbody>
-                                <%= resultMessages.getGradeDetails(rs, person.getPERSON_TYPE())%>
+                                <%= resultMessages.getGradeDetails(rs, person.getPERSON_TYPE().personType)%>
                             </tbody>
                         </table>
                     </div>

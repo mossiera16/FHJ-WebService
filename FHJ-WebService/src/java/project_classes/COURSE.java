@@ -7,19 +7,13 @@
  */
 package project_classes;
 
-import java.util.ArrayList;
 import java.util.List;
-import static javafx.scene.input.KeyCode.T;
 import javax.persistence.Basic;
 import javax.persistence.OneToMany;
 import project_entities.COURSE_ENTITY;
 import project_entities.GRADE_ENTITY;
 
 
-/**
- *
- * @author standard
- */
 public class COURSE<T> {
     @Basic
     private String COURSE_NAME;

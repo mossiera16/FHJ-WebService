@@ -7,6 +7,7 @@
  * Datum: 16.12.2016
  */
 --%>
+<jsp:useBean id="navbarMessage" class="project_classes.MessageHandler"></jsp:useBean>
 <%@page import="project_classes.PERSON"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%PERSON personNavbar = (PERSON) session.getAttribute("currentSessionUser");%>
@@ -27,10 +28,12 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li style="color: #9d9d9d; margin-top: 1.1em; margin-left: 1.1em;">
-                    <% if(personNavbar.getPERSON_TYPE().equals("LECTURER_ENTITY")){
+                    <% if(personNavbar.getPERSON_TYPE().personType == 1){
                         out.print("<image src='images/glyphicon-lecturer1.png' style='color: #78b832;' data-toggle='tooltip' title='Vortragende(r)'></image>");
-                    }else{
+                    } else if(personNavbar.getPERSON_TYPE().personType == 2) {
                         out.print("<span style='color: #78b832;' class='glyphicon glyphicon-education' aria-hidden='true' data-toggle='tooltip' title='Student/-in'></span>");
+                    }else{
+                        out.print("<span style='color: #78b832;' class='glyphicon glyphicon-cog' aria-hidden='true' data-toggle='tooltip' title='Student/-in'></span>");
                     }
                     %>
                     <span style="color: #78b832;"><%
@@ -38,12 +41,8 @@
                         %>
                     </span>
                 </li>
-                <li><a href="dashboard.jsp">Dashboard</a></li>
-                <li><a href="courses.jsp">Kurse</a></li>
-                <li><a href="results.jsp">Ergebnisse</a></li>
-                <li><a href="logout.jsp">Logout</a></li>
+                <%= navbarMessage.getNavbarLinks(personNavbar)%>
             </ul>
-
         </div>
     </div>
 </nav>

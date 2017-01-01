@@ -7,11 +7,11 @@
  */
 package project_classes;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -48,7 +48,7 @@ public class DBAccess<T> {
                 String password = "123";
                 dbConnection = DriverManager.getConnection(url, user, password);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             String message = e.getMessage();
             System.out.println(e.getMessage());
             if (emf != null) {
@@ -76,7 +76,7 @@ public class DBAccess<T> {
     public ResultSet DBgetSQLResultSet(String sqlStatement, T[] parameterValues) {
         try {
             dbConnection.setAutoCommit(false);
-            ResultSet rs = null;
+            ResultSet rs;
             PreparedStatement stmt = dbConnection.prepareStatement(sqlStatement);
 
             if(parameterValues != null) {
@@ -90,7 +90,7 @@ public class DBAccess<T> {
             }
 
             return rs;
-        } catch (Exception ex) {
+        } catch (NumberFormatException | SQLException ex) {
             System.out.println(ex.getMessage());
             return null;
         }
@@ -104,7 +104,7 @@ public class DBAccess<T> {
                 stmt.setInt(i + 1, Integer.parseInt(parameterValues[i].toString()));
             }
             return stmt.executeUpdate();
-        } catch (Exception ex) {
+        } catch (NumberFormatException | SQLException ex) {
             System.out.println(ex.getMessage());
             return -1;
         }
@@ -149,7 +149,7 @@ public class DBAccess<T> {
 
     public void DBCloseAccess() {
         try {
-            if (!dbConnection.equals(null)) {
+            if (dbConnection!=null) {
                 dbConnection.close();
             } else {
                 if (emf != null) {
@@ -159,7 +159,7 @@ public class DBAccess<T> {
                     em.close();
                 }
             }
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -218,7 +218,7 @@ public class DBAccess<T> {
             //#####################################
             DateFormat format = new SimpleDateFormat("DD.MM.YYYY", Locale.GERMAN);
             List<STUDENT_ENTITY> students = new ArrayList<>();
-            STUDENT_ENTITY student1 = new STUDENT_ENTITY("1", "m", new java.sql.Date(format.parse("16.10.1992").getTime()), "Andreas", false, "Mossier", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "1", 3333, 1310288011, "BSc", "Masters programme", "mossiera16", gradeList1);
+            STUDENT_ENTITY student1 = new STUDENT_ENTITY("1", "m", new java.sql.Date(format.parse("16.10.1992").getTime()), "Andreas", false, "Mossier", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "1", 3333, 1310288011, "BSc", "Masters programme", "mossiera16");
 
             STUDENT_ENTITY clonedStudent = (STUDENT_ENTITY) student1.getClone();
             clonedStudent.setBIRTHDATE(new java.sql.Date(format.parse("20.11.1990").getTime()));
@@ -228,9 +228,9 @@ public class DBAccess<T> {
             clonedStudent.setUSERNAME("wurzere16");
             clonedStudent.setPERSON_PK(Long.parseLong("2"));
 
-            STUDENT_ENTITY student2 = new STUDENT_ENTITY("3", "m", new java.sql.Date(format.parse("18.4.1969").getTime()), "Heinz", false, "Kurt", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "1", 3335, 1310288013, "BSc", "Masters programme", "kurth16", gradeList2);
-            STUDENT_ENTITY student3 = new STUDENT_ENTITY("4", "w", new java.sql.Date(format.parse("18.4.1989").getTime()), "Romana", false, "Ausim", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "1", 33367, 1310288014, "BSc", "Masters programme", "ausimr16", gradeList3);
-            STUDENT_ENTITY student4 = new STUDENT_ENTITY("5", "w", new java.sql.Date(format.parse("12.4.1984").getTime()), "Mina", false, "Shokrollahi", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "1", 4000, 1310288015, "BSc", "Masters programme", "shokrollahim16", gradeList4);
+            STUDENT_ENTITY student2 = new STUDENT_ENTITY("3", "m", new java.sql.Date(format.parse("18.4.1969").getTime()), "Heinz", false, "Kurt", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "1", 3335, 1310288013, "BSc", "Masters programme", "kurth16");
+            STUDENT_ENTITY student3 = new STUDENT_ENTITY("4", "w", new java.sql.Date(format.parse("18.4.1989").getTime()), "Romana", false, "Ausim", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "1", 33367, 1310288014, "BSc", "Masters programme", "ausimr16");
+            STUDENT_ENTITY student4 = new STUDENT_ENTITY("5", "w", new java.sql.Date(format.parse("12.4.1984").getTime()), "Mina", false, "Shokrollahi", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "1", 4000, 1310288015, "BSc", "Masters programme", "shokrollahim16");
 
             students.add(student1);
             students.add(clonedStudent);
@@ -250,35 +250,35 @@ public class DBAccess<T> {
             List<COURSE_ENTITY> courses4 = new ArrayList<>();
             List<COURSE_ENTITY> courses5 = new ArrayList<>();
             List<COURSE_ENTITY> courses6 = new ArrayList<>();
-            List<GRADE_ENTITY> gradeCourseList1 = new ArrayList<>();
-            List<GRADE_ENTITY> gradeCourseList2 = new ArrayList<>();
-            List<GRADE_ENTITY> gradeCourseList3 = new ArrayList<>();
-            List<GRADE_ENTITY> gradeCourseList5 = new ArrayList<>();
-            List<GRADE_ENTITY> gradeCourseList6 = new ArrayList<>();
+//            List<GRADE_ENTITY> gradeCourseList1 = new ArrayList<>();
+//            List<GRADE_ENTITY> gradeCourseList2 = new ArrayList<>();
+//            List<GRADE_ENTITY> gradeCourseList3 = new ArrayList<>();
+//            List<GRADE_ENTITY> gradeCourseList5 = new ArrayList<>();
+//            List<GRADE_ENTITY> gradeCourseList6 = new ArrayList<>();
+//
+//            gradeCourseList1.add(grade1);
+//            gradeCourseList1.add(grade3);
+//            gradeCourseList1.add(grade5);
+//            gradeCourseList1.add(grade7);
+//
+//            gradeCourseList2.add(grade2);
+//            gradeCourseList2.add(grade4);
+//            gradeCourseList2.add(grade6);
+//            gradeCourseList2.add(grade8);
+//
+//            gradeCourseList3.add(grade12);
+//            gradeCourseList3.add(grade14);
+//
+//            gradeCourseList5.add(grade9);
+//
+//            gradeCourseList6.add(grade10);
 
-            gradeCourseList1.add(grade1);
-            gradeCourseList1.add(grade3);
-            gradeCourseList1.add(grade5);
-            gradeCourseList1.add(grade7);
-
-            gradeCourseList2.add(grade2);
-            gradeCourseList2.add(grade4);
-            gradeCourseList2.add(grade6);
-            gradeCourseList2.add(grade8);
-
-            gradeCourseList3.add(grade12);
-            gradeCourseList3.add(grade14);
-
-            gradeCourseList5.add(grade9);
-
-            gradeCourseList6.add(grade10);
-
-            COURSE_ENTITY course1 = new COURSE_ENTITY("1", "Standards in der Gesundheitsinformatik", 1, 1, "Masterstudium eHealth", gradeCourseList1);
-            COURSE_ENTITY course2 = new COURSE_ENTITY("2", "Business Intelligence", 2, 1, "Masterstudium eHealth", gradeCourseList2);
-            COURSE_ENTITY course3 = new COURSE_ENTITY("3", "Softwarearchitekturen", 3, 3, "Bachelorstudium eHealth", gradeCourseList3);
-            COURSE_ENTITY course4 = new COURSE_ENTITY("4", "Softwareentwicklung", 4, 1, "Masterstudium eHealth", null);
-            COURSE_ENTITY course5 = new COURSE_ENTITY("5", "HCIT", 4, 2, "Masterstudium eHealth", gradeCourseList5);
-            COURSE_ENTITY course6 = new COURSE_ENTITY("6", "Selected Topics in Medical Informatics", 3, 2, "Masterstudium eHealth", gradeCourseList6);
+            COURSE_ENTITY course1 = new COURSE_ENTITY("1", "Standards in der Gesundheitsinformatik", 1, 1, "Masterstudium eHealth");
+            COURSE_ENTITY course2 = new COURSE_ENTITY("2", "Business Intelligence", 2, 1, "Masterstudium eHealth");
+            COURSE_ENTITY course3 = new COURSE_ENTITY("3", "Softwarearchitekturen", 3, 3, "Bachelorstudium eHealth");
+            COURSE_ENTITY course4 = new COURSE_ENTITY("4", "Softwareentwicklung", 4, 1, "Masterstudium eHealth");
+            COURSE_ENTITY course5 = new COURSE_ENTITY("5", "HCIT", 4, 2, "Masterstudium eHealth");
+            COURSE_ENTITY course6 = new COURSE_ENTITY("6", "Selected Topics in Medical Informatics", 3, 2, "Masterstudium eHealth");
 
             courses1.add(course1);
             courses2.add(course2);

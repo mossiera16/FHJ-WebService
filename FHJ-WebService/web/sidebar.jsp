@@ -8,9 +8,11 @@
  */
 --%>
 <jsp:useBean id="sidebarMessage" class="project_classes.MessageHandler"></jsp:useBean>
+<%@page import="project_classes.PERSON"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%PERSON personSidebar = (PERSON) session.getAttribute("currentSessionUser");%>
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-        <%= sidebarMessage.getSidebarNavigationElements((String)session.getAttribute("siteName"))%>
+        <%= sidebarMessage.getSidebarNavigationElements((String)session.getAttribute("siteName"), personSidebar)%>
     </ul> 
 </div>

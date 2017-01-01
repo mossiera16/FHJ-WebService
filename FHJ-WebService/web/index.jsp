@@ -7,7 +7,7 @@
  * Datum: 16.12.2016
  */
 --%>
-<%@page import="LoginPackage.LoginServlet"%>
+<%@page import="project_classes.LoginServlet"%>
 <%@page import="project_classes.MessageHandler"%>
 <%@page import="project_classes.DBAccess"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -36,7 +36,7 @@
             session.setAttribute("userState", 0);
         }
         //dbAccess.DBCloseAccess();
-%>
+    %>
 
     <body>
         <div class="container">

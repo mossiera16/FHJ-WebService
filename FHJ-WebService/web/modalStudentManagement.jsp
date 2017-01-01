@@ -6,12 +6,10 @@
 <jsp:useBean id="modalContainerMessages" class="project_classes.MessageHandler"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="project_classes.PERSON"%>
-<%@page import="project_classes.GRADE"%>
 <%@page import="project_classes.COURSE"%>
-<%@page import="project_classes.STUDENT"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Enumeration"%>
-<%@ page import="java.sql.ResultSet" %>
+<%@page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -28,7 +26,7 @@
                 courseNumber = (Integer) Integer.parseInt(request.getParameter("courseNumber"));
             }
             rs = person.getGradeDetailsForPerson(courseNumber);
-            rsStudentsToEnroll = person.getStudentsToEnroll();
+            rsStudentsToEnroll = person.getStudents();
             courseDetails = person.getCourseDetails(courseNumber, true);
             if (request.getParameter("update") != null) {
                 updateData = request.getQueryString();
@@ -38,6 +36,11 @@
                 } else {
                     response.sendRedirect("results.jsp?courseNumber=" + courseNumber);
                 }
+
+            }
+
+            if (request.getParameter("add") != null) {
+                response.sendRedirect("index.jsp");
 
             }
 
@@ -66,17 +69,58 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <script type="text/javascript">
+            var table;
+            var studentPKsToDelete = [], coursePKsToDelete = [];
+            var studentPKsToAdd = [], coursePKsToAdd = [];
             $(document).ready(function () {
-                var table = $('#resultTable2').DataTable({
+                 table = $('#resultTable2').DataTable({
                     "order": [[1, "asc"]],
                     "language": {
                         "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
                     }
                 });
+
+                $('#commit').click(function () {
+                    var data = table.$('input, select').serialize();
+                    var urlString = generataUrlString(studentPKsToDelete, coursePKsToDelete);
+                    
+                    if(urlString === ""){
+                        if(data !== ""){
+                            urlString = "?insert=" + data;
+                        }
+                    } else {
+                        urlString = "?delete=" + urlString + "&insert=" + data;
+                    }
+
+                    window.location.replace("results.jsp" + urlString);
+                });
+                
+                function generataUrlString(studentPKs, coursePKs){
+                   var urlString = "";
+                    for (var i = 0; i < studentPKs.length; i++) {
+                        urlString += studentPKs[i] + "=" + coursePKs[i]+"&";
+                    }
+                    urlString = urlString.substring(0, urlString.length-1);
+                    return urlString;
+                }
+
+                $('#add').on('click', function () {
+                    var myTr = $(this).closest('tr');
+                    var clone = myTr.clone();
+                    table.row.add(clone); myTr.after(clone);
+                    table.destroy();
+                    table = $('#resultTable2').DataTable({
+                    "order": [[1, "asc"]],
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
+                    }});
+                });
             });
             function remove(studentPK, coursePK) {
-                document.getElementById(studentPK+coursePK).style.display = "none";
-        //window.location.replace("results.jsp?personPK=" + studentPK + "&coursePK=" + coursePK);
+                studentPKsToDelete.push(studentPK);
+                coursePKsToDelete.push(coursePK);
+                document.getElementById(studentPK + coursePK).style.display = "none";
+                //window.location.replace("results.jsp?personPK=" + studentPK + "&coursePK=" + coursePK);
             }
         </script>
     </head>
@@ -108,12 +152,11 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success">Eingaben bestätigen</button>
+                <button id="commit" type="submit" class="btn btn-success">Eingaben bestätigen</button>
             </div>
         </div>
-        <!-- Bootstrap core JavaScript
-================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
+        <!-- Bootstrap core JavaScript-->
+        <!-- Placed at the end of the document so the pages load faster-->
         <script src="bootstrap/dist/js/bootstrap.min.js"></script>
     </body>
 </html>

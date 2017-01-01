@@ -1,14 +1,17 @@
 <%-- 
-    Document   : admindashboard
-    Created on : 22.12.2016, 13:44:08
-    Author     : standard
+/*
+ * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
+ * Programm: software_architecture
+ * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
+ * Fachhochschule Joanneum
+ * Datum: 16.12.2016
+ */
 --%>
-
-<jsp:useBean id="dashboardMessage" class="project_classes.MessageHandler"></jsp:useBean>
-<%@page import="project_classes.PERSON"%>
+<jsp:useBean id="adminCoursesMessage" class="project_classes.MessageHandler"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="project_classes.PERSON"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,7 +20,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="SHORTCUT ICON" href="images/favicon.png" type="image/png">
-        <title>Dashboard - Kursverwaltungssystem</title>
+        <title>Vortragendenverwaltung</title>
 
         <!-- Bootstrap core CSS -->
         <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -34,7 +37,8 @@
         <![endif]-->
     </head>
     <%
-        session.setAttribute("siteName", "dashboard");
+        session.setAttribute("siteName", "lecturers");
+
         PERSON person = (PERSON) session.getAttribute("currentSessionUser");
         if (person == null) {
             session.setAttribute("userState", 2);
@@ -42,7 +46,7 @@
             response.sendRedirect(redirectURL);
             return;
         }
-    %>
+        %>
     <body>
         <%@include  file="navbar.jsp" %>
 
@@ -51,8 +55,17 @@
                 <%@include  file="sidebar.jsp" %>
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                     <div>
-                        <h1 class="page-header">Dashboard <%= dashboardMessage.getDashboardWelcomeMessage((PERSON) person)%></h1>
+                        <h1 class="page-header">Vortragendenverwaltung</h1>
                     </div>
-        <h1>Hello World!</h1>
+                        
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap core JavaScript-->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="bootstrap/assets/js/vendor/jquery.min.js"><\/script>');</script>
+        <script src="bootstrap/dist/js/bootstrap.min.js"></script>
     </body>
 </html>

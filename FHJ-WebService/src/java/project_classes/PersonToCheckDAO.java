@@ -5,17 +5,12 @@
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
  */
-package LoginPackage;
+package project_classes;
 
-import project_classes.PERSON;
 import java.util.List;
-import project_classes.DBAccess;
 import project_entities.PERSON_ENTITY;
 
-/**
- *
- * @author Notebook
- */
+
 public class PersonToCheckDAO {
 
     static List resultList = null;
@@ -29,8 +24,8 @@ public class PersonToCheckDAO {
 
         String[]parameterValues = new String[] {username, password};
         
-        for(int i = 0; i < person_entities.length; i++){
-            personToCheck = checkLoginData(personToCheck,person_entities[i], parameterValues);
+        for (String person_entity : person_entities) {
+            personToCheck = checkLoginData(personToCheck, person_entity, parameterValues);
             if(personToCheck.getISVALID())
                 return personToCheck;
         }
@@ -56,6 +51,7 @@ public class PersonToCheckDAO {
                 personToCheck.setPERSON_PK(person.getPERSON_PK());
                 personToCheck.setFIRSTNAME(person.getFIRSTNAME());
                 personToCheck.setLASTNAME(person.getLASTNAME());
+                personToCheck.setADMINSEX(person.getADMINSEX());
                 personToCheck.setPERSON_TYPE(person_entity);
             }
             dbAccess.DBCloseAccess();

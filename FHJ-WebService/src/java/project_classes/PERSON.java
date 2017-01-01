@@ -9,16 +9,16 @@ package project_classes;
 
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import project_entities.COURSE_ENTITY;
-import project_entities.GRADE_ENTITY;
-import project_entities.STUDENT_ENTITY;
 
 /**
  *
  * @author Notebook
+ * @param <T>
  */
 public class PERSON<T> {
 
@@ -39,6 +39,9 @@ public class PERSON<T> {
 
     @Basic
     private String PERSON_TYPE;
+    
+    @Basic
+    private PERSON_TYPE_ENUM PERSON_TYPE_ENUM;
 
     @Basic
     private String TITLE;
@@ -94,12 +97,12 @@ public class PERSON<T> {
         this.ISVALID = ISVALID;
     }
 
-    public String getPERSON_TYPE() {
-        return this.PERSON_TYPE;
+    public PERSON_TYPE_ENUM getPERSON_TYPE() {
+        return this.PERSON_TYPE_ENUM;
     }
 
     public void setPERSON_TYPE(String PERSON_TYPE) {
-        this.PERSON_TYPE = PERSON_TYPE;
+        this.PERSON_TYPE_ENUM = new PERSON_TYPE_ENUM(PERSON_TYPE);
     }
 
     public String getTITLE() {
@@ -145,15 +148,15 @@ public class PERSON<T> {
     public List<COURSE> getCourseDetails(Integer COURSE_PK, boolean isResultCall) {
         List<COURSE_ENTITY> dbResult;
         String sqlStatement = "";
-        switch (this.getPERSON_TYPE()) {
-            case "STUDENT_ENTITY": {
+        switch (this.getPERSON_TYPE().personType) {
+            case 2: {
                 sqlStatement = "SELECT course FROM STUDENT_ENTITY student, COURSE_ENTITY course, GRADE_ENTITY grade\n"
                         + "WHERE student.PERSON_PK = grade.STUDENT_PK\n"
                         + "AND grade.COURSE_PK = course.COURSE_PK\n"
                         + "AND student.PERSON_PK = :PERSON_PK";
                 break;
             }
-            case "LECTURER_ENTITY": {
+            case 1: {
                 sqlStatement = "SELECT course FROM LECTURER_ENTITY lecturer, COURSE_ENTITY course\n"
                         + "WHERE course.LECTURER_PK = lecturer.PERSON_PK AND\n"
                         + "lecturer.PERSON_PK = :PERSON_PK";
@@ -196,9 +199,9 @@ public class PERSON<T> {
     }
 
     public ResultSet getGradeDetailsForPerson(Integer COURSE_PK) {
-        ResultSet rs = null;
+        ResultSet rs;
         String sqlStatement = "";
-        if (this.getPERSON_TYPE().equals("LECTURER_ENTITY")) {
+        if (this.getPERSON_TYPE().personType == 1) {
             sqlStatement += getGradeDetailsForLecturer();
         } else {
             sqlStatement += getGradeDetailsForStudent();
@@ -234,46 +237,101 @@ public class PERSON<T> {
     }
 
     public void updateGradeDetails(String updateData, Integer courseNumber) {
-        if (updateData != "") {
+        if (!updateData.equals("")) {
             String cleanedUpdateData;
-            if(courseNumber==null)
-             cleanedUpdateData = updateData.replace("update=", "");
-            else
-             cleanedUpdateData = updateData.replace("courseNumber="+courseNumber+"&update=", "");   
-            
+            if (courseNumber == null) {
+                cleanedUpdateData = updateData.replace("update=", "");
+            } else {
+                cleanedUpdateData = updateData.replace("courseNumber=" + courseNumber + "&update=", "");
+            }
+
             String[] splittedArray = cleanedUpdateData.split("&");
             String updateStatement = "UPDATE GRADE_ENTITY SET GRADE = ? WHERE GRADE_PK = ?";
             DBAccess dbAccess = new DBAccess(false);
             Long[] parameterValues;
-            String [] updateArray;
-            for (int i = 0; i < splittedArray.length; i++) {
-                updateArray = splittedArray[i].split("=");
+            String[] updateArray;
+            for (String splittedItem : splittedArray) {
+                updateArray = splittedItem.split("=");
                 parameterValues = new Long[]{Long.parseLong(updateArray[1]), Long.parseLong(updateArray[0])};
                 dbAccess.DBupdateData(updateStatement, parameterValues);
             }
             dbAccess.DBCloseAccess();
         }
     }
-    
-    public ResultSet getStudentsToEnroll(){
-        ResultSet rs = null;
-        String sqlStatement = "SELECT student.PERSON_PK, student.FIRSTNAME, student.LASTNAME, student.STUDENT_NR \n" +
-                "FROM STUDENT_ENTITY AS student WHERE 1 = ?";
+
+    public ResultSet getStudents() {
+        ResultSet rs;
+        String sqlStatement = "SELECT * \n"
+                + "FROM STUDENT_ENTITY AS student WHERE 1 = ?";
         DBAccess dbAccess = new DBAccess(false);
         Long[] parameterValues = new Long[]{Long.parseLong("1")};
         rs = dbAccess.DBgetSQLResultSet(sqlStatement, parameterValues);
-        
+
         dbAccess.DBCloseAccess();
         return rs;
     }
-    
-    public void deleteStudentFromCourse(String studentPK, String coursePK){
+
+    public void deleteStudentFromCourse(String studentPK, String coursePK) {
         String sqlStatement = "DELETE FROM GRADE_ENTITY as grade WHERE grade.STUDENT_PK = ? AND grade.COURSE_PK = ?";
-        
+
         DBAccess dbAccess = new DBAccess(false);
-        Long[] parameterValues = new Long[]{Long.parseLong(studentPK),Long.parseLong(coursePK)};
-        
+        Long[] parameterValues = new Long[]{Long.parseLong(studentPK), Long.parseLong(coursePK)};
+
         dbAccess.DBupdateData(sqlStatement, parameterValues);
         dbAccess.DBCloseAccess();
     }
+
+    public void deleteInsertStudents(String deleteInsertData) {
+        String[] array = deleteInsertData.split("insert");
+        deleteStudents(array[0].replace("delete=", ""));
+
+        insertStudents(array[1].replace("id", "").replace("=", ""));
+    }
+
+    private void deleteStudents(String deleteData) {
+        try {
+            if (!deleteData.equals("")){
+                String deleteStatement = "DELETE FROM GRADE_ENTITY WHERE COURSE_PK = ? AND STUDENT_PK = ?";
+                Long[] parameterValues;
+                String[] deletePairs = deleteData.split("&");
+                String[] deleteArray;
+                DBAccess dbAccess = new DBAccess(false);
+                for (String deletePair : deletePairs) {
+                    if (!deletePair.equals("")) {
+                        deleteArray = deletePair.split("=");
+                        parameterValues = new Long[]{Long.parseLong(deleteArray[1]), Long.parseLong(deleteArray[0])};
+                        dbAccess.DBupdateData(deleteStatement, parameterValues);
+                    }
+                }
+                dbAccess.DBCloseAccess();
+            }
+        } catch (NumberFormatException ex) {
+            System.out.print("Error: " + ex.getMessage());
+        }
+    }
+
+    private void insertStudents(String insertData) {
+        try {
+            String[] insertArray = insertData.split("&");
+            String checkStatement = "SELECT * FROM GRADE_ENTITY as grade WHERE grade.COURSE_PK = ? AND grade.STUDENT_PK = ?";
+            ResultSet rs;
+            Long[] parameterValues;
+            String insertStatement = "INSERT INTO GRADE_ENTITY (GRADE_PK, COURSE_PK, GRADE, SEMESTER, STUDENT_PK) VALUES(NEXT VALUE FOR SEQUENCE, ?, 0, 1, ?)";
+            DBAccess dbAccess = new DBAccess(false);
+            for (int i = 1; i < insertArray.length; i++) {
+                if (!insertArray[i - 1].equals("0") && !insertArray[i].equals("0")) {
+                    parameterValues = new Long[]{Long.parseLong(insertArray[i]), Long.parseLong(insertArray[i - 1])};
+                    rs = dbAccess.DBgetSQLResultSet(checkStatement, parameterValues);
+                    if (rs != null && !rs.next()) {
+                        dbAccess.DBupdateData(insertStatement, parameterValues);
+                    }
+                }
+            }
+            dbAccess.DBCloseAccess();
+        } catch (NumberFormatException | SQLException ex) {
+            System.out.print("Error: " + ex.getMessage());
+        }
+
+    }
 }
+ 

@@ -5,29 +5,29 @@
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
  */
-package LoginPackage;
+package project_classes;
 
-import project_classes.PERSON;
+import java.io.IOException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import project_classes.STUDENT;
-import project_entities.STUDENT_ENTITY;
 
 /**
  * * Servlet Implementierung LoginServlet
  */
 public class LoginServlet extends HttpServlet {
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
         try {
             PERSON person = new PERSON();
             person.setUSERNAME(request.getParameter("username"));
-            MessageDigest md = MessageDigest.getInstance("SHA-1");;
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
             String shaPassword = byteArrayToHexString(md.digest(request.getParameter("password").getBytes()));
             
             person.setPASSWORD(shaPassword);
@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("userState", 1);
                 response.sendRedirect("index.jsp"); //error page 
             }
-        } catch (Exception ex) {
+        } catch (IOException | NoSuchAlgorithmException ex) {
             System.out.println(ex);
         }
 

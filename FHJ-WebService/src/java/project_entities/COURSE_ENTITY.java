@@ -18,19 +18,17 @@ import javax.persistence.OneToMany;
 @Entity
 public class COURSE_ENTITY implements Serializable {
 
-      public COURSE_ENTITY () {
+    public COURSE_ENTITY() {
     }
-    
-    public COURSE_ENTITY (String COURSE_PK, String COURSE_NAME, int LECTURER_PK, int SEMESTER, String STUDY, List<GRADE_ENTITY> GRADE_ENTITies) {
+
+    public COURSE_ENTITY(String COURSE_PK, String COURSE_NAME, int LECTURER_PK, int SEMESTER, String STUDY) {
         this.setCOURSE_PK(Long.parseLong(COURSE_PK));
         this.setCOURSE_NAME(COURSE_NAME);
         this.setLECTURER_PK(LECTURER_PK);
         this.setSEMESTER(SEMESTER);
         this.setSTUDY(STUDY);
-        this.setGRADE_ENTITies(GRADE_ENTITies);
     }
-    
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long COURSE_PK;
@@ -40,10 +38,10 @@ public class COURSE_ENTITY implements Serializable {
 
     @Basic
     private int LECTURER_PK;
-    
+
     @Basic
     private int SEMESTER;
-    
+
     @Basic
     private String STUDY;
 
@@ -97,7 +95,5 @@ public class COURSE_ENTITY implements Serializable {
     public void setSTUDY(String STUDY) {
         this.STUDY = STUDY;
     }
-    
-    
 
 }
