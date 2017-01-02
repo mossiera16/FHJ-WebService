@@ -41,7 +41,6 @@
 
             if (request.getParameter("add") != null) {
                 response.sendRedirect("index.jsp");
-
             }
 
         %>

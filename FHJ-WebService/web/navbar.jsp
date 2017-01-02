@@ -33,7 +33,7 @@
                     } else if(personNavbar.getPERSON_TYPE().personType == 2) {
                         out.print("<span style='color: #78b832;' class='glyphicon glyphicon-education' aria-hidden='true' data-toggle='tooltip' title='Student/-in'></span>");
                     }else{
-                        out.print("<span style='color: #78b832;' class='glyphicon glyphicon-cog' aria-hidden='true' data-toggle='tooltip' title='Student/-in'></span>");
+                        out.print("<span style='color: #78b832;' class='glyphicon glyphicon-cog' aria-hidden='true' data-toggle='tooltip' title='Administrator/-in'></span>");
                     }
                     %>
                     <span style="color: #78b832;"><%

@@ -8,6 +8,7 @@
 package project_classes;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -79,7 +80,7 @@ public class DBAccess<T> {
             ResultSet rs;
             PreparedStatement stmt = dbConnection.prepareStatement(sqlStatement);
 
-            if(parameterValues != null) {
+            if (parameterValues != null) {
                 for (int i = 0; i < parameterValues.length; i++) {
                     stmt.setInt(i + 1, Integer.parseInt(parameterValues[i].toString()));
                 }
@@ -101,13 +102,24 @@ public class DBAccess<T> {
             dbConnection.setAutoCommit(true);
             PreparedStatement stmt = dbConnection.prepareStatement(sqlStatement);
             for (int i = 0; i < parameterValues.length; i++) {
-                stmt.setInt(i + 1, Integer.parseInt(parameterValues[i].toString()));
+                
+                if (parameterValues[i] instanceof String) {
+                    stmt.setString(i + 1, parameterValues[i].toString());
+                } else if (parameterValues[i] instanceof Integer || parameterValues[i] instanceof Long) {
+                    stmt.setInt(i + 1, Integer.parseInt(parameterValues[i].toString()));
+                } else if (parameterValues[i] instanceof Date) {
+                    stmt.setDate(i + 1, Date.valueOf(parameterValues[i].toString()));
+                }
             }
             return stmt.executeUpdate();
         } catch (NumberFormatException | SQLException ex) {
             System.out.println(ex.getMessage());
             return -1;
         }
+    }
+
+    enum DataObject {
+        String, Integer, Date;
     }
 
     public void DBPersistObject(Object objectToPersist) {
@@ -149,7 +161,7 @@ public class DBAccess<T> {
 
     public void DBCloseAccess() {
         try {
-            if (dbConnection!=null) {
+            if (dbConnection != null) {
                 dbConnection.close();
             } else {
                 if (emf != null) {
@@ -174,11 +186,11 @@ public class DBAccess<T> {
         try {
             //GRADE
             List<GRADE_ENTITY> gradeList1 = new ArrayList<>();
-            GRADE_ENTITY grade1 = new GRADE_ENTITY("1", 1, 1, 1, 1);//Standards in der Gesundheitsinformatik
-            GRADE_ENTITY grade2 = new GRADE_ENTITY("2", 2, 1, 1, 1);//Business Intelligence
-            GRADE_ENTITY grade9 = new GRADE_ENTITY("9", 5, 2, 2, 1);//HCIT
-            GRADE_ENTITY grade10 = new GRADE_ENTITY("10", 6, 3, 2, 1);//Selected Topics in Medical informatics
-            GRADE_ENTITY grade12 = new GRADE_ENTITY("12", 3, 2, 3, 1);//Softwarearchitekturen
+            GRADE_ENTITY grade1 = new GRADE_ENTITY("1", 1, 1, 1);//Standards in der Gesundheitsinformatik
+            GRADE_ENTITY grade2 = new GRADE_ENTITY("2", 2, 1, 1);//Business Intelligence
+            GRADE_ENTITY grade9 = new GRADE_ENTITY("9", 5, 2, 1);//HCIT
+            GRADE_ENTITY grade10 = new GRADE_ENTITY("10", 6, 3, 1);//Selected Topics in Medical informatics
+            GRADE_ENTITY grade12 = new GRADE_ENTITY("12", 3, 2, 1);//Softwarearchitekturen
             gradeList1.add(grade1);
             gradeList1.add(grade2);
             gradeList1.add(grade9);
@@ -188,17 +200,17 @@ public class DBAccess<T> {
             DBPersistObjects((List<Object>) (List<?>) gradeList1);
 
             List<GRADE_ENTITY> gradeList2 = new ArrayList<>();
-            GRADE_ENTITY grade3 = new GRADE_ENTITY("3", 1, 1, 1, 2);
-            GRADE_ENTITY grade4 = new GRADE_ENTITY("4", 2, 1, 1, 2);
+            GRADE_ENTITY grade3 = new GRADE_ENTITY("3", 1, 1, 2);
+            GRADE_ENTITY grade4 = new GRADE_ENTITY("4", 2, 1, 2);
             gradeList2.add(grade3);
             gradeList2.add(grade4);
 
             DBPersistObjects((List<Object>) (List<?>) gradeList2);
 
             List<GRADE_ENTITY> gradeList3 = new ArrayList<>();
-            GRADE_ENTITY grade5 = new GRADE_ENTITY("5", 1, 1, 1, 4);
-            GRADE_ENTITY grade6 = new GRADE_ENTITY("6", 2, 1, 1, 4);
-            GRADE_ENTITY grade14 = new GRADE_ENTITY("14", 3, 0, 3, 4);
+            GRADE_ENTITY grade5 = new GRADE_ENTITY("5", 1, 1, 4);
+            GRADE_ENTITY grade6 = new GRADE_ENTITY("6", 2, 1, 4);
+            GRADE_ENTITY grade14 = new GRADE_ENTITY("14", 3, 0, 4);
             gradeList3.add(grade5);
             gradeList3.add(grade6);
             gradeList3.add(grade14);
@@ -206,8 +218,8 @@ public class DBAccess<T> {
             DBPersistObjects((List<Object>) (List<?>) gradeList3);
 
             List<GRADE_ENTITY> gradeList4 = new ArrayList<>();
-            GRADE_ENTITY grade7 = new GRADE_ENTITY("7", 1, 1, 1, 5);
-            GRADE_ENTITY grade8 = new GRADE_ENTITY("8", 2, 1, 1, 5);
+            GRADE_ENTITY grade7 = new GRADE_ENTITY("7", 1, 1, 5);
+            GRADE_ENTITY grade8 = new GRADE_ENTITY("8", 2, 1, 5);
             gradeList4.add(grade7);
             gradeList4.add(grade8);
 

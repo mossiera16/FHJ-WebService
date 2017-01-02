@@ -176,9 +176,6 @@
                             <th>
                                 Note
                             </th>
-                            <th>
-                                Semester
-                            </th>
                             <% if (person.getPERSON_TYPE().personType == 1) {
                                     out.print("<th>Vorname</th><th>Nachname</th><th>Studentennummer</th>");
                                 }

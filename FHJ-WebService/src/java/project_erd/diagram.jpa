@@ -233,9 +233,6 @@
             <jpa:basic attribute-type="int" visibile="true" name="COURSE_PK" id="_148035245479760">
                 <jpa:bv/>
             </jpa:basic>
-            <jpa:basic optional="false" attribute-type="int" visibile="true" name="SEMESTER" id="_148035252253363">
-                <jpa:bv/>
-            </jpa:basic>
             <jpa:basic attribute-type="int" visibile="true" name="GRADE" id="_148070351755122">
                 <jpa:bv/>
             </jpa:basic>
@@ -252,9 +249,6 @@
         </jpa:nq>
         <jpa:nq e="false" name="GRADE_ENTITY.findByCOURSE_PK">
             <jpa:query>Select g from GRADE_ENTITY g where g.COURSE_PK=:COURSE_PK</jpa:query>
-        </jpa:nq>
-        <jpa:nq e="false" name="GRADE_ENTITY.findBySEMESTER">
-            <jpa:query>Select g from GRADE_ENTITY g where g.SEMESTER=:SEMESTER</jpa:query>
         </jpa:nq>
         <jpa:nq e="false" name="GRADE.findByGRADE_ENTITY">
             <jpa:query>Select g from GRADE_ENTITY g where g.GRADE_ENTITY=:GRADE_ENTITY</jpa:query>

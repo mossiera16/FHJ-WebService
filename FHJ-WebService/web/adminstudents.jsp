@@ -40,8 +40,10 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <script type="text/javascript">
+            var table;
+            var studentPKsToDelete = [];
             $(document).ready(function () {
-                var table = $('#resultTable').DataTable({
+                table = $('#resultTable').DataTable({
                     "order": [[0, "asc"]],
                     "language": {
                         "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
@@ -49,11 +51,56 @@
                 });
                 $('#commit').click(function () {
                     var data = table.$('input, select').serialize();
-                    alert(data);
+                    var urlString = generataUrlString(studentPKsToDelete);
+                    
+                    if(urlString === ""){
+                        if(data !== ""){
+                            urlString = "?insert-update=" + data;
+                        }
+                    } else {
+                        urlString = "?delete=" + urlString + "&insert-update=" + data;
+                    }
+                    
                     document.getElementById("commit").style.background = "#A7D177";
                     commited = true;
+                    window.location.replace("adminstudents.jsp" + urlString);
+                });
+                
+                function generataUrlString(studentPKs){
+                   var urlString = "";
+                    for (var i = 0; i < studentPKs.length; i++) {
+                        urlString += studentPKs[i] +"=";
+                    }
+                    urlString = urlString.substring(0, urlString.length-1);
+                    return urlString;
+                }
+                
+                $('#add').on('click', function () {
+                    var myTr = $(this).closest('tr');
+                    var clone = myTr.clone();
+                    table.row.add(clone);
+                    myTr.after(clone);
+                    table.destroy();
+                    table = $('#resultTable').DataTable({
+                        "order": [[0, "asc"]],
+                        "language": {
+                            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
+                        }});
+                });
+                $('#resultTable tbody').on('click', 'tr', function () {
+                    if ($(this).hasClass('selected')) {
+                        $(this).removeClass('selected');
+                    } else {
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
                 });
             });
+
+            function removeStudent(studentPK) {
+                table.row('.selected').remove().draw(false);
+                studentPKsToDelete.push(studentPK);
+            };
 
             function setUncommitedStyle() {
                 document.getElementById("commit").style.background = "#F79E9E";
@@ -63,12 +110,14 @@
                 if (!commited)
                     return 'Wollen Sie die vorgenommenen Änderungen beibehalten?';
             };
+
+
         </script>
     </head>
     <%
         session.setAttribute("siteName", "students");
         ResultSet rsStudents = null;
-
+        String data = "";
         PERSON person = (PERSON) session.getAttribute("currentSessionUser");
         if (person == null) {
             session.setAttribute("userState", 2);
@@ -77,8 +126,13 @@
             return;
         } else {
             rsStudents = person.getStudents();
+            if (request.getParameter("delete") != null || request.getParameter("insert-update") != null) {
+                data = request.getQueryString();
+                person.administrateStudents(data);
+                response.sendRedirect("adminstudents.jsp");
+            }
         }
-        %>
+    %>
     <body>
         <%@include  file="navbar.jsp" %>
 
@@ -91,11 +145,12 @@
                     </div>
                     <div class="btn-group" style="margin-top: 1em; margin-bottom: 1em;">
                         <a style="text-decoration: none;" role="button" id="commit" class="btn btn-default btn-sm">
-                         <span class='glyphicon glyphicon-floppy-disk' aria-hidden="true"></span>Eingaben bestätigen
+                            <span class='glyphicon glyphicon-floppy-disk' aria-hidden="true"></span>Eingaben bestätigen
                         </a>
                     </div>
                     <table id="resultTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
                         <thead>
+                        <th></th>
                         <th>
                             #
                         </th>
