@@ -28,7 +28,7 @@
         <link href="css/datatables.css" rel="stylesheet">
         <script src="bootstrap/js/jquery.js" type="text/javascript"></script>
         <script src="bootstrap/js/jquery-datatables.js" type="text/javascript"></script>
-
+        <script src="administration.js" type="text/javascript"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 
         <!-- Custom styles for this template -->
@@ -39,80 +39,6 @@
           <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <script type="text/javascript">
-            var table;
-            var studentPKsToDelete = [];
-            $(document).ready(function () {
-                table = $('#resultTable').DataTable({
-                    "order": [[0, "asc"]],
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
-                    }
-                });
-                $('#commit').click(function () {
-                    var data = table.$('input, select').serialize();
-                    var urlString = generataUrlString(studentPKsToDelete);
-                    
-                    if(urlString === ""){
-                        if(data !== ""){
-                            urlString = "?insert-update=" + data;
-                        }
-                    } else {
-                        urlString = "?delete=" + urlString + "&insert-update=" + data;
-                    }
-                    
-                    document.getElementById("commit").style.background = "#A7D177";
-                    commited = true;
-                    window.location.replace("adminstudents.jsp" + urlString);
-                });
-                
-                function generataUrlString(studentPKs){
-                   var urlString = "";
-                    for (var i = 0; i < studentPKs.length; i++) {
-                        urlString += studentPKs[i] +"=";
-                    }
-                    urlString = urlString.substring(0, urlString.length-1);
-                    return urlString;
-                }
-                
-                $('#add').on('click', function () {
-                    var myTr = $(this).closest('tr');
-                    var clone = myTr.clone();
-                    table.row.add(clone);
-                    myTr.after(clone);
-                    table.destroy();
-                    table = $('#resultTable').DataTable({
-                        "order": [[0, "asc"]],
-                        "language": {
-                            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
-                        }});
-                });
-                $('#resultTable tbody').on('click', 'tr', function () {
-                    if ($(this).hasClass('selected')) {
-                        $(this).removeClass('selected');
-                    } else {
-                        table.$('tr.selected').removeClass('selected');
-                        $(this).addClass('selected');
-                    }
-                });
-            });
-
-            function removeStudent(studentPK) {
-                table.row('.selected').remove().draw(false);
-                studentPKsToDelete.push(studentPK);
-            };
-
-            function setUncommitedStyle() {
-                document.getElementById("commit").style.background = "#F79E9E";
-                commited = false;
-            }
-            window.onbeforeunload = function () {
-                if (!commited)
-                    return 'Wollen Sie die vorgenommenen Änderungen beibehalten?';
-            };
-
-
-        </script>
     </head>
     <%
         session.setAttribute("siteName", "students");
@@ -128,12 +54,12 @@
             rsStudents = person.getStudents();
             if (request.getParameter("delete") != null || request.getParameter("insert-update") != null) {
                 data = request.getQueryString();
-                person.administrateStudents(data);
+                person.administrateData(data, "students", 11);
                 response.sendRedirect("adminstudents.jsp");
             }
         }
     %>
-    <body>
+    <body onload="administration('adminstudents.jsp')">
         <%@include  file="navbar.jsp" %>
 
         <div class="container-fluid">

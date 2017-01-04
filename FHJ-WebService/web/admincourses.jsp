@@ -8,6 +8,7 @@
  */
 --%>
 <jsp:useBean id="adminCoursesMessage" class="project_classes.MessageHandler"></jsp:useBean>
+<%@page import="java.sql.ResultSet" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="project_classes.PERSON"%>
 <!DOCTYPE html>
@@ -24,7 +25,10 @@
 
         <!-- Bootstrap core CSS -->
         <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
+        <link href="css/datatables.css" rel="stylesheet">
+        <script src="bootstrap/js/jquery.js" type="text/javascript"></script>
+        <script src="bootstrap/js/jquery-datatables.js" type="text/javascript"></script>
+        <script src="administration.js" type="text/javascript"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 
         <!-- Custom styles for this template -->
@@ -35,19 +39,30 @@
           <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+        
     </head>
     <%
         session.setAttribute("siteName", "courses");
-
+        ResultSet rsCourses = null;
+        ResultSet rsLecturers = null;
+        String data = "";
         PERSON person = (PERSON) session.getAttribute("currentSessionUser");
         if (person == null) {
             session.setAttribute("userState", 2);
             String redirectURL = "index.jsp";
             response.sendRedirect(redirectURL);
             return;
+        }else {
+            rsCourses = person.getCourses();
+            rsLecturers = person.getLecturers();
+            if (request.getParameter("delete") != null || request.getParameter("insert-update") != null) {
+                data = request.getQueryString();
+                person.administrateData(data, "courses", 5);
+                response.sendRedirect("admincourses.jsp");
+            }
         }
         %>
-    <body>
+    <body onload="administration('admincourses.jsp')">
         <%@include  file="navbar.jsp" %>
 
         <div class="container-fluid">
@@ -57,15 +72,40 @@
                     <div>
                         <h1 class="page-header">Kursverwaltung</h1>
                     </div>
-                        
+                   <div class="btn-group" style="margin-top: 1em; margin-bottom: 1em;">
+                        <a style="text-decoration: none;" role="button" id="commit" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-floppy-disk' aria-hidden="true"></span>Eingaben bestätigen
+                        </a>
+                    </div>
+                    <table id="resultTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
+                        <thead>
+                        <th></th>
+                        <th>
+                            #
+                        </th>
+                        <th>
+                            Kursname
+                        </th>
+                        <th>
+                            Vortragender
+                        </th>
+                        <th>
+                            Semester
+                        </th>
+                        <th>
+                            Studium
+                        </th>
+                        </thead>
+                        <tbody>
+                            <%= adminCoursesMessage.getCourseDetailsForAdmin(rsCourses, rsLecturers, person) %>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <!-- Bootstrap core JavaScript-->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="bootstrap/assets/js/vendor/jquery.min.js"><\/script>');</script>
         <script src="bootstrap/dist/js/bootstrap.min.js"></script>
     </body>
 </html>

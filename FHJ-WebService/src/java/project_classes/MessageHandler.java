@@ -9,6 +9,7 @@ package project_classes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageHandler {
@@ -323,8 +324,8 @@ public class MessageHandler {
             int count = 1;
 
             while (rs.next()) {
-                result += "<tr id='"+ rs.getString("PERSON_PK") +"'>";
-                result += "<td><span id='remove' style=\"cursor: pointer;\" onclick=\"removeStudent('" + rs.getInt("PERSON_PK") + "');\" class='glyphicon glyphicon-remove-circle' aria-hidden='true' data-toggle='tooltip' title='Student/-in entfernen'></span></td>";
+                result += "<tr id='" + rs.getString("PERSON_PK") + "'>";
+                result += "<td><span id='remove' style=\"cursor: pointer;\" onclick=\"remove('" + rs.getInt("PERSON_PK") + "');\" class='glyphicon glyphicon-remove-circle' aria-hidden='true' data-toggle='tooltip' title='Student/-in entfernen'></span></td>";
                 result += "<td> " + count + "</td>";
                 result += "<td><select onchange='setUncommitedStyle()' size=\"1\" id=\"" + rs.getInt("PERSON_PK") + "\" name=\"" + rs.getInt("PERSON_PK") + "\">";
                 result += getAdminSexSelectBox(rs.getString("ADMINSEX"));
@@ -362,7 +363,7 @@ public class MessageHandler {
             result += "<td><input onchange='setUncommitedStyle()'  type='text' id='0' name='0' value=''/></td>";
             result += "<td><input onchange='setUncommitedStyle()'  type='text' id='0' name='0' value=''/></td>";
             result += "</tr>";
-            
+
             return result;
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -408,16 +409,16 @@ public class MessageHandler {
                 result += semester1 + "<option value=\"2\" selected=\"selected\">Semester 2</option>" + semester3 + semester4 + semester5 + semester6;
                 break;
             case 3:
-                result += semester1 + semester2 + "<option value=\"2\" selected=\"selected\">Semester 3</option>" + semester4 + semester5 + semester6;
+                result += semester1 + semester2 + "<option value=\"3\" selected=\"selected\">Semester 3</option>" + semester4 + semester5 + semester6;
                 break;
             case 4:
-                result += semester1 + semester2 + semester3 + "<option value=\"2\" selected=\"selected\">Semester 4</option>" + semester5 + semester6;
+                result += semester1 + semester2 + semester3 + "<option value=\"4\" selected=\"selected\">Semester 4</option>" + semester5 + semester6;
                 break;
             case 5:
-                result += semester1 + semester2 + semester3 + semester4 + "<option value=\"2\" selected=\"selected\">Semester 5</option>" + semester6;
+                result += semester1 + semester2 + semester3 + semester4 + "<option value=\"5\" selected=\"selected\">Semester 5</option>" + semester6;
                 break;
             case 6:
-                result += semester1 + semester2 + semester3 + semester4 + semester5 + "<option value=\"2\" selected=\"selected\">Semester 6</option>";
+                result += semester1 + semester2 + semester3 + semester4 + semester5 + "<option value=\"6\" selected=\"selected\">Semester 6</option>";
                 break;
             default:
                 result += "<option value=\"1\" selected=\"selected\">Semester 1</option>" + semester2 + semester3 + semester4 + semester5 + semester6;
@@ -426,5 +427,111 @@ public class MessageHandler {
 
         return result;
     }
+
+    public String getCourseDetailsForAdmin(ResultSet rs, ResultSet rsLecturers, PERSON person) {
+        try {
+            String result = "";
+            int count = 1;
+            while (rs.next()) {
+                result += "<tr id='" + rs.getString("COURSE_PK") + "'>";
+                result += "<td><span id='remove' style=\"cursor: pointer;\" onclick=\"remove('" + rs.getInt("COURSE_PK") + "');\" class='glyphicon glyphicon-remove-circle' aria-hidden='true' data-toggle='tooltip' title='Kurs entfernen'></span></td>";
+                result += "<td> " + count + "</td>";
+                result += "<td><input onchange='setUncommitedStyle()' type='text' id='" + rs.getInt("COURSE_PK") + "' name='" + rs.getInt("COURSE_PK") + "' value='" + rs.getString("COURSE_NAME") + "'/></td>";
+                result += "<td><select onchange='setUncommitedStyle()' size=\"1\" id=\"" + rs.getInt("COURSE_PK") + "\" name=\"" + rs.getInt("COURSE_PK") + "\">";
+                result += getLecturerSelectBox(rs.getInt("PERSON_PK"), rsLecturers);
+                result += "</select></td>";
+                result += "<td><input  onchange='setUncommitedStyle()' type='text' id='" + rs.getInt("COURSE_PK") + "' name='" + rs.getInt("COURSE_PK") + "' value='" + rs.getInt("SEMESTER") + "'/></td>";
+                result += "<td><input onchange='setUncommitedStyle()'  type='text' id='" + rs.getInt("COURSE_PK") + "' name='" + rs.getInt("COURSE_PK") + "' value='" + rs.getString("STUDY") + "'/></td>";
+
+                result += "</tr>";
+                count++;
+                rsLecturers = person.getLecturers();
+            }
+            result += "<tr>";
+            result += "<td><span id='add' style=\"cursor: pointer;\" class='glyphicon glyphicon-plus-sign' aria-hidden='true'></span></td>";
+            result += "<td>neu</td>";
+            result += "<td><input onchange='setUncommitedStyle()' type='text' id='0' name='0' value=''/></td>";
+            result += "<td><select onchange='setUncommitedStyle()' size=\"1\" id=\"0\" name=\"0\">";
+            result += getLecturerSelectBox(0, rsLecturers);
+            result += "</select></td>";
+            result += "<td><input onchange='setUncommitedStyle()' type='text' id='0' name='0' value=''/></td>";
+            result += "<td><input  onchange='setUncommitedStyle()' type='text' id='0' name='0' value=''/></td>";
+
+            result += "</tr>";
+
+            return result;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
+
+  
+
+    private String getLecturerSelectBox(Integer LECTURER_PK, ResultSet rsLecturers) {
+        try {
+            String result = "";
+            while (rsLecturers.next()) {
+                if (rsLecturers.getInt("PERSON_PK") == LECTURER_PK) {
+                    result += "<option value=\"" + LECTURER_PK + "\" selected=\"selected\">" + rsLecturers.getString("FIRSTNAME") + " " + rsLecturers.getString("LASTNAME") + "</option>";
+                } else {
+
+                    result += "<option value=\"" + rsLecturers.getInt("PERSON_PK") + "\">" + rsLecturers.getString("FIRSTNAME") + " " + rsLecturers.getString("LASTNAME") + "</option>";
+                }
+            }
+
+            return result;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return "";
+        }
+    }
+    
+     public String getLecturerDetailsForAdmin(ResultSet rs) {
+        try {
+            String result = "";
+            int count = 1;
+
+            while (rs.next()) {
+                result += "<tr id='" + rs.getString("PERSON_PK") + "'>";
+                result += "<td><span id='remove' style=\"cursor: pointer;\" onclick=\"remove('" + rs.getInt("PERSON_PK") + "');\" class='glyphicon glyphicon-remove-circle' aria-hidden='true' data-toggle='tooltip' title='Student/-in entfernen'></span></td>";
+                result += "<td> " + count + "</td>";
+                result += "<td><select onchange='setUncommitedStyle()' size=\"1\" id=\"" + rs.getInt("PERSON_PK") + "\" name=\"" + rs.getInt("PERSON_PK") + "\">";
+                result += getAdminSexSelectBox(rs.getString("ADMINSEX"));
+                result += "</select></td>";
+                result += "<td><input onchange='setUncommitedStyle()' type='text' id='" + rs.getInt("PERSON_PK") + "' name='" + rs.getInt("PERSON_PK") + "' value='" + rs.getDate("BIRTHDATE") + "'/></td>";
+                result += "<td><input  onchange='setUncommitedStyle()' type='text' id='" + rs.getInt("PERSON_PK") + "' name='" + rs.getInt("PERSON_PK") + "' value='" + rs.getInt("EMPLOEE_NR") + "'/></td>";
+                result += "<td><input  onchange='setUncommitedStyle()' type='text' id='" + rs.getInt("PERSON_PK") + "' name='" + rs.getInt("PERSON_PK") + "' value='" + rs.getString("FIRSTNAME") + "'/></td>";
+                result += "<td><input onchange='setUncommitedStyle()'  type='text' id='" + rs.getInt("PERSON_PK") + "' name='" + rs.getInt("PERSON_PK") + "' value='" + rs.getString("LASTNAME") + "'/></td>";
+                result += "<td><input onchange='setUncommitedStyle()'  type='text' id='" + rs.getInt("PERSON_PK") + "' name='" + rs.getInt("PERSON_PK") + "' value='" + rs.getString("USERNAME") + "'/></td>";
+                result += "<td><input onchange='setUncommitedStyle()' type='text' id='" + rs.getInt("PERSON_PK") + "' name='" + rs.getInt("PERSON_PK") + "' value='" + rs.getInt("SSN") + "'/></td>";
+                result += "<td><input onchange='setUncommitedStyle()'  type='text' id='" + rs.getInt("PERSON_PK") + "' name='" + rs.getInt("PERSON_PK") + "' value='" + rs.getString("TITLE") + "'/></td>";
+
+                result += "</tr>";
+                count++;
+            }
+            result += "<tr>";
+            result += "<td><span id='add' style=\"cursor: pointer;\" class='glyphicon glyphicon-plus-sign' aria-hidden='true'></span></td>";
+            result += "<td>neu</td>";
+            result += "<td><select onchange='setUncommitedStyle()' size=\"1\" id=\"0\" name=\"0\">";
+            result += getAdminSexSelectBox("");
+            result += "</select></td>";
+            result += "<td><input onchange='setUncommitedStyle()' type='text' id='0' name='0' value=''/></td>";
+            result += "<td><input onchange='setUncommitedStyle()' type='text' id='0' name='0' value=''/></td>";
+            result += "<td><input  onchange='setUncommitedStyle()' type='text' id='0' name='0' value=''/></td>";
+            result += "<td><input onchange='setUncommitedStyle()'  type='text' id='0' name='0' value=''/></td>";
+            result += "<td><input onchange='setUncommitedStyle()'  type='text' id='0' name='0' value=''/></td>";
+            result += "<td><input onchange='setUncommitedStyle()' type='text' id='0' name='0' value=''/></td>";
+            result += "<td><input onchange='setUncommitedStyle()' type='text' id='0' name='0' value=''/></td>";
+            result += "</tr>";
+
+            return result;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
+    
+    
 
 }

@@ -272,6 +272,30 @@ public class PERSON<T> {
         return rs;
     }
 
+    public ResultSet getCourses() {
+        ResultSet rs;
+        String sqlStatement = "SELECT course.*, lecturer.PERSON_PK, lecturer.FIRSTNAME, lecturer.LASTNAME \n"
+                + "FROM COURSE_ENTITY AS course, LECTURER_ENTITY AS lecturer WHERE course.LECTURER_PK = lecturer.PERSON_PK AND 1 = ?";
+        DBAccess dbAccess = new DBAccess(false);
+        Long[] parameterValues = new Long[]{Long.parseLong("1")};
+        rs = dbAccess.DBgetSQLResultSet(sqlStatement, parameterValues);
+
+        dbAccess.DBCloseAccess();
+        return rs;
+    }
+
+    public ResultSet getLecturers() {
+        ResultSet rs;
+        String sqlStatement = "SELECT * \n"
+                + "FROM LECTURER_ENTITY AS lecturer WHERE 1 = ?";
+        DBAccess dbAccess = new DBAccess(false);
+        Long[] parameterValues = new Long[]{Long.parseLong("1")};
+        rs = dbAccess.DBgetSQLResultSet(sqlStatement, parameterValues);
+
+        dbAccess.DBCloseAccess();
+        return rs;
+    }
+
     public void deleteStudentFromCourse(String studentPK, String coursePK) {
         String sqlStatement = "DELETE FROM GRADE_ENTITY as grade WHERE grade.STUDENT_PK = ? AND grade.COURSE_PK = ?";
 
@@ -282,18 +306,41 @@ public class PERSON<T> {
         dbAccess.DBCloseAccess();
     }
 
-    public void administrateStudents(String data) {
+    public void administrateData(String data, String adminType, Integer paramCount) {
+        String insertStatement = "", deleteStatement = "", updateStatement = "";
+        switch (adminType) {
+            case "courses": {
+                insertStatement = "INSERT INTO COURSE_ENTITY (COURSE_PK, COURSE_NAME, LECTURER_PK, SEMESTER, STUDY) VALUES(NEXT VALUE FOR SEQUENCE, ?, ?, ?, ?)";
+                deleteStatement = "DELETE FROM COURSE_ENTITY WHERE COURSE_PK = ?";
+                updateStatement = "UPDATE COURSE_ENTITY SET COURSE_NAME=?, LECTURER_PK=?, SEMESTER=?, STUDY=? WHERE COURSE_PK = ?";
+                break;
+            }
+            case "lecturers": {
+                insertStatement = "INSERT INTO LECTURER_ENTITY (PASSWORD, PERSON_PK, ADMINSEX, BIRTHDATE, EMPLOEE_NR, FIRSTNAME, LASTNAME, USERNAME, SSN, TITLE) VALUES('a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', NEXT VALUE FOR SEQUENCE, ?, ?, ?, ?, ?, ?, ?,?)";
+                deleteStatement = "DELETE FROM LECTURER_ENTITY WHERE PERSON_PK = ?";
+                updateStatement = "UPDATE LECTURER_ENTITY SET ADMINSEX=?, BIRTHDATE=?, EMPLOEE_NR=?, FIRSTNAME=?, LASTNAME=?, USERNAME=?, SSN=?, TITLE=? WHERE PERSON_PK = ?";
+                break;
+            }
+            case "students": {
+                insertStatement = "INSERT INTO STUDENT_ENTITY (PASSWORD, PERSON_PK, ADMINSEX, BIRTHDATE, FIRSTNAME, LASTNAME, USERNAME, SEMESTER, SSN, STUDENT_NR, TITLE, TYPE_OF_STUDY) VALUES('a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', NEXT VALUE FOR SEQUENCE, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                deleteStatement = "DELETE FROM STUDENT_ENTITY WHERE PERSON_PK = ?";
+                updateStatement = "UPDATE STUDENT_ENTITY SET ADMINSEX=?, BIRTHDATE=?, FIRSTNAME=?, LASTNAME=?, USERNAME=?, SEMESTER=?, SSN=?, STUDENT_NR=?, TITLE=?, TYPE_OF_STUDY=? WHERE PERSON_PK = ?";
+                break;
+            }
+
+        }
+
         String[] array = data.split("insert-update=");
-        String deleteStudents = array[0].replace("delete=", "");
-        adminDeleteStudents(deleteStudents);
-        String insertUpdateStudents = array[1];
-        adminInsertUpdateStudents(insertUpdateStudents);
+        String deleteData = array[0].replace("delete=", "");
+        adminDeleteData(deleteData, deleteStatement);
+        String insertUpdateData = array[1];
+        adminInsertUpdateData(insertUpdateData, insertStatement, updateStatement, paramCount);
+
     }
 
-    public void adminDeleteStudents(String deleteData) {
+    private void adminDeleteData(String deleteData, String deleteStatement) {
         try {
             if (!deleteData.equals("")) {
-            String deleteStatement = "DELETE FROM STUDENT_ENTITY WHERE PERSON_PK = ?";
                 Long[] parameterValues;
                 String[] deletePairs = deleteData.split("&");
                 String[] deleteArray;
@@ -306,19 +353,16 @@ public class PERSON<T> {
                     }
                 }
                 dbAccess.DBCloseAccess();
-                
             }
-       } catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             System.out.print("Error: " + ex.getMessage());
         }
     }
-
-    public void adminInsertUpdateStudents(String insertUpdateData) {
+    
+    private void adminInsertUpdateData(String insertUpdateData,String insertStatement,String updateStatement,Integer paramCount){
         try {
             if (!insertUpdateData.equals("")) {
-                String updateStatement = "UPDATE STUDENT_ENTITY SET ADMINSEX=?, BIRTHDATE=?, FIRSTNAME=?, LASTNAME=?, USERNAME=?, SEMESTER=?, SSN=?, STUDENT_NR=?, TITLE=?, TYPE_OF_STUDY=? WHERE PERSON_PK = ?";
-                String insertStatement = "INSERT INTO STUDENT_ENTITY (PASSWORD, PERSON_PK, ADMINSEX, BIRTHDATE, FIRSTNAME, LASTNAME, USERNAME, SEMESTER, SSN, STUDENT_NR, TITLE, TYPE_OF_STUDY) VALUES('a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', NEXT VALUE FOR SEQUENCE, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                String[] parameterValues = new String[11];
+                String[] parameterValues = new String[paramCount];
                 String[] insertUpdatePairs = insertUpdateData.split("&");
                 String[] insertUpdateArray;
                 DBAccess dbAccess = new DBAccess(false);
@@ -326,16 +370,17 @@ public class PERSON<T> {
                 for (String insertUpdatePair : insertUpdatePairs) {
                     if (!insertUpdatePair.equals("")) {
                         insertUpdateArray = insertUpdatePair.split("=");
-                        
-                        if(insertUpdateArray.length==1)
+
+                        if (insertUpdateArray.length == 1) {
                             break;
-                        parameterValues[count] = insertUpdateArray[1];
+                        }
+                        parameterValues[count] = insertUpdateArray[1].replace("+", " ");
                         count++;
-                        if (count == 10) {
+                        if (count == (paramCount-1)) {
                             parameterValues[count] = insertUpdateArray[0];
                             if (insertUpdateArray[0].equals("0")) {
-                                String[] parameterValuesToInsert = new String[10];
-                                parameterValuesToInsert = Arrays.copyOfRange(parameterValues, 0, 10);
+                                String[] parameterValuesToInsert = new String[(paramCount-1)];
+                                parameterValuesToInsert = Arrays.copyOfRange(parameterValues, 0, (paramCount-1));
                                 dbAccess.DBupdateData(insertStatement, parameterValuesToInsert);
                             } else {
                                 dbAccess.DBupdateData(updateStatement, parameterValues);
@@ -349,7 +394,6 @@ public class PERSON<T> {
         } catch (NumberFormatException ex) {
             System.out.print("Error: " + ex.getMessage());
         }
-
     }
 
     public void deleteInsertStudents(String deleteInsertData) {
