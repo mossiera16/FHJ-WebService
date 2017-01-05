@@ -9,7 +9,6 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 /**
  * @author Notebook

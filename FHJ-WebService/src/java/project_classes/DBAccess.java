@@ -43,7 +43,7 @@ public class DBAccess<T> {
                 emf = Persistence.createEntityManagerFactory(persistencyUnit);
                 em = emf.createEntityManager();
             } else {
-                DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+                //DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
                 String url = "jdbc:derby://localhost:1527/project";
                 String user = "administrator";
                 String password = "123";
