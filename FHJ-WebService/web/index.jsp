@@ -30,12 +30,14 @@
         <title>FH-Joanneum Kursverwaltungssystem</title>
     </head>
     <%
-        DBAccess dbAccess = new DBAccess(true);
+        //Die nächsten 3 Zeilen für das Einfügen der Testdaten auskommentieren 
+        //DBAccess dbAccess = new DBAccess(true);
         //dbAccess.DBInsertSampleData();
+        //dbAccess.DBCloseAccess();
         if (session.getAttribute("userState") == null) {
             session.setAttribute("userState", 0);
         }
-        //dbAccess.DBCloseAccess();
+        
     %>
 
     <body>

@@ -64,7 +64,8 @@ function administration(sitename) {
     });
 }
 function remove(PKToRemove) {
-    table.row('.selected').remove().draw(false);
+    document.getElementById(PKToRemove).style.display = "none";
+    //table.row('.selected').remove().draw(false);
     toDelete.push(PKToRemove);
     setUncommitedStyle();
 }

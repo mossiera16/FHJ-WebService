@@ -288,9 +288,9 @@ public class DBAccess<T> {
             COURSE_ENTITY course1 = new COURSE_ENTITY("1", "Standards in der Gesundheitsinformatik", 1, 1, "Masterstudium eHealth");
             COURSE_ENTITY course2 = new COURSE_ENTITY("2", "Business Intelligence", 2, 1, "Masterstudium eHealth");
             COURSE_ENTITY course3 = new COURSE_ENTITY("3", "Softwarearchitekturen", 3, 3, "Bachelorstudium eHealth");
-            COURSE_ENTITY course4 = new COURSE_ENTITY("4", "Softwareentwicklung", 4, 1, "Masterstudium eHealth");
-            COURSE_ENTITY course5 = new COURSE_ENTITY("5", "HCIT", 4, 2, "Masterstudium eHealth");
-            COURSE_ENTITY course6 = new COURSE_ENTITY("6", "Selected Topics in Medical Informatics", 3, 2, "Masterstudium eHealth");
+            COURSE_ENTITY course4 = new COURSE_ENTITY("4", "Softwareentwicklung", 1, 1, "Masterstudium eHealth");
+            COURSE_ENTITY course5 = new COURSE_ENTITY("5", "HCIT", 1, 2, "Masterstudium eHealth");
+            COURSE_ENTITY course6 = new COURSE_ENTITY("6", "Selected Topics in Medical Informatics", 1, 2, "Masterstudium eHealth");
 
             courses1.add(course1);
             courses2.add(course2);
@@ -308,9 +308,9 @@ public class DBAccess<T> {
 
             //LECTURERS
             List<LECTURER_ENTITY> lecturers = new ArrayList<>();
-            LECTURER_ENTITY lecturer1 = new LECTURER_ENTITY("1", "m", new java.sql.Date(format.parse("16.10.1955").getTime()), 1, "test", "test", "Jozef", false, "Aerts", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3333, "DDr.", "aertsjozef", courses1);
-            LECTURER_ENTITY lecturer2 = new LECTURER_ENTITY("2", "w", new java.sql.Date(format.parse("16.10.1975").getTime()), 2, "test", "test", "Johanna", false, "Wieser", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3337, "Dr.", "wieserjohanna", courses2);
-            LECTURER_ENTITY lecturer3 = new LECTURER_ENTITY("3", "m", new java.sql.Date(format.parse("01.5.1985").getTime()), 3, "test", "test", "Peter", false, "Seifter", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3338, "Dr.", "seifterpeter", courses3);
+            LECTURER_ENTITY lecturer1 = new LECTURER_ENTITY("1", "m", new java.sql.Date(format.parse("16.10.1955").getTime()), 1, "test", "test", "Jozef", false, "Aerts", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3333, "DDr.", "aertsjozef");
+            LECTURER_ENTITY lecturer2 = new LECTURER_ENTITY("2", "w", new java.sql.Date(format.parse("16.10.1975").getTime()), 2, "test", "test", "Johanna", false, "Wieser", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3337, "Dr.", "wieserjohanna");
+            LECTURER_ENTITY lecturer3 = new LECTURER_ENTITY("3", "m", new java.sql.Date(format.parse("01.5.1985").getTime()), 3, "test", "test", "Baptiste", false, "Alcalde", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3338, "Dr.", "alcaldebaptiste");
             lecturers.add(lecturer1);
             lecturers.add(lecturer2);
             lecturers.add(lecturer3);

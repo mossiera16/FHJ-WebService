@@ -12,6 +12,7 @@
 <%@page import="project_classes.PERSON"%>
 <%@page import="project_classes.COURSE"%>
 <%@page import="java.util.List"%>
+<%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
 <html lang="de">
     <head>
@@ -79,7 +80,7 @@
                     <div>
                         <h1 class="page-header">Kurse</h1>
                         <%                            
-                            List<COURSE> result = person.getCourseDetails(null, false);
+                            ResultSet result = person.getCourseDetails(null, false);
                         %>
                         <table id="courseTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
                             <thead>

@@ -16,7 +16,7 @@
       <property name="javax.persistence.jdbc.password" value="123"/>
       <property name="eclipselink.ddl-generation" value="none"/>
       <!--
-      for the first time:
+      for the first start (Testdaten):
       <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
       -->
     </properties>

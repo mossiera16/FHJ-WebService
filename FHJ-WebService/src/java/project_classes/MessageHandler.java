@@ -154,33 +154,44 @@ public class MessageHandler {
         return "";
     }
 
-    public String getResultCaption(Integer courseNumber, List<COURSE> courseDetails) {
-        String result = "<small>";
+    public String getResultCaption(Integer courseNumber, ResultSet courseDetails) {
+        try {
+            String result = "<small>";
+            
+            if (courseNumber == null) {
+                result += "aller Kurse</small>";
+            } else if(courseDetails.next()) {
+                result += "von " + courseDetails.getString("COURSE_NAME") + "</small>";
+            }
 
-        if (courseNumber == null) {
-            result += "aller Kurse</small>";
-        } else {
-            result += "von " + courseDetails.get(0).getCOURSE_NAME() + "</small>";
+            return result;
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex.getMessage());
+            return null;
         }
-
-        return result;
     }
 
-    public String getCourseDetails(List<COURSE> courses) {
-        if (courses != null) {
-            String result = "";
-
-            for (int i = 0; i < courses.size(); i++) {
-                result += "<tr class='clickable-row' data-href='results.jsp?courseNumber=" + courses.get(i).getCOURSE_PK().toString() + "' data-toggle=\"tooltip\" title='Ergebnisse von " + courses.get(i).getCOURSE_NAME() + "'>";
-                result += "<td> " + (i + 1) + "</td>";
-                result += "<td> " + courses.get(i).getCOURSE_NAME() + "</td>";
-                result += "<td> " + courses.get(i).getSEMESTER() + "</td>";
-                result += "<td> " + courses.get(i).getSTUDY() + "</td>";
-                result += "</tr>";
+    public String getCourseDetails(ResultSet courses) {
+        try {
+            if (courses != null) {
+                String result = "";
+                int i = 1;
+                while (courses.next()) {
+                    result += "<tr class='clickable-row' data-href='results.jsp?courseNumber=" + courses.getInt("COURSE_PK") + "' data-toggle=\"tooltip\" title='Ergebnisse von " + courses.getString("COURSE_NAME") + "'>";
+                    result += "<td> " + i + "</td>";
+                    result += "<td> " + courses.getString("COURSE_NAME") + "</td>";
+                    result += "<td> " + courses.getInt("SEMESTER") + "</td>";
+                    result += "<td> " + courses.getString("STUDY") + "</td>";
+                    result += "</tr>";
+                    i++;
+                }
+                return result;
             }
-            return result;
+            return null;
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex.getMessage());
+            return null;
         }
-        return null;
     }
 
     public String getGradeDetails(ResultSet rs, int personType) {
@@ -273,7 +284,7 @@ public class MessageHandler {
         }
     }
 
-    public String getGradeDetailsForModal(ResultSet rs, ResultSet rsStudentsToEnroll, List<COURSE> courseDetails) {
+    public String getGradeDetailsForModal(ResultSet rs, ResultSet rsStudentsToEnroll, ResultSet courseDetails) {
         try {
             String result = "";
             int count = 1;
@@ -304,9 +315,10 @@ public class MessageHandler {
             result += "<option value=\"0\" selected=\"selected\">\n"
                     + "Kurs auswählen\n"
                     + "</option>";
-            for (int i = 0; i < courseDetails.size(); i++) {
-                result += "<option value=" + courseDetails.get(i).getCOURSE_PK() + ">";
-                result += courseDetails.get(i).getCOURSE_NAME();
+            while (courseDetails.next()) {
+
+                result += "<option value=" + courseDetails.getInt("COURSE_PK") + ">";
+                result += courseDetails.getString("COURSE_NAME");
                 result += "</option>";
             }
             result += "</select></td>";
@@ -466,8 +478,6 @@ public class MessageHandler {
         }
     }
 
-  
-
     private String getLecturerSelectBox(Integer LECTURER_PK, ResultSet rsLecturers) {
         try {
             String result = "";
@@ -486,8 +496,8 @@ public class MessageHandler {
             return "";
         }
     }
-    
-     public String getLecturerDetailsForAdmin(ResultSet rs) {
+
+    public String getLecturerDetailsForAdmin(ResultSet rs) {
         try {
             String result = "";
             int count = 1;
@@ -531,7 +541,5 @@ public class MessageHandler {
             return null;
         }
     }
-    
-    
 
 }

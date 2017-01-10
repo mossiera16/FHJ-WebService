@@ -146,55 +146,40 @@ public class PERSON<T> {
         this.PERSON_PK = PERSON_PK;
     }
 
-    public List<COURSE> getCourseDetails(Integer COURSE_PK, boolean isResultCall) {
-        List<COURSE_ENTITY> dbResult;
+    public ResultSet getCourseDetails(Integer COURSE_PK, boolean isResultCall) {
+        ResultSet dbResult;
         String sqlStatement = "";
         switch (this.getPERSON_TYPE().personType) {
             case 2: {
-                sqlStatement = "SELECT course FROM STUDENT_ENTITY student, COURSE_ENTITY course, GRADE_ENTITY grade\n"
+                sqlStatement = "SELECT course.* FROM STUDENT_ENTITY student, COURSE_ENTITY course, GRADE_ENTITY grade\n"
                         + "WHERE student.PERSON_PK = grade.STUDENT_PK\n"
                         + "AND grade.COURSE_PK = course.COURSE_PK\n"
-                        + "AND student.PERSON_PK = :PERSON_PK";
+                        + "AND student.PERSON_PK = ?";
                 break;
             }
             case 1: {
-                sqlStatement = "SELECT course FROM LECTURER_ENTITY lecturer, COURSE_ENTITY course\n"
+                sqlStatement = "SELECT course.* FROM LECTURER_ENTITY lecturer, COURSE_ENTITY course\n"
                         + "WHERE course.LECTURER_PK = lecturer.PERSON_PK AND\n"
-                        + "lecturer.PERSON_PK = :PERSON_PK";
+                        + "lecturer.PERSON_PK = ?";
 
                 break;
             }
         }
 
         if (COURSE_PK != null) {
-            sqlStatement += " AND course.COURSE_PK = :COURSE_PK";
+            sqlStatement += " AND course.COURSE_PK = ?";
         } else if (!isResultCall) {
             sqlStatement += " GROUP BY course.COURSE_PK, course.COURSE_NAME, course.LECTURER_PK, course.SEMESTER, course.STUDY";
         }
-        dbResult = getCourseDetailsForPerson(sqlStatement, COURSE_PK);
-
-        List<COURSE> result = new ArrayList();
-        COURSE courseToConvert;
-        for (int i = 0; i < dbResult.size(); i++) {
-            courseToConvert = new COURSE();
-            result.add(i, courseToConvert.convertToCOURSE(dbResult.get(i)));
-        }
-
-        return result;
-    }
-
-    private List<COURSE_ENTITY> getCourseDetailsForPerson(String sqlStatement, Integer COURSE_PK) {
-        DBAccess dbAccess = new DBAccess(true);
-        List<COURSE_ENTITY> dbResult;
-        String[] parameterStrings = new String[]{"PERSON_PK"};
+        
+        DBAccess dbAccess = new DBAccess(false);
         Long[] parameterValues = new Long[]{this.getPERSON_PK()};
 
         if (COURSE_PK != null) {
-            parameterStrings = new String[]{"PERSON_PK", "COURSE_PK"};
             parameterValues = new Long[]{this.getPERSON_PK(), Long.parseLong(COURSE_PK.toString())};
         }
 
-        dbResult = dbAccess.DBgetSQLResultList(sqlStatement, parameterStrings, parameterValues);
+        dbResult = dbAccess.DBgetSQLResultSet(sqlStatement,  parameterValues);
         dbAccess.DBCloseAccess();
         return dbResult;
     }

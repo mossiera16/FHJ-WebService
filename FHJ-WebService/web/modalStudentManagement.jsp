@@ -14,7 +14,7 @@
 <html lang="en">
     <head>
         <%
-            List<COURSE> courseDetails = null;
+            ResultSet courseDetails = null;
             ResultSet rsStudentsToEnroll = null;
             ResultSet rs = null;
             Integer courseNumber = null;

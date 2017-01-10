@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <%
-        List<COURSE> courseDetails = null;
+        ResultSet courseDetails = null;
         ResultSet rs = null;
         Integer courseNumber = null;
         String updateData = "";
@@ -76,7 +76,6 @@
 
         <!-- Custom styles for this template -->
         <link href="css/dashboard.css" rel="stylesheet">
-        <link href="css/results.css" rel="stylesheet">
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
