@@ -4,13 +4,14 @@
  * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
+ * Seite: COURSE.java
+ * Beschreibung: Kopie der Entitäts-Klasse COURSE_ENTITY.java für erweiterte Funktionalitäten
  */
 package project_classes;
 
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.OneToMany;
-import project_entities.COURSE_ENTITY;
 import project_entities.GRADE_ENTITY;
 
 
@@ -76,39 +77,5 @@ public class COURSE<T> {
 
     public void setGRADE_ENTITies(List<GRADE_ENTITY> GRADE_ENTITies) {
         this.GRADE_ENTITies = GRADE_ENTITies;
-    }
-    
-  
-    
-    public COURSE_ENTITY convertToCOURSE_ENTITY(){
-        COURSE_ENTITY courseToConvert = new COURSE_ENTITY();
-        courseToConvert.setCOURSE_NAME(this.getCOURSE_NAME());
-        courseToConvert.setLECTURER_PK(this.getLECTURER_PK());
-        courseToConvert.setCOURSE_PK(this.getCOURSE_PK());
-        courseToConvert.setSEMESTER(this.getSEMESTER());
-        courseToConvert.setSTUDY(this.getSTUDY());
-        courseToConvert.setGRADE_ENTITies(this.getGRADE_ENTITies());
-        return courseToConvert;
-    }
-    
-    public COURSE convertToCOURSE(COURSE_ENTITY courseToConvert){
-        this.setCOURSE_NAME(courseToConvert.getCOURSE_NAME());
-        this.setLECTURER_PK(courseToConvert.getLECTURER_PK());
-        this.setCOURSE_PK(courseToConvert.getCOURSE_PK());
-        this.setSEMESTER(courseToConvert.getSEMESTER());
-        this.setSTUDY(courseToConvert.getSTUDY());
-        this.setGRADE_ENTITies(courseToConvert.getGRADE_ENTITies());
-        return this;
-    }
-    
-     public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof PERSON)) {
-            return false;
-        }
-        COURSE other = (COURSE) obj;
-        return this.getCOURSE_PK().equals(other.getCOURSE_PK());
     }
 }

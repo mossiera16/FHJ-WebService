@@ -1,9 +1,15 @@
 <%-- 
-    Document   : modalContainer
-    Created on : 29.12.2016, 16:20:32
-    Author     : Notebook
+ /*
+ * Autoren: Andreas Mossier, Mina Shokrollahi, Romana Ausim
+ * Programm: software_architecture
+ * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
+ * Fachhochschule Joanneum
+ * Datum: 16.12.2016
+ * Seite: modalStudentManagement.jsp
+ * Beschreibung: Dialogfenster für die Verwaltung der Studenten innerhalb eines Kurses (für Vortragende)
+ */
 --%>
-<jsp:useBean id="modalContainerMessages" class="project_classes.MessageHandler"></jsp:useBean>
+<jsp:useBean id="modalContainerMessages" class="project_classes.Data2HTMLConverterBean"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="project_classes.PERSON"%>
 <%@page import="project_classes.COURSE"%>
@@ -11,8 +17,20 @@
 <%@page import="java.util.Enumeration"%>
 <%@page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
+    <!--Erste Überprüfung mithilfe von Java:
+    * Setzung des Seitennamens
+    * Notwendige ResultSets instanzieren
+    * Session abfragen und überprüfen, ob Person angemeldet ist.
+        Wenn erfolgreich:
+        - Abfrage der notwendigen Daten für die Seite (ResultSets werden befüllt)
+        - Abfrage, ob der URL-Parameter delete oder insert-update für die Datenmanipulation gesetzt sind.
+            Wenn ja:
+            -- URL-String wird abgefragt und an eine Methode übergeben zur Durchführung der Datenmanipulationen 
+        Wenn nicht erfolgreich:
+        - Weiterleitung zur index.jsp Seite
+    -->
         <%
             ResultSet courseDetails = null;
             ResultSet rsStudentsToEnroll = null;
@@ -25,7 +43,9 @@
             if (request.getParameter("courseNumber") != null) {
                 courseNumber = (Integer) Integer.parseInt(request.getParameter("courseNumber"));
             }
+            //Abfrage der Kursdaten der Studenten
             rs = person.getGradeDetailsForPerson(courseNumber);
+            //Abfrage für die Auswahl der auszuwählenden Studenten
             rsStudentsToEnroll = person.getStudents();
             courseDetails = person.getCourseDetails(courseNumber, true);
             if (request.getParameter("update") != null) {
@@ -53,24 +73,21 @@
         <link rel="SHORTCUT ICON" href="images/favicon.png" type="image/png">
         <title>Ergebnisse - Kursverwaltungssystem</title>
 
-        <!-- Bootstrap core CSS -->
+         <!-- Bootstrap core CSS -->
         <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Datatables CSS -->
         <link href="css/datatables.css" rel="stylesheet">
-
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-
-        <!-- Custom styles for this template -->
+        <!-- Bootstrap core JavaScript -->
+        <script src="bootstrap/js/jquery.js" type="text/javascript"></script>
+        <script src="bootstrap/js/jquery-datatables.js" type="text/javascript"></script>
+        
         <link href="css/dashboard.css" rel="stylesheet">
         <link href="css/results.css" rel="stylesheet">
-        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
         <script type="text/javascript">
             var table;
             var studentPKsToDelete = [], coursePKsToDelete = [];
             var studentPKsToAdd = [], coursePKsToAdd = [];
+            //Initialisierung der Datentabelle für Sortierung, Filterung und ästhetische Darstellung der Informationen
             $(document).ready(function () {
                  table = $('#resultTable2').DataTable({
                     "order": [[1, "asc"]],
@@ -78,7 +95,7 @@
                         "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/German.json"
                     }
                 });
-
+                 //Falls auf den Button mit der ID: 'commit' geklickt wird, wird diese Funktion aufgerufen
                 $('#commit').click(function () {
                     var data = table.$('input, select').serialize();
                     var urlString = generataUrlString(studentPKsToDelete, coursePKsToDelete);
@@ -93,7 +110,8 @@
 
                     window.location.replace("results.jsp" + urlString);
                 });
-                
+                //In dieser Funktion wird ein Teil des URL-Strings generiert.
+                //Die übergebenen Primärschlüssel der zu löschenden Datensätze wird übergeben.
                 function generataUrlString(studentPKs, coursePKs){
                    var urlString = "";
                     for (var i = 0; i < studentPKs.length; i++) {
@@ -102,7 +120,9 @@
                     urlString = urlString.substring(0, urlString.length-1);
                     return urlString;
                 }
-
+                
+                //Falls auf den Button mit der ID: 'add' geklickt wird, wird diese Funktion aufgerufen
+                //Hierbei wird die letzte Zeile geklont und eine Zeile darunter eingefügt.
                 $('#add').on('click', function () {
                     var myTr = $(this).closest('tr');
                     var clone = myTr.clone();
@@ -115,11 +135,11 @@
                     }});
                 });
             });
+            //Funktion für das Entfernen (Zeile wird ausgeblendet und PK wird in ein Array gespeichert) 
             function remove(studentPK, coursePK) {
                 studentPKsToDelete.push(studentPK);
                 coursePKsToDelete.push(coursePK);
                 document.getElementById(studentPK + coursePK).style.display = "none";
-                //window.location.replace("results.jsp?personPK=" + studentPK + "&coursePK=" + coursePK);
             }
         </script>
     </head>

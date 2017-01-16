@@ -4,23 +4,20 @@
  * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
+ * Seite: PERSON.java
+ * Beschreibung: Kopie der Entitäts-Klasse PERSON_ENTITY.java für erweiterte Funktionalitäten:
+ * Funktionen für die Abfrage von Kurs- und Ergebnisdaten
+ * Funktionen für die Manipulation von Daten
  */
 package project_classes;
 
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import javax.persistence.Basic;
-import project_entities.COURSE_ENTITY;
 
-/**
- *
- * @author Notebook
- * @param <T>
- */
+
 public class PERSON<T> {
 
     @Basic(optional = false)
@@ -146,6 +143,9 @@ public class PERSON<T> {
         this.PERSON_PK = PERSON_PK;
     }
 
+    /*
+        Funktion für die Abfrage von Kursdetails (Studenten/Vortragende)
+    */
     public ResultSet getCourseDetails(Integer COURSE_PK, boolean isResultCall) {
         ResultSet dbResult;
         String sqlStatement = "";
@@ -184,6 +184,9 @@ public class PERSON<T> {
         return dbResult;
     }
 
+    /*
+        Funktion für die Abfrage von Ergebnisdetails für eine bestimmte Person (Studenten/Vortragende)
+    */
     public ResultSet getGradeDetailsForPerson(Integer COURSE_PK) {
         ResultSet rs;
         String sqlStatement = "";
@@ -206,7 +209,10 @@ public class PERSON<T> {
 
         return rs;
     }
-
+    
+    /*
+        Funktion für das Setzen des SQL-Statements für die Abfrage der Ergebnisdetails für Vortragende
+    */
     public String getGradeDetailsForLecturer() {
         return "SELECT course.COURSE_PK, grade.GRADE_PK, course.COURSE_NAME, grade.GRADE, student.FIRSTNAME, student.LASTNAME, student.STUDENT_NR, student.PERSON_PK FROM LECTURER_ENTITY AS lecturer, COURSE_ENTITY AS course, GRADE_ENTITY AS grade, STUDENT_ENTITY AS student\n"
                 + "WHERE lecturer.PERSON_PK = course.LECTURER_PK\n"
@@ -214,7 +220,9 @@ public class PERSON<T> {
                 + "AND grade.STUDENT_PK = student.PERSON_PK\n"
                 + "AND lecturer.PERSON_PK = ?";
     }
-
+    /*
+        Funktion für das Setzen des SQL-Statements für die Abfrage der Ergebnisdetails für Studenten
+    */
     public String getGradeDetailsForStudent() {
         return "SELECT course.COURSE_NAME, grade.GRADE FROM STUDENT_ENTITY AS student, COURSE_ENTITY AS course, GRADE_ENTITY AS grade\n"
                 + "WHERE student.PERSON_PK = grade.STUDENT_PK\n"
@@ -222,6 +230,9 @@ public class PERSON<T> {
                 + "AND student.PERSON_PK = ?";
     }
 
+    /*
+        Funktion für die Manipulation der Ergebnisdaten
+    */
     public void updateGradeDetails(String updateData, Integer courseNumber) {
         if (!updateData.equals("")) {
             String cleanedUpdateData;
@@ -245,6 +256,9 @@ public class PERSON<T> {
         }
     }
 
+    /*
+        Funktion für die Abfrage aller Studenten
+    */
     public ResultSet getStudents() {
         ResultSet rs;
         String sqlStatement = "SELECT * \n"
@@ -256,7 +270,10 @@ public class PERSON<T> {
         dbAccess.DBCloseAccess();
         return rs;
     }
-
+    
+    /*
+        Funktion für die Abfrage aller Kurse
+    */
     public ResultSet getCourses() {
         ResultSet rs;
         String sqlStatement = "SELECT course.*, lecturer.PERSON_PK, lecturer.FIRSTNAME, lecturer.LASTNAME \n"
@@ -269,6 +286,9 @@ public class PERSON<T> {
         return rs;
     }
 
+    /*
+        Funktion für die Abfrage aller Vortragenden
+    */
     public ResultSet getLecturers() {
         ResultSet rs;
         String sqlStatement = "SELECT * \n"
@@ -281,6 +301,9 @@ public class PERSON<T> {
         return rs;
     }
 
+    /*
+        Funktion für die Löschung von Studenten aus einem bestimmten Kurs 
+    */
     public void deleteStudentFromCourse(String studentPK, String coursePK) {
         String sqlStatement = "DELETE FROM GRADE_ENTITY as grade WHERE grade.STUDENT_PK = ? AND grade.COURSE_PK = ?";
 
@@ -291,6 +314,9 @@ public class PERSON<T> {
         dbAccess.DBCloseAccess();
     }
 
+    /*
+        Funktion für die administrative Verwaltung von Kursen, Vortragenden und Studenten
+    */
     public void administrateData(String data, String adminType, Integer paramCount) {
         String insertStatement = "", deleteStatement = "", updateStatement = "";
         switch (adminType) {
@@ -322,7 +348,10 @@ public class PERSON<T> {
         adminInsertUpdateData(insertUpdateData, insertStatement, updateStatement, paramCount);
 
     }
-
+    
+    /*
+        Funktion für das Löschen von Kursen, Vortragenden und Studenten
+    */
     private void adminDeleteData(String deleteData, String deleteStatement) {
         try {
             if (!deleteData.equals("")) {
@@ -344,6 +373,9 @@ public class PERSON<T> {
         }
     }
     
+    /*
+        Funktion für die Manipulation von Kursen, Vortragenden und Studenten
+    */
     private void adminInsertUpdateData(String insertUpdateData,String insertStatement,String updateStatement,Integer paramCount){
         try {
             if (!insertUpdateData.equals("")) {
@@ -380,7 +412,11 @@ public class PERSON<T> {
             System.out.print("Error: " + ex.getMessage());
         }
     }
-
+    
+    /*
+        Funktion für die Verwaltung von Studenten durch Vortragende
+        (Hinzufügen/Entfernen aus Kursen, die dem Vortragenden zugewiesen sind)
+    */
     public void deleteInsertStudents(String deleteInsertData) {
         String[] array = deleteInsertData.split("insert");
         deleteStudents(array[0].replace("delete=", ""));
@@ -388,6 +424,9 @@ public class PERSON<T> {
         insertStudents(array[1].replace("id", "").replace("=", ""));
     }
 
+    /*
+        Funktion für die Löschung von Studenten durch Vortragende
+    */
     private void deleteStudents(String deleteData) {
         try {
             if (!deleteData.equals("")) {
@@ -409,7 +448,10 @@ public class PERSON<T> {
             System.out.print("Error: " + ex.getMessage());
         }
     }
-
+    
+    /*
+        Funktion für das Einfügen von Studenten durch Vortragende
+    */
     private void insertStudents(String insertData) {
         try {
             String[] insertArray = insertData.split("&");
@@ -431,6 +473,6 @@ public class PERSON<T> {
         } catch (NumberFormatException | SQLException ex) {
             System.out.print("Error: " + ex.getMessage());
         }
-
     }
+
 }

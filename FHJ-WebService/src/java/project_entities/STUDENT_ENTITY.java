@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 /**
- * @author Notebook
+ * Student
  */
 @Entity
 public class STUDENT_ENTITY extends PERSON_ENTITY implements Serializable, PERSON {
@@ -76,6 +76,8 @@ public class STUDENT_ENTITY extends PERSON_ENTITY implements Serializable, PERSO
     public void setGRADE_ENTITies(List<GRADE_ENTITY> GRADE_ENTITies) {
         this.GRADE_ENTITies = GRADE_ENTITies;
     }
+    
+    //Demonstration des Entwurfsmusters PROTOTYPE
     
     @Override
     public PERSON_ENTITY getClone(){

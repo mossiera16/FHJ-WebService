@@ -14,7 +14,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 
 /**
- * @author Notebook
+ * Superklasse PERSON
  */
 @MappedSuperclass
 public abstract class PERSON_ENTITY implements Serializable  {    

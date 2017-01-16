@@ -5,9 +5,11 @@
  * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
+ * Seite: courses.jsp
+ * Beschreibung: Seite für die Übersicht der Kurse (Vortragende und Studenten)
  */
 --%>
-<jsp:useBean id="coursesMessages" class="project_classes.MessageHandler"></jsp:useBean>
+<jsp:useBean id="coursesMessages" class="project_classes.Data2HTMLConverterBean"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="project_classes.PERSON"%>
 <%@page import="project_classes.COURSE"%>
@@ -27,22 +29,17 @@
 
         <!-- Bootstrap core CSS -->
         <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Datatables CSS -->
         <link href="css/datatables.css" rel="stylesheet">
+        <!-- Bootstrap core JavaScript -->
         <script src="bootstrap/js/jquery.js" type="text/javascript"></script>
         <script src="bootstrap/js/jquery-datatables.js" type="text/javascript"></script>
 
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-
-        <!-- Custom styles for this template -->
+        <!-- Standard - CSS -->
         <link href="css/dashboard.css" rel="stylesheet">
-
-        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
         <script type="text/javascript">
             $(document).ready(function () {
+                //Initialisierung der Datentabelle für Sortierung, Filterung und ästhetische Darstellung der Informationen
                 $('#courseTable').DataTable({
                     "order": [[1, "asc"]],
                     "language": {
@@ -50,7 +47,8 @@
                     }
                 });
             });
-
+            
+            //Initialisierung der Datentabelle für Sortierung, Filterung und ästhetische Darstellung der Informationen
             jQuery(document).ready(function ($) {
                 $(".clickable-row").click(function () {
                     window.document.location = $(this).data("href");
@@ -59,7 +57,18 @@
         </script>
 
     </head>
-
+    <!--Erste Überprüfung mithilfe von Java:
+    * Setzung des Seitennamens
+    * Notwendige ResultSets instanzieren
+    * Session abfragen und überprüfen, ob Person angemeldet ist.
+        Wenn erfolgreich:
+        - Abfrage der notwendigen Daten für die Seite (ResultSets werden befüllt)
+        - Abfrage, ob der URL-Parameter delete oder insert-update für die Datenmanipulation gesetzt sind.
+            Wenn ja:
+            -- URL-String wird abgefragt und an eine Methode übergeben zur Durchführung der Datenmanipulationen 
+        Wenn nicht erfolgreich:
+        - Weiterleitung zur index.jsp Seite
+    --> 
     <%
         session.setAttribute("siteName", "courses");
         PERSON person = (PERSON) session.getAttribute("currentSessionUser");
@@ -71,10 +80,11 @@
         }
     %>
     <body>
+        <!--Inkludierung der Navigationsleiste (oberhalb)-->
         <%@include  file="navbar.jsp"  %>
-
         <div class="container-fluid">
             <div class="row">
+                <!--Inkludierung der Seitenleiste (links)-->
                 <%@include  file="sidebar.jsp" %>
                 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                     <div>
@@ -82,6 +92,7 @@
                         <%                            
                             ResultSet result = person.getCourseDetails(null, false);
                         %>
+                        <!--Datentabelle mithilfe von DataTable(JavaScript & jQuery) geladen-->
                         <table id="courseTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
                             <thead>
                             <th>
@@ -98,6 +109,7 @@
                             </th>
                             </thead>
                             <tbody>
+                                <!--Informationen aus der Datenbank in HTML umwandeln (Übergabe der ResultSets)-->                               
                                 <%= coursesMessages.getCourseDetails(result)%>
                             </tbody>
                         </table>

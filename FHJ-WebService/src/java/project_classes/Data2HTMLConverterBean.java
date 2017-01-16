@@ -4,16 +4,19 @@
  * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
+ * Seite: Data2HTMLConverterBean.java
+ * Beschreibung: Java-Klasse zur Umwandlung von Daten, welche zum Teil aus der Datenbank abgefragt wurden zu HTML
  */
 package project_classes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class MessageHandler {
+public class Data2HTMLConverterBean {
 
+    /*
+        Funktion für die Generierung der Links für die Navigationsleiste (oberhalb des Fensters)
+    */
     public String getNavbarLinks(PERSON person) {
         String result = "";
         if (person.getPERSON_TYPE().personType == 1 || person.getPERSON_TYPE().personType == 2) {
@@ -32,6 +35,9 @@ public class MessageHandler {
         return result;
     }
 
+    /*
+        Funktion für die Generierung der Buttons der Sidebar
+    */
     public String getDashboardButtonGroup(PERSON person) {
         String result = "<div class=\"btn-group btn-group-justified\" role=\"group\">";
         if (person.getPERSON_TYPE().personType == 2 || person.getPERSON_TYPE().personType == 1) {
@@ -56,6 +62,9 @@ public class MessageHandler {
         return result;
     }
 
+    /*
+        Funktion für die Generierung der Nachricht auf der index.jsp-Seite
+    */
     public String getIndexSiteMessage(int messageId) {
         switch (messageId) {
             case 0:
@@ -70,7 +79,10 @@ public class MessageHandler {
                 return "";
         }
     }
-
+    
+    /*
+        Funktion für die Generierung der Willkommensnachricht auf der dashboard.jsp-Seite
+    */
     public String getDashboardWelcomeMessage(PERSON person) {
         switch (person.getPERSON_TYPE().personType) {
             case 2:
@@ -96,6 +108,9 @@ public class MessageHandler {
         }
     }
 
+    /*
+        Funktion für die Generierung der Sidebar-Navigationsleiste
+    */
     public String getSidebarNavigationElements(String siteName, PERSON person) {
         String SidebarNavigationElementsString = "";
         int personType = person.getPERSON_TYPE().personType;
@@ -106,7 +121,10 @@ public class MessageHandler {
         }
         return SidebarNavigationElementsString;
     }
-
+    
+    /*
+        Funktion für die Generierung der Sidebar-Navigationsleiste für Studenten und Vortragende
+    */
     public String getSidebarNavigationElementsForLecturersStudents(String siteName) {
         String dashboard = "<li><a href=\"dashboard.jsp\">Übersicht</a></li>";
         String courses = "<li><a href=\"courses.jsp\">Kurse</a></li>";
@@ -128,6 +146,9 @@ public class MessageHandler {
         return "";
     }
 
+    /*
+        Funktion für die Generierung der Sidebar-Navigationsleiste für Administratoren
+    */
     public String getSidebarNavigationElementsForAdministrators(String siteName) {
         String dashboard = "<li><a href=\"dashboard.jsp\">Übersicht</a></li>";
         String courses = "<li><a href=\"admincourses.jsp\">Kursverwaltung</a></li>";
@@ -154,6 +175,9 @@ public class MessageHandler {
         return "";
     }
 
+    /*
+        Funktion für die Generierung der Ergebnisüberschrift
+    */
     public String getResultCaption(Integer courseNumber, ResultSet courseDetails) {
         try {
             String result = "<small>";
@@ -170,7 +194,10 @@ public class MessageHandler {
             return null;
         }
     }
-
+    
+    /*
+        Funktion für die Generierung der Kursdetails (Tabelle)
+    */
     public String getCourseDetails(ResultSet courses) {
         try {
             if (courses != null) {
@@ -193,7 +220,10 @@ public class MessageHandler {
             return null;
         }
     }
-
+    
+    /*
+        Funktion für die Generierung der Ergebnisdetails (Tabelle)
+    */
     public String getGradeDetails(ResultSet rs, int personType) {
         if (rs != null) {
             String result;
@@ -207,7 +237,10 @@ public class MessageHandler {
         }
         return null;
     }
-
+    
+    /*
+        Funktion für die Generierung der Ergebnisdetails für Vortragende (Tabelle)
+    */
     private String getGradeDetailsForLecturer(ResultSet rs) {
         try {
             String result = "";
@@ -259,7 +292,10 @@ public class MessageHandler {
             return null;
         }
     }
-
+    
+    /*
+        Funktion für die Generierung der Ergebnisdetails für Studenten (Tabelle)
+    */
     private String getGradeDetailsForStudent(ResultSet rs) {
         try {
             String result = "";
@@ -283,7 +319,10 @@ public class MessageHandler {
             return null;
         }
     }
-
+    
+    /*
+        Funktion für die Generierung der Ergebnisdetails im Dialogfenster für Vortragende (Tabelle)
+    */
     public String getGradeDetailsForModal(ResultSet rs, ResultSet rsStudentsToEnroll, ResultSet courseDetails) {
         try {
             String result = "";
@@ -329,7 +368,10 @@ public class MessageHandler {
             return null;
         }
     }
-
+    
+    /*
+        Funktion für die Generierung der Studentendetails für Administratoren (Tabelle)
+    */
     public String getStudentDetailsForAdmin(ResultSet rs) {
         try {
             String result = "";
@@ -382,7 +424,10 @@ public class MessageHandler {
             return null;
         }
     }
-
+    
+    /*
+        Funktion für die Generierung der Kombobox für die Geschlechtsauswahl
+    */
     private String getAdminSexSelectBox(String adminSex) {
         String result = "";
         String adminSexM = "<option value=\"m\">männlich</option>";
@@ -402,7 +447,10 @@ public class MessageHandler {
 
         return result;
     }
-
+    
+    /*
+        Funktion für die Generierung der Kombobox für die Semesterauswahl
+    */
     private String getSemesterSelectBox(int semester) {
         String result = "";
 
@@ -439,7 +487,10 @@ public class MessageHandler {
 
         return result;
     }
-
+    
+    /*
+        Funktion für die Generierung der Kursdetails für Administratoren (Tabelle)
+    */
     public String getCourseDetailsForAdmin(ResultSet rs, ResultSet rsLecturers, PERSON person) {
         try {
             String result = "";
@@ -478,6 +529,9 @@ public class MessageHandler {
         }
     }
 
+    /*
+        Funktion für die Generierung der Kombobox für die Vortragendenauswahl
+    */
     private String getLecturerSelectBox(Integer LECTURER_PK, ResultSet rsLecturers) {
         try {
             String result = "";
@@ -497,6 +551,9 @@ public class MessageHandler {
         }
     }
 
+    /*
+        Funktion für die Generierung der Vortragendendetails für Administratoren (Tabelle)
+    */
     public String getLecturerDetailsForAdmin(ResultSet rs) {
         try {
             String result = "";

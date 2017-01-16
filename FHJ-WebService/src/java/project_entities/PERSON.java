@@ -8,8 +8,7 @@
 package project_entities;
 
 /**
- *
- * @author Notebook
+ * Schnittstelle PERSON um das Entwurfsmuster PROTOTYPE zu demonstrieren
  */
 public interface PERSON extends Cloneable {
     public PERSON_ENTITY getClone();

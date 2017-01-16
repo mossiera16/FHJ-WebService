@@ -5,9 +5,11 @@
  * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
+ * Seite: navbar.jsp
+ * Beschreibung: Navigationsleiste (oberhalb des Fensters) --> Wird in dashboard.jsp eingebunden
  */
 --%>
-<jsp:useBean id="navbarMessage" class="project_classes.MessageHandler"></jsp:useBean>
+<jsp:useBean id="navbarMessage" class="project_classes.Data2HTMLConverterBean"></jsp:useBean>
 <%@page import="project_classes.PERSON"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%PERSON personNavbar = (PERSON) session.getAttribute("currentSessionUser");%>

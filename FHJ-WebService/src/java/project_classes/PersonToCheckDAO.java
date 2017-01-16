@@ -4,18 +4,20 @@
  * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
+ * Seite: PersonToCheckDAO.java
+ * Beschreibung: Java-Klasse zur Überprüfung der Logindaten
  */
 package project_classes;
 
 import java.util.List;
 import project_entities.PERSON_ENTITY;
 
-
 public class PersonToCheckDAO {
 
     static List resultList = null;
-    
-    
+    /*
+        Funktion zur Überprüfung der eingegebenen Logindaten
+    */
     public static PERSON login(PERSON personToCheck) {
         
         String username = personToCheck.getUSERNAME();
@@ -24,6 +26,7 @@ public class PersonToCheckDAO {
 
         String[]parameterValues = new String[] {username, password};
         
+        //Enumeration über die unterschiedlichen Personentypen (Administratoren, Vortragende und Studenten)
         for (String person_entity : person_entities) {
             personToCheck = checkLoginData(personToCheck, person_entity, parameterValues);
             if(personToCheck.getISVALID())
@@ -31,12 +34,15 @@ public class PersonToCheckDAO {
         }
         return personToCheck;
     }
-    
+    /*
+        Funktion zur Überprüfung der eingegebenen Logindaten für einen bestimmten Personentyp
+    */
     private static PERSON checkLoginData(PERSON personToCheck,String person_entity, String[] parameterValues){
         try {
             String[]parameterStrings = new String[] {"username", "password"};
             String searchQuery = "SELECT c FROM " + person_entity + " c WHERE c.USERNAME = :username AND c.PASSWORD = :password";
             
+            //Instanzierung der Klasse DBAccess für die Verbindung zur Datenbank
             DBAccess dbAccess = new DBAccess(true);
 
             resultList = dbAccess.DBgetSQLResultList(searchQuery, parameterStrings, parameterValues);

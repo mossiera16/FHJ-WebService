@@ -5,11 +5,10 @@ package project_entities;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.List;
 import javax.persistence.Entity;
 
 /**
- * @author Notebook
+ * Administrator
  */
 @Entity
 public class ADMINISTRATOR_ENTITY extends PERSON_ENTITY implements Serializable, PERSON {

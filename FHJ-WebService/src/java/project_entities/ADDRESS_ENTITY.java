@@ -11,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * @author Notebook
+ * Adresse einer Person
  */
 @Entity
 public class ADDRESS_ENTITY implements Serializable {

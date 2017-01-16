@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 /**
- * @author Notebook
+ * Vortragender
  */
 @Entity
 public class LECTURER_ENTITY extends PERSON_ENTITY implements Serializable, PERSON {

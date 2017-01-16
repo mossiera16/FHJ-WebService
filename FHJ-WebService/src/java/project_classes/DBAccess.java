@@ -4,6 +4,8 @@
  * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
+ * Seite: DBAccess.java
+ * Beschreibung: Java-Klasse für die Datenbankverbindung, Abfrage von Daten und Manipulation von Daten
  */
 package project_classes;
 
@@ -37,6 +39,10 @@ public class DBAccess<T> {
     static String persistencyUnit = "PROJECT_PU";
     Connection dbConnection;
 
+    //Konstruktor:
+    //bekommt einen booleschen Wert mit
+    //false --> Verbindung zur Datenbank mithilfe von DriverManager.getConnection
+    //true  --> Verbindung zur Datenbank mithilfe des Entitätsmanagers
     public DBAccess(boolean isEntityManager) {
         try {
             if (isEntityManager) {
@@ -50,7 +56,6 @@ public class DBAccess<T> {
                 dbConnection = DriverManager.getConnection(url, user, password);
             }
         } catch (SQLException e) {
-            String message = e.getMessage();
             System.out.println(e.getMessage());
             if (emf != null) {
                 emf.close();
@@ -61,6 +66,10 @@ public class DBAccess<T> {
         }
     }
 
+    /*
+        Funktion zur Abfrage von Daten. Übergeben werden SQLStatement, Parameterbezeichnungen und Parameterwerte
+        Mittels Entitätsmanagers
+    */
     public List DBgetSQLResultList(String sqlStatement, String[] parameterStrings, T[] parameterValues) {
         if (parameterStrings.length == parameterValues.length) {
             Query typedQuery = em.createQuery(sqlStatement);
@@ -74,6 +83,10 @@ public class DBAccess<T> {
         }
     }
 
+    /*
+        Funktion zur Abfrage von Daten. Übergeben werden SQLStatement und Parameterwerte
+        Mittels DriverManager
+    */
     public ResultSet DBgetSQLResultSet(String sqlStatement, T[] parameterValues) {
         try {
             dbConnection.setAutoCommit(false);
@@ -97,6 +110,10 @@ public class DBAccess<T> {
         }
     }
 
+    /*
+        Funktion zur Manipulation von Daten. Übergeben werden SQLStatement und Parameterwerte
+        Mittels DriverManager
+    */
     public int DBupdateData(String sqlStatement, T[] parameterValues) {
         try {
             dbConnection.setAutoCommit(true);
@@ -117,29 +134,41 @@ public class DBAccess<T> {
             return -1;
         }
     }
-
-    enum DataObject {
-        String, Integer, Date;
-    }
-
-    public void DBPersistObject(Object objectToPersist) {
+    
+    /*
+        Funktion für das Einfügen von Daten. Übergeben wird das zu speichernde Objekt
+        Mittels Entitätsmanagers
+    */
+    private void DBPersistObject(Object objectToPersist) {
         if (em != null) {
             em.persist(objectToPersist);
         }
     }
-
+    
+    /*
+        Funktion für das Einfügen von Daten. Übergeben wird das zu speichernde Objekt
+        Mittels Entitätsmanagers
+    */
     public void DBPersistObjects(List<Object> objectsToPersist) {
         for (int i = 0; i < objectsToPersist.size(); i++) {
             DBPersistObject(objectsToPersist.get(i));
         }
     }
-
+    
+    /*
+        Funktion für die Manipulation von Daten. Übergeben wird das zu verändernde Objekt
+        Mittels Entitätsmanagers
+    */
     public void DBUpdateObject(Object objectToUpdate) {
         if (em != null) {
             em.merge(objectToUpdate);
         }
     }
-
+    
+    /*
+        Funktion für die Manipulation von Daten. Übergeben wird das SQL-Statement, Parameterbezeichnungen und Parameterwerte
+        Mittels Entitätsmanagers
+    */
     public void DBExecuteSQLStatements(String sqlStatement, String[] parameterStrings, T[] parameterValues) {
         Query typedQuery;
         if (sqlStatement.isEmpty() && parameterStrings != null && parameterValues != null && parameterStrings.length == parameterValues.length) {
@@ -153,12 +182,19 @@ public class DBAccess<T> {
             typedQuery.executeUpdate();
         }
     }
-
+    
+    
+    /*
+        Funktion für die Ausführung einer Transaktion
+    */
     public void DBTransaction() {
         em.getTransaction().begin();
         em.getTransaction().commit();
     }
-
+    
+    /*
+        Funktion für das Beenden der Datenbankverbindung
+    */
     public void DBCloseAccess() {
         try {
             if (dbConnection != null) {
@@ -175,13 +211,10 @@ public class DBAccess<T> {
             System.out.println(ex.getMessage());
         }
     }
-
-    public void DBGetObjectToUpdate(Class objectClass, Long id) {
-        if (em != null) {
-            DBUpdateObject(em.find(objectClass, id));
-        }
-    }
-
+    
+    /*
+        Funktion für das Einfügen von Beispieldaten
+    */
     public void DBInsertSampleData() {
         try {
             //GRADE

@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
- * @author Notebook
+ * Kurs
  */
 @Entity
 public class COURSE_ENTITY implements Serializable {

@@ -11,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * @author Notebook
+ * Noten/Ergebnisse
  */
 @Entity
 public class GRADE_ENTITY implements Serializable {

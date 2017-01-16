@@ -4,13 +4,11 @@
  * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
+ * Seite: PERSON_TYPE_ENUM.java
+ * Beschreibung: Java-Klasse für die unterschiedlichen Personentypen
  */
 package project_classes;
 
-/**
- *
- * @author Notebook
- */
 public class PERSON_TYPE_ENUM {
     public int personType;
     

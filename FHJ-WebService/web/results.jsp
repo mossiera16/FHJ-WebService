@@ -7,7 +7,7 @@
  * Datum: 16.12.2016
  */
 --%>
-<jsp:useBean id="resultMessages" class="project_classes.MessageHandler"></jsp:useBean>
+<jsp:useBean id="resultMessages" class="project_classes.Data2HTMLConverterBean"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="project_classes.PERSON"%>
 <%@page import="project_classes.COURSE"%>
@@ -67,20 +67,16 @@
         <link rel="SHORTCUT ICON" href="images/favicon.png" type="image/png">
         <title>Ergebnisse - Kursverwaltungssystem</title>
 
-        <!-- Bootstrap core CSS -->
+         <!-- Bootstrap core CSS -->
         <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Datatables CSS -->
         <link href="css/datatables.css" rel="stylesheet">
+        <!-- Bootstrap core JavaScript -->
         <script src="bootstrap/js/jquery.js" type="text/javascript"></script>
         <script src="bootstrap/js/jquery-datatables.js" type="text/javascript"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-
-        <!-- Custom styles for this template -->
+        
+        <!-- Standard - CSS -->
         <link href="css/dashboard.css" rel="stylesheet">
-        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
         <script type="text/javascript">
             var commited = true;
             $(document).ready(function () {
