@@ -27,7 +27,7 @@ function administration(sitename) {
         $('#commit').click(function () {
             var data = table.$('input, select').serialize();
             var urlString = generataUrlString(toDelete);
-
+            
             if (urlString === "") {
                 if (data !== "") {
                     urlString = "?insert-update=" + data;
@@ -35,10 +35,11 @@ function administration(sitename) {
             } else {
                 urlString = "?delete=" + urlString + "&insert-update=" + data;
             }
-
+            
             document.getElementById("commit").style.background = "#A7D177";
             commited = true;
             window.location.replace(sitename + urlString);
+            
         });
 
         /*

@@ -15,6 +15,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -129,10 +130,17 @@ public class DBAccess<T> {
                 }
             }
             return stmt.executeUpdate();
-        } catch (NumberFormatException | SQLException ex) {
+            
+        }
+        catch(SQLIntegrityConstraintViolationException ex){
             System.out.println(ex.getMessage());
             return -1;
         }
+        catch (NumberFormatException | SQLException ex) {
+            System.out.println(ex.getMessage());
+            return 0;
+        }
+        
     }
     
     /*
@@ -217,47 +225,6 @@ public class DBAccess<T> {
     */
     public void DBInsertSampleData() {
         try {
-            //GRADE
-            List<GRADE_ENTITY> gradeList1 = new ArrayList<>();
-            GRADE_ENTITY grade1 = new GRADE_ENTITY("1", 1, 1, 1);//Standards in der Gesundheitsinformatik
-            GRADE_ENTITY grade2 = new GRADE_ENTITY("2", 2, 1, 1);//Business Intelligence
-            GRADE_ENTITY grade9 = new GRADE_ENTITY("9", 5, 2, 1);//HCIT
-            GRADE_ENTITY grade10 = new GRADE_ENTITY("10", 6, 3, 1);//Selected Topics in Medical informatics
-            GRADE_ENTITY grade12 = new GRADE_ENTITY("12", 3, 2, 1);//Softwarearchitekturen
-            gradeList1.add(grade1);
-            gradeList1.add(grade2);
-            gradeList1.add(grade9);
-            gradeList1.add(grade10);
-            gradeList1.add(grade12);
-
-            DBPersistObjects((List<Object>) (List<?>) gradeList1);
-
-            List<GRADE_ENTITY> gradeList2 = new ArrayList<>();
-            GRADE_ENTITY grade3 = new GRADE_ENTITY("3", 1, 1, 2);
-            GRADE_ENTITY grade4 = new GRADE_ENTITY("4", 2, 1, 2);
-            gradeList2.add(grade3);
-            gradeList2.add(grade4);
-
-            DBPersistObjects((List<Object>) (List<?>) gradeList2);
-
-            List<GRADE_ENTITY> gradeList3 = new ArrayList<>();
-            GRADE_ENTITY grade5 = new GRADE_ENTITY("5", 1, 1, 4);
-            GRADE_ENTITY grade6 = new GRADE_ENTITY("6", 2, 1, 4);
-            GRADE_ENTITY grade14 = new GRADE_ENTITY("14", 3, 0, 4);
-            gradeList3.add(grade5);
-            gradeList3.add(grade6);
-            gradeList3.add(grade14);
-
-            DBPersistObjects((List<Object>) (List<?>) gradeList3);
-
-            List<GRADE_ENTITY> gradeList4 = new ArrayList<>();
-            GRADE_ENTITY grade7 = new GRADE_ENTITY("7", 1, 1, 5);
-            GRADE_ENTITY grade8 = new GRADE_ENTITY("8", 2, 1, 5);
-            gradeList4.add(grade7);
-            gradeList4.add(grade8);
-
-            DBPersistObjects((List<Object>) (List<?>) gradeList4);
-
             //#####################################
             //Cloning-Example-----START-----STUDENT
             //#####################################
@@ -288,13 +255,7 @@ public class DBAccess<T> {
             //##############################
             //Cloning-Example-----END-------
             //##############################
-            //COURSES
-            List<COURSE_ENTITY> courses1 = new ArrayList<>();
-            List<COURSE_ENTITY> courses2 = new ArrayList<>();
-            List<COURSE_ENTITY> courses3 = new ArrayList<>();
-            List<COURSE_ENTITY> courses4 = new ArrayList<>();
-            List<COURSE_ENTITY> courses5 = new ArrayList<>();
-            List<COURSE_ENTITY> courses6 = new ArrayList<>();
+
 //            List<GRADE_ENTITY> gradeCourseList1 = new ArrayList<>();
 //            List<GRADE_ENTITY> gradeCourseList2 = new ArrayList<>();
 //            List<GRADE_ENTITY> gradeCourseList3 = new ArrayList<>();
@@ -318,12 +279,37 @@ public class DBAccess<T> {
 //
 //            gradeCourseList6.add(grade10);
 
-            COURSE_ENTITY course1 = new COURSE_ENTITY("1", "Standards in der Gesundheitsinformatik", 1, 1, "Masterstudium eHealth");
-            COURSE_ENTITY course2 = new COURSE_ENTITY("2", "Business Intelligence", 2, 1, "Masterstudium eHealth");
-            COURSE_ENTITY course3 = new COURSE_ENTITY("3", "Softwarearchitekturen", 3, 3, "Bachelorstudium eHealth");
-            COURSE_ENTITY course4 = new COURSE_ENTITY("4", "Softwareentwicklung", 1, 1, "Masterstudium eHealth");
-            COURSE_ENTITY course5 = new COURSE_ENTITY("5", "HCIT", 1, 2, "Masterstudium eHealth");
-            COURSE_ENTITY course6 = new COURSE_ENTITY("6", "Selected Topics in Medical Informatics", 1, 2, "Masterstudium eHealth");
+           
+
+            //LECTURERS
+            List<LECTURER_ENTITY> lecturers = new ArrayList<>();
+            LECTURER_ENTITY lecturer1 = new LECTURER_ENTITY("1", "m", new java.sql.Date(format.parse("16.10.1955").getTime()), 1, "test", "test", "Jozef", false, "Aerts", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3333, "DDr.", "aertsjozef");
+            LECTURER_ENTITY lecturer2 = new LECTURER_ENTITY("2", "w", new java.sql.Date(format.parse("16.10.1975").getTime()), 2, "test", "test", "Johanna", false, "Wieser", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3337, "Dr.", "wieserjohanna");
+            LECTURER_ENTITY lecturer3 = new LECTURER_ENTITY("3", "m", new java.sql.Date(format.parse("01.5.1985").getTime()), 3, "test", "test", "Baptiste", false, "Alcalde", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3338, "Dr.", "alcaldebaptiste");
+            LECTURER_ENTITY lecturer4 = new LECTURER_ENTITY("4", "", new java.sql.Date(format.parse("1.1.1").getTime()), 4, "test", "test", "Default", false, "Lecturer", "", 3338, ".", "default");
+
+            lecturers.add(lecturer1);
+            lecturers.add(lecturer2);
+            lecturers.add(lecturer3);
+            lecturers.add(lecturer4);
+
+
+            DBPersistObjects((List<Object>) (List<?>) lecturers);
+            
+            //COURSES
+            List<COURSE_ENTITY> courses1 = new ArrayList<>();
+            List<COURSE_ENTITY> courses2 = new ArrayList<>();
+            List<COURSE_ENTITY> courses3 = new ArrayList<>();
+            List<COURSE_ENTITY> courses4 = new ArrayList<>();
+            List<COURSE_ENTITY> courses5 = new ArrayList<>();
+            List<COURSE_ENTITY> courses6 = new ArrayList<>();
+            
+            COURSE_ENTITY course1 = new COURSE_ENTITY("1", "Standards in der Gesundheitsinformatik", 1, "Masterstudium eHealth", lecturer1);
+            COURSE_ENTITY course2 = new COURSE_ENTITY("2", "Business Intelligence", 1, "Masterstudium eHealth", lecturer1);
+            COURSE_ENTITY course3 = new COURSE_ENTITY("3", "Softwarearchitekturen", 3, "Bachelorstudium eHealth", lecturer3);
+            COURSE_ENTITY course4 = new COURSE_ENTITY("4", "Softwareentwicklung", 1, "Masterstudium eHealth", lecturer1);
+            COURSE_ENTITY course5 = new COURSE_ENTITY("5", "HCIT", 2, "Masterstudium eHealth", lecturer1);
+            COURSE_ENTITY course6 = new COURSE_ENTITY("6", "Selected Topics in Medical Informatics", 2, "Masterstudium eHealth", lecturer1);
 
             courses1.add(course1);
             courses2.add(course2);
@@ -338,18 +324,7 @@ public class DBAccess<T> {
             DBPersistObjects((List<Object>) (List<?>) courses4);
             DBPersistObjects((List<Object>) (List<?>) courses5);
             DBPersistObjects((List<Object>) (List<?>) courses6);
-
-            //LECTURERS
-            List<LECTURER_ENTITY> lecturers = new ArrayList<>();
-            LECTURER_ENTITY lecturer1 = new LECTURER_ENTITY("1", "m", new java.sql.Date(format.parse("16.10.1955").getTime()), 1, "test", "test", "Jozef", false, "Aerts", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3333, "DDr.", "aertsjozef");
-            LECTURER_ENTITY lecturer2 = new LECTURER_ENTITY("2", "w", new java.sql.Date(format.parse("16.10.1975").getTime()), 2, "test", "test", "Johanna", false, "Wieser", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3337, "Dr.", "wieserjohanna");
-            LECTURER_ENTITY lecturer3 = new LECTURER_ENTITY("3", "m", new java.sql.Date(format.parse("01.5.1985").getTime()), 3, "test", "test", "Baptiste", false, "Alcalde", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3338, "Dr.", "alcaldebaptiste");
-            lecturers.add(lecturer1);
-            lecturers.add(lecturer2);
-            lecturers.add(lecturer3);
-
-            DBPersistObjects((List<Object>) (List<?>) lecturers);
-
+            
             //ADMINISTRATORS
             List<ADMINISTRATOR_ENTITY> administrators = new ArrayList<>();
             ADMINISTRATOR_ENTITY administrator1 = new ADMINISTRATOR_ENTITY("1", "m", new java.sql.Date(format.parse("16.10.1992").getTime()), "Andreas", false, "Mossier", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", 3333, "BSc", "mossieraadmin");
@@ -360,7 +335,49 @@ public class DBAccess<T> {
             administrators.add(administrator3);
 
             DBPersistObjects((List<Object>) (List<?>) administrators);
+            
+            
+            //GRADE
+            List<GRADE_ENTITY> gradeList1 = new ArrayList<>();
+            GRADE_ENTITY grade1 = new GRADE_ENTITY("1", course1, 1, student1);//Standards in der Gesundheitsinformatik
+            GRADE_ENTITY grade2 = new GRADE_ENTITY("2", course2, 1, student1);//Business Intelligence
+            GRADE_ENTITY grade9 = new GRADE_ENTITY("9", course5, 2, student1);//HCIT
+            GRADE_ENTITY grade10 = new GRADE_ENTITY("10", course6, 3, student1);//Selected Topics in Medical informatics
+            GRADE_ENTITY grade12 = new GRADE_ENTITY("12", course3, 2, student1);//Softwarearchitekturen
+            gradeList1.add(grade1);
+            gradeList1.add(grade2);
+            gradeList1.add(grade9);
+            gradeList1.add(grade10);
+            gradeList1.add(grade12);
 
+            DBPersistObjects((List<Object>) (List<?>) gradeList1);
+
+            List<GRADE_ENTITY> gradeList2 = new ArrayList<>();
+            GRADE_ENTITY grade3 = new GRADE_ENTITY("3", course1, 1, student2);
+            GRADE_ENTITY grade4 = new GRADE_ENTITY("4", course2, 1, student2);
+            gradeList2.add(grade3);
+            gradeList2.add(grade4);
+
+            DBPersistObjects((List<Object>) (List<?>) gradeList2);
+
+            List<GRADE_ENTITY> gradeList3 = new ArrayList<>();
+            GRADE_ENTITY grade5 = new GRADE_ENTITY("5", course1, 1, student4);
+            GRADE_ENTITY grade6 = new GRADE_ENTITY("6", course2, 1, student4);
+            GRADE_ENTITY grade14 = new GRADE_ENTITY("14", course3, 0, student4);
+            gradeList3.add(grade5);
+            gradeList3.add(grade6);
+            gradeList3.add(grade14);
+
+            DBPersistObjects((List<Object>) (List<?>) gradeList3);
+
+            List<GRADE_ENTITY> gradeList4 = new ArrayList<>();
+            GRADE_ENTITY grade7 = new GRADE_ENTITY("7", course1, 1, student3);
+            GRADE_ENTITY grade8 = new GRADE_ENTITY("8", course2, 1, student3);
+            gradeList4.add(grade7);
+            gradeList4.add(grade8);
+
+            DBPersistObjects((List<Object>) (List<?>) gradeList4);
+            
             DBTransaction();
         } catch (NumberFormatException | ParseException ex) {
             System.out.println("Error: " + ex.getMessage());

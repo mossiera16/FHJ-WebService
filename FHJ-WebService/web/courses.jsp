@@ -12,7 +12,6 @@
 <jsp:useBean id="coursesMessages" class="project_classes.Data2HTMLConverterBean"></jsp:useBean>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="project_classes.PERSON"%>
-<%@page import="project_classes.COURSE"%>
 <%@page import="java.util.List"%>
 <%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>

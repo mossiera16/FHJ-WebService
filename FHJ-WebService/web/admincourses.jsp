@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
+        <meta charset="charset=ISO-8859-1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
@@ -25,7 +25,7 @@
         <link rel="SHORTCUT ICON" href="images/favicon.png" type="image/png">
         <title>Kursverwaltung</title>
 
-         <!-- Bootstrap core CSS -->
+        <!-- Bootstrap core CSS -->
         <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Datatables CSS -->
         <link href="css/datatables.css" rel="stylesheet">
@@ -37,7 +37,7 @@
 
         <!-- Custom styles for this template -->
         <link href="css/dashboard.css" rel="stylesheet">
-        
+
     </head>
     <!--Erste Überprüfung mithilfe von Java:
     * Setzung des Seitennamens
@@ -55,20 +55,32 @@
         session.setAttribute("siteName", "courses");
         ResultSet rsCourses = null;
         ResultSet rsLecturers = null;
+        String errorMessage = "";
         String data = "";
+        int result = 0;
         PERSON person = (PERSON) session.getAttribute("currentSessionUser");
         if (person == null) {
             session.setAttribute("userState", 2);
             String redirectURL = "index.jsp";
             response.sendRedirect(redirectURL);
             return;
-        }else {
+        } else {
+
             rsCourses = person.getCourses();
             rsLecturers = person.getLecturers();
             if (request.getParameter("delete") != null || request.getParameter("insert-update") != null) {
                 data = request.getQueryString();
-                person.administrateData(data, "courses", 5);
-                response.sendRedirect("admincourses.jsp");
+                data = java.net.URLDecoder.decode(data, "UTF-8").toString();
+                result = person.administrateData(data, "courses", 5);
+                session.setAttribute("result", result);
+
+                response.sendRedirect("admincourses.jsp?result="+result);
+           
+            }
+            if(request.getParameter("result")!= null){
+                String resultString = request.getQueryString().replace("result=", "");
+                if(resultString.equals("-1"))
+                errorMessage = "Foreign-Key-Constraint Violation. Übergeordneter Datensatz vorhanden";
             }
         }
         %>
@@ -85,11 +97,21 @@
                     <div>
                         <h1 class="page-header">Kursverwaltung</h1>
                     </div>
-                   <div class="btn-group" style="margin-top: 1em; margin-bottom: 1em;">
+                    <div class="btn-group" style="margin-top: 1em; margin-bottom: 1em;">
                         <a style="text-decoration: none;" role="button" id="commit" class="btn btn-default btn-sm">
                             <span class='glyphicon glyphicon-floppy-disk' aria-hidden="true"></span>Eingaben bestätigen
                         </a>
+
+                       
                     </div>
+                     <% if (errorMessage != "") {
+                                out.print("<div class='alert alert-danger' role='alert'>");
+                                out.print("<span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>");
+                                out.print("<span class='sr-only'>Error:</span>");
+                                out.print(errorMessage);
+                                out.print("</div>");
+                            }
+                        %>
                     <!--Datentabelle mithilfe von DataTable(JavaScript & jQuery) geladen-->
                     <table id="resultTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
                         <thead>
@@ -112,7 +134,7 @@
                         </thead>
                         <tbody>
                             <!--Informationen aus der Datenbank in HTML umwandeln (Übergabe der ResultSets)-->
-                            <%= adminCoursesMessage.getCourseDetailsForAdmin(rsCourses, rsLecturers, person) %>
+                            <%= adminCoursesMessage.getCourseDetailsForAdmin(rsCourses, rsLecturers, person)%>
                         </tbody>
                     </table>
                 </div>

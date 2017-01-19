@@ -53,7 +53,9 @@
     <%
         session.setAttribute("siteName", "lecturers");
         ResultSet rsLecturers = null;
+        String errorMessage = "";
         String data = "";
+        int result = 0;
         PERSON person = (PERSON) session.getAttribute("currentSessionUser");
         if (person == null) {
             session.setAttribute("userState", 2);
@@ -64,8 +66,14 @@
             rsLecturers = person.getLecturers();
             if (request.getParameter("delete") != null || request.getParameter("insert-update") != null) {
                 data = request.getQueryString();
-                person.administrateData(data, "lecturers", 9);
-                response.sendRedirect("adminlecturers.jsp");
+                data = java.net.URLDecoder.decode(data, "UTF-8").toString();
+                result = person.administrateData(data, "lecturers", 9);
+                response.sendRedirect("adminlecturers.jsp?result="+result);
+            }
+            if(request.getParameter("result")!= null){
+                String resultString = request.getQueryString().replace("result=", "");
+                if(resultString.equals("-1"))
+                errorMessage = "Foreign-Key-Constraint Violation. Übergeordneter Datensatz vorhanden: Den Vortragenden beim Kurs auf den Default-Lecturer setzen";
             }
         }
         %>
@@ -87,6 +95,14 @@
                             <span class='glyphicon glyphicon-floppy-disk' aria-hidden="true"></span>Eingaben bestätigen
                         </a>
                     </div>
+                    <% if (errorMessage != "") {
+                                out.print("<div class='alert alert-danger' role='alert'>");
+                                out.print("<span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>");
+                                out.print("<span class='sr-only'>Error:</span>");
+                                out.print(errorMessage);
+                                out.print("</div>");
+                            }
+                        %>
                     <!--Datentabelle mithilfe von DataTable(JavaScript & jQuery) geladen-->
                     <table id="resultTable" class="table table-hover table-striped display"  cellspacing="0" width="100%">
                         <thead>

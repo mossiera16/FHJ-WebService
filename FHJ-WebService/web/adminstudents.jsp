@@ -64,6 +64,7 @@
             rsStudents = person.getStudents();
             if (request.getParameter("delete") != null || request.getParameter("insert-update") != null) {
                 data = request.getQueryString();
+                data = java.net.URLDecoder.decode(data, "UTF-8").toString();
                 person.administrateData(data, "students", 11);
                 response.sendRedirect("adminstudents.jsp");
             }

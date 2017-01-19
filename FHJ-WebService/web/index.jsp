@@ -32,9 +32,9 @@
     </head>
     <%
         //Die nächsten 3 Zeilen für das Einfügen der Testdaten auskommentieren 
-        //DBAccess dbAccess = new DBAccess(true);
-        //dbAccess.DBInsertSampleData();
-        //dbAccess.DBCloseAccess();
+//        DBAccess dbAccess = new DBAccess(true);
+//        dbAccess.DBInsertSampleData();
+//        dbAccess.DBCloseAccess();
         if (session.getAttribute("userState") == null) {
             session.setAttribute("userState", 0);
         }
@@ -64,6 +64,7 @@
                     <!--Nachrichtenbox >> Benachrichtigung je nachdem ob eine Person sich erfolgreich abgemeldet/nicht erfolgreich angemeldet hat oder ohne vorheriger Anmeldung auf eine Seite navigiert ist, die für Benutzer ohne Anmeldung nicht erreichbar sein sollte -->
                     <jsp:useBean id="message" class="project_classes.Data2HTMLConverterBean"></jsp:useBean>
                     <%= message.getIndexSiteMessage((int) session.getAttribute("userState"))%>
+                    
                 </div>
             </div>
         </div>

@@ -6,27 +6,30 @@ package project_entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
+import javax.persistence.ForeignKey;
 /**
  * Kurs
  */
 @Entity
 public class COURSE_ENTITY implements Serializable {
-
+    private LECTURER_ENTITY lecturer;
+    
     public COURSE_ENTITY() {
     }
 
-    public COURSE_ENTITY(String COURSE_PK, String COURSE_NAME, int LECTURER_PK, int SEMESTER, String STUDY) {
-        this.setCOURSE_PK(Long.parseLong(COURSE_PK));
+    public COURSE_ENTITY(String COURSE_COURSE_PK, String COURSE_NAME, int SEMESTER, String STUDY, LECTURER_ENTITY lecturer) {
+        this.setCOURSE_COURSE_PK(Long.parseLong(COURSE_COURSE_PK));
         this.setCOURSE_NAME(COURSE_NAME);
-        this.setLECTURER_PK(LECTURER_PK);
         this.setSEMESTER(SEMESTER);
         this.setSTUDY(STUDY);
+        this.setLecturer(lecturer);
     }
 
     @Id
@@ -37,23 +40,20 @@ public class COURSE_ENTITY implements Serializable {
     private String COURSE_NAME;
 
     @Basic
-    private int LECTURER_PK;
-
-    @Basic
     private int SEMESTER;
 
     @Basic
     private String STUDY;
 
-    @OneToMany(targetEntity = GRADE_ENTITY.class)
+    @OneToMany(targetEntity = GRADE_ENTITY.class, cascade = CascadeType.REMOVE)
     private List<GRADE_ENTITY> GRADE_ENTITies;
 
-    public Long getCOURSE_PK() {
+    public Long getCOURSE_COURSE_PK() {
         return this.COURSE_PK;
     }
 
-    public void setCOURSE_PK(Long COURSE_PK) {
-        this.COURSE_PK = COURSE_PK;
+    public void setCOURSE_COURSE_PK(Long COURSE_COURSE_PK) {
+        this.COURSE_PK = COURSE_COURSE_PK;
     }
 
     public String getCOURSE_NAME() {
@@ -64,12 +64,13 @@ public class COURSE_ENTITY implements Serializable {
         this.COURSE_NAME = COURSE_NAME;
     }
 
-    public int getLECTURER_PK() {
-        return this.LECTURER_PK;
+    @ManyToOne()
+    public LECTURER_ENTITY getLecturer(){
+        return lecturer;
     }
-
-    public void setLECTURER_PK(int LECTURER_PK) {
-        this.LECTURER_PK = LECTURER_PK;
+    
+    public void setLecturer(LECTURER_ENTITY lecturer){
+        this.lecturer = lecturer;
     }
 
     public List<GRADE_ENTITY> getGRADE_ENTITies() {

@@ -146,37 +146,37 @@ public class PERSON<T> {
     /*
         Funktion für die Abfrage von Kursdetails (Studenten/Vortragende)
     */
-    public ResultSet getCourseDetails(Integer COURSE_PK, boolean isResultCall) {
+    public ResultSet getCourseDetails(Integer COURSE_COURSE_PK, boolean isResultCall) {
         ResultSet dbResult;
         String sqlStatement = "";
         switch (this.getPERSON_TYPE().personType) {
             case 2: {
                 sqlStatement = "SELECT course.* FROM STUDENT_ENTITY student, COURSE_ENTITY course, GRADE_ENTITY grade\n"
-                        + "WHERE student.PERSON_PK = grade.STUDENT_PK\n"
-                        + "AND grade.COURSE_PK = course.COURSE_PK\n"
+                        + "WHERE student.PERSON_PK = grade.STUDENT_PERSON_PK\n"
+                        + "AND grade.COURSE_COURSE_PK = course.COURSE_PK\n"
                         + "AND student.PERSON_PK = ?";
                 break;
             }
             case 1: {
                 sqlStatement = "SELECT course.* FROM LECTURER_ENTITY lecturer, COURSE_ENTITY course\n"
-                        + "WHERE course.LECTURER_PK = lecturer.PERSON_PK AND\n"
+                        + "WHERE course.LECTURER_PERSON_PK = lecturer.PERSON_PK AND\n"
                         + "lecturer.PERSON_PK = ?";
 
                 break;
             }
         }
 
-        if (COURSE_PK != null) {
+        if (COURSE_COURSE_PK != null) {
             sqlStatement += " AND course.COURSE_PK = ?";
         } else if (!isResultCall) {
-            sqlStatement += " GROUP BY course.COURSE_PK, course.COURSE_NAME, course.LECTURER_PK, course.SEMESTER, course.STUDY";
+            sqlStatement += " GROUP BY course.COURSE_PK, course.COURSE_NAME, course.LECTURER_PERSON_PK, course.SEMESTER, course.STUDY";
         }
         
         DBAccess dbAccess = new DBAccess(false);
         Long[] parameterValues = new Long[]{this.getPERSON_PK()};
 
-        if (COURSE_PK != null) {
-            parameterValues = new Long[]{this.getPERSON_PK(), Long.parseLong(COURSE_PK.toString())};
+        if (COURSE_COURSE_PK != null) {
+            parameterValues = new Long[]{this.getPERSON_PK(), Long.parseLong(COURSE_COURSE_PK.toString())};
         }
 
         dbResult = dbAccess.DBgetSQLResultSet(sqlStatement,  parameterValues);
@@ -187,7 +187,7 @@ public class PERSON<T> {
     /*
         Funktion für die Abfrage von Ergebnisdetails für eine bestimmte Person (Studenten/Vortragende)
     */
-    public ResultSet getGradeDetailsForPerson(Integer COURSE_PK) {
+    public ResultSet getGradeDetailsForPerson(Integer COURSE_COURSE_PK) {
         ResultSet rs;
         String sqlStatement = "";
         if (this.getPERSON_TYPE().personType == 1) {
@@ -197,9 +197,9 @@ public class PERSON<T> {
         }
         Long[] parameterValues = new Long[]{this.getPERSON_PK()};
 
-        if (COURSE_PK != null) {
+        if (COURSE_COURSE_PK != null) {
             sqlStatement += " AND course.COURSE_PK = ? ";
-            parameterValues = new Long[]{this.getPERSON_PK(), Long.parseLong(COURSE_PK.toString())};
+            parameterValues = new Long[]{this.getPERSON_PK(), Long.parseLong(COURSE_COURSE_PK.toString())};
         }
 
         DBAccess dbAccess = new DBAccess(false);
@@ -215,9 +215,9 @@ public class PERSON<T> {
     */
     public String getGradeDetailsForLecturer() {
         return "SELECT course.COURSE_PK, grade.GRADE_PK, course.COURSE_NAME, grade.GRADE, student.FIRSTNAME, student.LASTNAME, student.STUDENT_NR, student.PERSON_PK FROM LECTURER_ENTITY AS lecturer, COURSE_ENTITY AS course, GRADE_ENTITY AS grade, STUDENT_ENTITY AS student\n"
-                + "WHERE lecturer.PERSON_PK = course.LECTURER_PK\n"
-                + "AND grade.COURSE_PK = course.COURSE_PK\n"
-                + "AND grade.STUDENT_PK = student.PERSON_PK\n"
+                + "WHERE lecturer.PERSON_PK = course.LECTURER_PERSON_PK\n"
+                + "AND grade.COURSE_COURSE_PK = course.COURSE_PK\n"
+                + "AND grade.STUDENT_PERSON_PK = student.PERSON_PK\n"
                 + "AND lecturer.PERSON_PK = ?";
     }
     /*
@@ -225,8 +225,8 @@ public class PERSON<T> {
     */
     public String getGradeDetailsForStudent() {
         return "SELECT course.COURSE_NAME, grade.GRADE FROM STUDENT_ENTITY AS student, COURSE_ENTITY AS course, GRADE_ENTITY AS grade\n"
-                + "WHERE student.PERSON_PK = grade.STUDENT_PK\n"
-                + "AND grade.COURSE_PK = course.COURSE_PK\n"
+                + "WHERE student.PERSON_PK = grade.STUDENT_PERSON_PK\n"
+                + "AND grade.COURSE_COURSE_PK = course.COURSE_PK\n"
                 + "AND student.PERSON_PK = ?";
     }
 
@@ -277,7 +277,7 @@ public class PERSON<T> {
     public ResultSet getCourses() {
         ResultSet rs;
         String sqlStatement = "SELECT course.*, lecturer.PERSON_PK, lecturer.FIRSTNAME, lecturer.LASTNAME \n"
-                + "FROM COURSE_ENTITY AS course, LECTURER_ENTITY AS lecturer WHERE course.LECTURER_PK = lecturer.PERSON_PK AND 1 = ?";
+                + "FROM COURSE_ENTITY AS course, LECTURER_ENTITY AS lecturer WHERE course.LECTURER_PERSON_PK = lecturer.PERSON_PK AND 1 = ?";
         DBAccess dbAccess = new DBAccess(false);
         Long[] parameterValues = new Long[]{Long.parseLong("1")};
         rs = dbAccess.DBgetSQLResultSet(sqlStatement, parameterValues);
@@ -305,7 +305,7 @@ public class PERSON<T> {
         Funktion für die Löschung von Studenten aus einem bestimmten Kurs 
     */
     public void deleteStudentFromCourse(String studentPK, String coursePK) {
-        String sqlStatement = "DELETE FROM GRADE_ENTITY as grade WHERE grade.STUDENT_PK = ? AND grade.COURSE_PK = ?";
+        String sqlStatement = "DELETE FROM GRADE_ENTITY as grade WHERE grade.STUDENT_PERSON_PK = ? AND grade.COURSE_COURSE_PK = ?";
 
         DBAccess dbAccess = new DBAccess(false);
         Long[] parameterValues = new Long[]{Long.parseLong(studentPK), Long.parseLong(coursePK)};
@@ -317,13 +317,13 @@ public class PERSON<T> {
     /*
         Funktion für die administrative Verwaltung von Kursen, Vortragenden und Studenten
     */
-    public void administrateData(String data, String adminType, Integer paramCount) {
+    public int administrateData(String data, String dataType, Integer paramCount) {
         String insertStatement = "", deleteStatement = "", updateStatement = "";
-        switch (adminType) {
+        switch (dataType) {
             case "courses": {
-                insertStatement = "INSERT INTO COURSE_ENTITY (COURSE_PK, COURSE_NAME, LECTURER_PK, SEMESTER, STUDY) VALUES(NEXT VALUE FOR SEQUENCE, ?, ?, ?, ?)";
+                insertStatement = "INSERT INTO COURSE_ENTITY (COURSE_PK, COURSE_NAME, LECTURER_PERSON_PK, SEMESTER, STUDY) VALUES(NEXT VALUE FOR SEQUENCE, ?, ?, ?, ?)";
                 deleteStatement = "DELETE FROM COURSE_ENTITY WHERE COURSE_PK = ?";
-                updateStatement = "UPDATE COURSE_ENTITY SET COURSE_NAME=?, LECTURER_PK=?, SEMESTER=?, STUDY=? WHERE COURSE_PK = ?";
+                updateStatement = "UPDATE COURSE_ENTITY SET COURSE_NAME=?, LECTURER_PERSON_PK=?, SEMESTER=?, STUDY=? WHERE COURSE_PK = ?";
                 break;
             }
             case "lecturers": {
@@ -343,17 +343,19 @@ public class PERSON<T> {
 
         String[] array = data.split("insert-update=");
         String deleteData = array[0].replace("delete=", "");
-        adminDeleteData(deleteData, deleteStatement);
+        int result = adminDeleteData(deleteData, deleteStatement, dataType);
         String insertUpdateData = array[1];
         adminInsertUpdateData(insertUpdateData, insertStatement, updateStatement, paramCount);
-
+        return result;
     }
     
     /*
         Funktion für das Löschen von Kursen, Vortragenden und Studenten
     */
-    private void adminDeleteData(String deleteData, String deleteStatement) {
+    private int adminDeleteData(String deleteData, String deleteStatement, String dataType) {
         try {
+            int result;
+            boolean isConstraintViolation = false;
             if (!deleteData.equals("")) {
                 Long[] parameterValues;
                 String[] deletePairs = deleteData.split("&");
@@ -363,13 +365,25 @@ public class PERSON<T> {
                     if (!deleteItem.equals("")) {
                         deleteArray = deleteItem.split("=");
                         parameterValues = new Long[]{Long.parseLong(deleteArray[0])};
-                        dbAccess.DBupdateData(deleteStatement, parameterValues);
+                        if(dataType=="course"){
+                            dbAccess.DBupdateData("DELETE FROM GRADE_ENTITY WHERE COURSE_PK = ?", parameterValues);
+                        }
+                        result = dbAccess.DBupdateData(deleteStatement, parameterValues);
+                        if(result == -1)
+                            isConstraintViolation = true;
                     }
                 }
                 dbAccess.DBCloseAccess();
+                if(isConstraintViolation)
+                    return -1;
+                else
+                    return 0;
             }
+            else
+                return 0;
         } catch (NumberFormatException ex) {
             System.out.print("Error: " + ex.getMessage());
+            return 0;
         }
     }
     
@@ -430,7 +444,7 @@ public class PERSON<T> {
     private void deleteStudents(String deleteData) {
         try {
             if (!deleteData.equals("")) {
-                String deleteStatement = "DELETE FROM GRADE_ENTITY WHERE COURSE_PK = ? AND STUDENT_PK = ?";
+                String deleteStatement = "DELETE FROM GRADE_ENTITY WHERE COURSE_COURSE_PK = ? AND STUDENT_PERSON_PK = ?";
                 Long[] parameterValues;
                 String[] deletePairs = deleteData.split("&");
                 String[] deleteArray;
@@ -455,10 +469,10 @@ public class PERSON<T> {
     private void insertStudents(String insertData) {
         try {
             String[] insertArray = insertData.split("&");
-            String checkStatement = "SELECT * FROM GRADE_ENTITY as grade WHERE grade.COURSE_PK = ? AND grade.STUDENT_PK = ?";
+            String checkStatement = "SELECT * FROM GRADE_ENTITY as grade WHERE grade.COURSE_COURSE_PK = ? AND grade.STUDENT_PERSON_PK = ?";
             ResultSet rs;
             Long[] parameterValues;
-            String insertStatement = "INSERT INTO GRADE_ENTITY (GRADE_PK, COURSE_PK, GRADE, STUDENT_PK) VALUES(NEXT VALUE FOR SEQUENCE, ?, 0, ?)";
+            String insertStatement = "INSERT INTO GRADE_ENTITY (GRADE_PK, COURSE_COURSE_PK, GRADE, STUDENT_PERSON_PK) VALUES(NEXT VALUE FOR SEQUENCE, ?, 0, ?)";
             DBAccess dbAccess = new DBAccess(false);
             for (int i = 1; i < insertArray.length; i++) {
                 if (!insertArray[i - 1].equals("0") && !insertArray[i].equals("0")) {
