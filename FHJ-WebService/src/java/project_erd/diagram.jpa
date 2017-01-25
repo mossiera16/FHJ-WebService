@@ -197,9 +197,7 @@
             <jpa:basic attribute-type="String" visibile="true" name="COURSE_NAME" id="_148035077869438">
                 <jpa:bv/>
             </jpa:basic>
-            <jpa:basic attribute-type="int" visibile="true" name="LECTURER_PK" id="_148035078727239">
-                <jpa:bv/>
-            </jpa:basic>
+			<jpa:one-to-one own="true" primaryKey="true" connected-entity-id="_148017048307911" visibile="true" name="LECTURER_PK" id="_14841450770496"/>
             <jpa:basic attribute-type="int" visibile="true" name="SEMESTER" id="_148035078727240">
                 <jpa:bv/>
             </jpa:basic>
@@ -207,13 +205,13 @@
                 <jpa:bv/>
             </jpa:basic>
             <jpa:one-to-many orp="false" own="true" collection-type="java.util.List" connected-entity-id="_1480352292337" visibile="true" name="GRADE_ENTITies" id="_148035251476462"/>
-            <jpa:id attribute-type="Long" visibile="true" name="COURSE_PK" id="_148035067463535">
+            <jpa:id attribute-type="Long" visibile="true" name="COURSE_COURSE_PK" id="_148035067463535">
                 <jpa:bv/>
                 <jpa:generated-value strategy="AUTO"/>
             </jpa:id>
         </jpa:attributes>
-        <jpa:nq e="false" name="COURSE_PK.findAll">
-            <jpa:query>Select e from COURSE_PK e</jpa:query>
+        <jpa:nq e="false" name="COURSE_COURSE_PK.findAll">
+            <jpa:query>Select e from COURSE_COURSE_PK e</jpa:query>
         </jpa:nq>
         <jpa:nq e="false" name="COURSE.findByCOURSE_NAME">
             <jpa:query>Select c from COURSE_ENTITY c where c.COURSE_NAME=:COURSE_NAME</jpa:query>
@@ -230,10 +228,7 @@
             <jpa:basic attribute-type="int" visibile="true" name="STUDENT_PK" id="_148035243342559">
                 <jpa:bv/>
             </jpa:basic>
-            <jpa:basic attribute-type="int" visibile="true" name="COURSE_PK" id="_148035245479760">
-                <jpa:bv/>
-            </jpa:basic>
-            <jpa:basic optional="false" attribute-type="int" visibile="true" name="SEMESTER" id="_148035252253363">
+            <jpa:basic attribute-type="int" visibile="true" name="COURSE_COURSE_PK" id="_148035245479760">
                 <jpa:bv/>
             </jpa:basic>
             <jpa:basic attribute-type="int" visibile="true" name="GRADE" id="_148070351755122">
@@ -250,11 +245,8 @@
         <jpa:nq e="false" name="GRADE_ENTITY.findBySTUDENT_PK">
             <jpa:query>Select g from GRADE_ENTITY g where g.STUDENT_PK=:STUDENT_PK</jpa:query>
         </jpa:nq>
-        <jpa:nq e="false" name="GRADE_ENTITY.findByCOURSE_PK">
-            <jpa:query>Select g from GRADE_ENTITY g where g.COURSE_PK=:COURSE_PK</jpa:query>
-        </jpa:nq>
-        <jpa:nq e="false" name="GRADE_ENTITY.findBySEMESTER">
-            <jpa:query>Select g from GRADE_ENTITY g where g.SEMESTER=:SEMESTER</jpa:query>
+        <jpa:nq e="false" name="GRADE_ENTITY.findByCOURSE_COURSE_PK">
+            <jpa:query>Select g from GRADE_ENTITY g where g.COURSE_COURSE_PK=:COURSE_COURSE_PK</jpa:query>
         </jpa:nq>
         <jpa:nq e="false" name="GRADE.findByGRADE_ENTITY">
             <jpa:query>Select g from GRADE_ENTITY g where g.GRADE_ENTITY=:GRADE_ENTITY</jpa:query>

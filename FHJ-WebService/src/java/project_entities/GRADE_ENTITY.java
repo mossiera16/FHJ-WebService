@@ -5,40 +5,36 @@ package project_entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
- * @author Notebook
+ * Noten/Ergebnisse
  */
 @Entity
 public class GRADE_ENTITY implements Serializable {
-
+    private STUDENT_ENTITY student;
+    private COURSE_ENTITY course;
+    
     public GRADE_ENTITY () {
     }
     
-    public GRADE_ENTITY (String GRADE_PK, int COURSE_PK, int GRADE, int SEMESTER, int STUDENT_PK) {
+    public GRADE_ENTITY (String GRADE_PK, COURSE_ENTITY COURSE, int GRADE, STUDENT_ENTITY STUDENT) {
         this.setGRADE_PK(Long.parseLong(GRADE_PK));
-        this.setCOURSE_PK(COURSE_PK);
+        this.setCOURSE(COURSE);
         this.setGRADE(GRADE);
-        this.setSEMESTER(SEMESTER);
-        this.setSTUDENT_PK(STUDENT_PK);
+        this.setSTUDENT(STUDENT);
     }
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long GRADE_PK;
 
-    @Basic
-    private int STUDENT_PK;
 
-    @Basic
-    private int COURSE_PK;
-
-    @Basic(optional = false)
-    private int SEMESTER;
 
     @Basic
     private int GRADE;
@@ -51,30 +47,6 @@ public class GRADE_ENTITY implements Serializable {
         this.GRADE_PK = GRADE_PK;
     }
 
-    public int getSTUDENT_PK() {
-        return this.STUDENT_PK;
-    }
-
-    public void setSTUDENT_PK(int STUDENT_PK) {
-        this.STUDENT_PK = STUDENT_PK;
-    }
-
-    public int getCOURSE_PK() {
-        return this.COURSE_PK;
-    }
-
-    public void setCOURSE_PK(int COURSE_PK) {
-        this.COURSE_PK = COURSE_PK;
-    }
-
-    public int getSEMESTER() {
-        return this.SEMESTER;
-    }
-
-    public void setSEMESTER(int SEMESTER) {
-        this.SEMESTER = SEMESTER;
-    }
-
     public int getGRADE() {
         return this.GRADE;
     }
@@ -82,5 +54,22 @@ public class GRADE_ENTITY implements Serializable {
     public void setGRADE(int GRADE) {
         this.GRADE = GRADE;
     }
-
+    
+     @ManyToOne(cascade = CascadeType.REMOVE)
+    public COURSE_ENTITY getCOURSE(){
+        return course;
+    }
+    
+    public void setCOURSE(COURSE_ENTITY course){
+        this.course = course;
+    }
+    
+    @ManyToOne()
+    public STUDENT_ENTITY getSTUDENT(){
+        return student;
+    }
+    
+    public void setSTUDENT(STUDENT_ENTITY student){
+        this.student = student;
+    }
 }

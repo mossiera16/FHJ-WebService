@@ -11,14 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 /**
- * @author Notebook
+ * Vortragender
  */
 @Entity
 public class LECTURER_ENTITY extends PERSON_ENTITY implements Serializable, PERSON {
 
     public LECTURER_ENTITY(){}
 
-    public LECTURER_ENTITY(String PERSON_PK, String ADMINSEX, Date BIRTHDATE, int EMPLOYEE_NR, String FIELD_OF_STUDY_1, String FIELD_OF_STUDY_2, String FIRST_NAME, boolean ISVALID, String LAST_NAME, String PASSWORD, int SVNR, String TITLE, String USERNAME, List<COURSE_ENTITY> COURSE_ENTITies){
+    public LECTURER_ENTITY(String PERSON_PK, String ADMINSEX, Date BIRTHDATE, int EMPLOYEE_NR, String FIELD_OF_STUDY_1, String FIELD_OF_STUDY_2, String FIRST_NAME, boolean ISVALID, String LAST_NAME, String PASSWORD, int SVNR, String TITLE, String USERNAME){
         this.setPERSON_PK(Long.parseLong(PERSON_PK));
         this.setADMINSEX(ADMINSEX);
         this.setBIRTHDATE(BIRTHDATE);
@@ -32,7 +32,6 @@ public class LECTURER_ENTITY extends PERSON_ENTITY implements Serializable, PERS
         this.setSSN(SVNR);
         this.setTITLE(TITLE);
         this.setUSERNAME(USERNAME);
-        this.setCOURSE_ENTITies(COURSE_ENTITies);
     }
     
     

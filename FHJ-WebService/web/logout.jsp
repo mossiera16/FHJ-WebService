@@ -5,6 +5,8 @@
  * Zweck: Kursverwaltungssystem --> Verwaltung von Studenten, Vortragenden, Kursen und Ergebnissen
  * Fachhochschule Joanneum
  * Datum: 16.12.2016
+ * Seite: logout.jsp
+ * Beschreibung: Abmeldungsseite (für den Endbenutzer nicht sichtbarer Inhalt) --> Session wird geschlossen
  */
 --%>
 <%

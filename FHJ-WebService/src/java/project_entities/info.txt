@@ -1,0 +1,2 @@
+Dieser Ordner enthält sämtliche Entitäten, welche mithilfe des JPA-Modelers automatisch generiert wurden.
+Schnittstelle PERSON wurde erstellt um das Entwurfsmuster PROTOTYPE zu demonstrieren.

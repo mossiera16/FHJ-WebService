@@ -9,17 +9,16 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 /**
- * @author Notebook
+ * Student
  */
 @Entity
 public class STUDENT_ENTITY extends PERSON_ENTITY implements Serializable, PERSON {
 
     public STUDENT_ENTITY(){}
     
-    public STUDENT_ENTITY(String PERSON_PK, String ADMINSEX, Date BIRTHDATE, String FIRST_NAME, boolean ISVALID, String LAST_NAME, String PASSWORD, String SEMESTER, int SVNR, int STUDENT_NR, String TITLE, String TYPE_OF_STUDY, String USERNAME, List<GRADE_ENTITY> GRADE_ENTITies){
+    public STUDENT_ENTITY(String PERSON_PK, String ADMINSEX, Date BIRTHDATE, String FIRST_NAME, boolean ISVALID, String LAST_NAME, String PASSWORD, String SEMESTER, int SVNR, int STUDENT_NR, String TITLE, String TYPE_OF_STUDY, String USERNAME){
         this.setPERSON_PK(Long.parseLong(PERSON_PK));
         this.setADMINSEX(ADMINSEX);
         this.setBIRTHDATE(BIRTHDATE);
@@ -33,7 +32,6 @@ public class STUDENT_ENTITY extends PERSON_ENTITY implements Serializable, PERSO
         this.setTITLE(TITLE);
         this.setTYPE_OF_STUDY(TYPE_OF_STUDY);
         this.setUSERNAME(USERNAME);
-        this.setGRADE_ENTITies(GRADE_ENTITies);
     }
     @Basic(optional = false)
     private int STUDENT_NR;
@@ -78,6 +76,8 @@ public class STUDENT_ENTITY extends PERSON_ENTITY implements Serializable, PERSO
     public void setGRADE_ENTITies(List<GRADE_ENTITY> GRADE_ENTITies) {
         this.GRADE_ENTITies = GRADE_ENTITies;
     }
+    
+    //Demonstration des Entwurfsmusters PROTOTYPE
     
     @Override
     public PERSON_ENTITY getClone(){
